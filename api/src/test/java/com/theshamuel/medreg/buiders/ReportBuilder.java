@@ -1,0 +1,48 @@
+package com.theshamuel.medreg.buiders;
+
+import com.theshamuel.medreg.model.report.entity.Report;
+import com.theshamuel.medreg.model.service.entity.Service;
+
+/**
+ * The Builder class for {@link Report}
+ *
+ * @author Alex Gladkikh
+ */
+public class ReportBuilder {
+
+    private Report report;
+
+    public ReportBuilder() {
+        report = new Report();
+    }
+
+    public ReportBuilder id(String id) {
+        report.setId(id);
+        return this;
+    }
+
+    public ReportBuilder service(Service service) {
+        report.setService(service);
+        return this;
+    }
+
+    public ReportBuilder template(String template) {
+        report.setTemplate(template);
+        return this;
+    }
+
+    public ReportBuilder label(String label) {
+        report.setLabel(label);
+        return this;
+    }
+
+    public ReportBuilder author(String author) {
+        report.setAuthor(author);
+        return this;
+    }
+
+
+    public Report build() {
+        return report;
+    }
+}
