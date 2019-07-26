@@ -1,0 +1,54 @@
+  <nav class="navbar navbar-default navbar-fixed-top menu_bgr">
+    <div class="container">
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav font_menu">
+          <li><a href="/workspace">Общее расписание</a></li>
+          <li class="admin">
+          <a href="#" class="admin-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Пациенты<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/visits-today">Прием на сегодня</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="/clients">Все пациенты</a></li>
+            <li><a href="/appointments">Записи на прием</a></li>
+            <li><a href="/visits">Все приемы</a></li>
+          </ul>
+        </li>
+        <li class="admin">
+        <a href="#" class="admin-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Доктора<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/doctors">Все доктора</a></li>
+            <li><a href="/schedule">Расписание приема</a></li>
+           </ul>
+        </li>
+        <li class="admin">
+          <a href="#" class="admin-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Услуги<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/service">Прайс лист услуг</a></li>
+          </ul>
+        </li>
+        <li class="admin">
+          <a href="#" class="admin-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Отчеты<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/reportofworkday">Отчетность за день</a></li>
+            <!-- <li><a href="#"></a></li> -->
+            <li role="separator" class="divider"></li>
+            <li><a href="/reports">Настройка бланков услуг</a></li>
+          </ul>
+        </li>
+          <li class="admin">
+            <a href="#" class="admin-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Администрирование <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/company" >Паспорт организации</a></li>
+              <li><a href="/users">Пользователи</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="/online">Справка</a></li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right font_menu_right">
+          <li class="header_user">{{name}}</li>
+          <li class="btn btn-primary btn-sm exit_btn" ng-click="logout()" role="button"><i class="fa fa-sign-out fa-2x" aria-hidden="true"></i></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
