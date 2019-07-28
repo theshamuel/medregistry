@@ -1,0 +1,22 @@
+<ng-include src="'menu.html'"></ng-include>
+
+<div class="wrap_combo">
+<div class="lists_appoint_cmb size_combo" id="combo_doc"></div>
+<button type="button" class="btn btn-success btn-sm lists_appoint_cmb size_btn" ng-click="addRowApp()">Добавить запись на прием
+        <span class="glyphicon glyphicon-plus"></span>
+</button>
+<button type="button" class="btn btn-success btn-sm lists_appoint_cmb size_btn btn_margin_left" ng-click="addRowVisit()">Добавить прием
+    <span class="glyphicon glyphicon-plus"></span>
+</button>
+</div>
+
+<div style="clear:both;"></div>
+
+<div class="wrap_list">
+
+    <div class="lists_appointments" id="today"></div>
+    <div class="lists_appointments" id="tomorrow"></div>
+    <!-- <div class="lists_appointments" id="afterTomorrow"></div> -->
+    <div class="lists_appointments" id="combDoctor"></div>
+    <div class="lists_appointments" id="visitsGrid"></div>
+</div>
