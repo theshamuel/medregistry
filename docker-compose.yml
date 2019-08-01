@@ -1,0 +1,110 @@
+version: '2'
+services:
+      medregdb:
+          build: db
+          hostname: medregdb
+          restart: always
+          container_name: medregdb
+
+          logging:
+            driver: json-file
+            options:
+                max-size: "10m"
+                max-file: "5"
+          volumes:
+              - ./db/data:/data/db
+              - ./backup:/backup
+          ports:
+              - "57017:27017"
+          environment:
+              - TZ=Europe/Moscow
+              - MONGO_AUTH=false
+              - MONGO_SERVER=medregdb
+              - MONGO_PORT=27017
+              - MONGO_DB=medregDB
+              - MONGO_ARCHIVE=medregdb_2017-11-25-143324.tar.gz
+              - MONGO_ADMIN=
+              - MONGO_ADMIN_PASSWORD=
+              - MONGO_USER=
+              - MONGO_USER_PASSWORD=
+              - INVITRO_DB_SERVER=localhost
+              - INVITRO_DB_PORT=5432
+              - INVITRO_DB=
+              - INVITRO_QUEUE=invitro_events
+              - INVITRO_DB_USER=postgres
+              - INVITRO_DB_USER_PASSWORD=postgres
+
+      medregapi:
+        build: api
+        hostname: medregapi
+        restart: always
+        container_name: medregapi
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+        volumes:
+          - ./log/medregistry:/var/log/medregistry
+        ports:
+            - "9001:9000"
+        environment:
+              - TZ=Europe/Moscow
+              - VERSION=1.1.0
+              - REPORT_PATH=/reports
+              - MONGO_SERVER=medregdb
+              - MONGO_PORT=27017
+              - MONGO_DB=medregDB
+              #- MONGO_USER=
+              #- MONGO_USER_PASSWORD=
+
+      medregweb:
+        build: web
+        hostname: medregweb
+        restart: always
+        container_name: medregweb
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+        volumes:
+            - ./web/src/:/usr/share/nginx/
+        ports:
+            - "8080:80"
+            - "8443:443"
+        environment:
+            - TZ=Europe/Moscow
+            - PROXY_SERVER=medregapi
+            - PROXY_PORT=9000
+        depends_on:
+            - medregapi
+
+      # monit:
+      #   image: umputun/monit-docker
+      #   hostname: monit
+      #   restart: always
+      #   container_name: monit
+      #   logging:
+      #     driver: json-file
+      #     options:
+      #         max-size: "10m"
+      #         max-file: "5"
+      #   ports:
+      #     - "9009:9009"
+      #   volumes:
+      #     - ./monit.conf.d:/etc/monit/conf.d
+      #     - /var/run/docker.sock:/var/run/docker.sock
+      #     - /srv:/hostsrv:ro
+      #     # - /data:/data:ro
+      #     # - /cache:/cache:ro
+      #     - /root:/hostroot:ro
+      #     # - /reports:/reports:ro
+      #     # - /backup:/backup:ro
+
+      #   environment:
+      #     - MHOST=
+      #     - MAIL_SERVER=smtp.yandex.ru port 465 username <> password <> using sslauto
+      #     - ALERT_EMAIL=
+      #     - MONIT_USER=
+      #     - MONIT_PASS=

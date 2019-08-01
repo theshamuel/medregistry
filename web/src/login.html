@@ -1,0 +1,42 @@
+  <nav class="header_line_login"/>
+
+
+  <div class="login_block">
+    <!--<form ng-submit="login()" method="POST">
+      <div>
+        <input name="username" ng-model="userLogin" type="text" placeholder="Логин" />
+      </div>
+      <div>
+        <input name="password" ng-model="userPassword" type="password" placeholder="Пароль" />
+      </div>
+      <div>
+        <input type="submit" value="Вход" class="button red small" />
+      </div>
+     </form>-->
+     <form name="form" ng-submit="form.$valid && login()" novalidate>
+    <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.userLogin.$invalid }">
+        <label for="userLogin">Логин</label>
+        <input type="text" name="userLogin" class="form-control" ng-model="userLogin" placeholder="Введите логин..." required />
+        <div ng-messages="form.$submitted && form.userLogin.$error" class="help-block">
+            <div ng-message="required">Заполните поле логин</div>
+        </div>
+    </div>
+    <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.userPassword.$invalid }">
+        <label for="userPassword">Пароль</label>
+        <input type="password" name="userPassword" class="form-control" ng-model="userPassword" placeholder="Введите пароль..." required />
+        <div ng-messages="form.$submitted && form.userPassword.$error" class="help-block">
+            <div ng-message="required">Заполните поле пароль</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <button ng-disabled="loading" class="btn btn-primary exit_btn">Войти</button>
+        <img ng-if="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+    </div>
+    <div ng-if="error" class="alert alert-danger">{{error}}</div>
+</form>
+  </div>
+ <!-- <div class="alert alert-danger" role="alert" ng-show="error.data.message">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span class="sr-only">Error:</span> {{error.data.message}}
+  </div>
+ -->
