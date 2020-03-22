@@ -20,19 +20,14 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.theshamuel.medreg.filter.JwtFilter;
-import com.theshamuel.medreg.module.invirto.OrderListener;
 import com.theshamuel.medreg.utils.BusinessGarbageCollectorDaemon;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -50,8 +45,11 @@ public class MedregistryBootstrap {
 
     private static Logger logger = LoggerFactory.getLogger(MedregistryBootstrap.class);
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
+
+    public MedregistryBootstrap(Environment env) {
+        this.env = env;
+    }
 
     /**
      * The entry point of application.
@@ -123,63 +121,6 @@ public class MedregistryBootstrap {
     @Bean
     public Module parameterNamesModule() {
         return new ParameterNamesModule(JsonCreator.Mode.PROPERTIES);
-    }
-
-    @Bean
-    public Thread invitroModule() {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-        StringBuffer url = new StringBuffer("jdbc:postgresql://");
-        if (env.getProperty("INVITRO_DB_SERVER") != null &&
-                env.getProperty("INVITRO_DB_PORT") != null &&
-                env.getProperty("INVITRO_DB") != null &&
-                env.getProperty("INVITRO_DB_USER") != null &&
-                env.getProperty("INVITRO_DB_PASSWORD") != null) {
-
-            url.append(env.getProperty("INVITRO_DB_SERVER"));
-            url.append(":");
-            url.append(env.getProperty("INVITRO_DB_PORT"));
-            url.append("/");
-            url.append(env.getProperty("INVITRO_DB"));
-        } else {
-            url.append("127.0.0.1");
-            url.append(":");
-            url.append("5432");
-            url.append("/");
-            url.append("postgres");
-            logger.warn("THE INVITRO MODULE is starting with DEFAULT DB params");
-        }
-        Connection conn = null;
-        String user = "postgres";
-        String password = "postgres";
-        if (env.getProperty("INVITRO_DB_USER") != null) {
-            user = env.getProperty("INVITRO_DB_USER");
-        }
-        if (env.getProperty("INVITRO_DB_PASSWORD") != null) {
-            password = env.getProperty("INVITRO_DB_USER");
-        }
-
-        try {
-            conn = DriverManager.getConnection(url.toString(), user, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        Thread listener = null;
-        try {
-            listener = new Thread(new OrderListener(conn, null));
-            listener.start();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-        logger.info("The INVITRO module has started");
-        return listener;
     }
 
 }
