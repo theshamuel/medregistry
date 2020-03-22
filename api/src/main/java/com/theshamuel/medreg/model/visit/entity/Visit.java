@@ -1,15 +1,14 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.model.visit.entity;
@@ -19,21 +18,19 @@ import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
 import com.theshamuel.medreg.model.client.entity.Client;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
 import com.theshamuel.medreg.model.service.entity.Service;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
-
 /**
- * The Visit entity class.
- * The class define completed appointment.
+ * The Visit entity class. The class define completed appointment.
  *
  * @author Alex Gladkikh
  */
@@ -92,7 +89,10 @@ public class Visit extends BaseEntity {
      * @param services    the services
      * @param terminalSum the terminal sum
      */
-    public Visit(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author, String contractNum, Doctor doctor, Client client, LocalDate dateEvent, LocalTime timeEvent, Appointment appointment, List<Service> services, BigInteger terminalSum) {
+    public Visit(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author,
+            String contractNum, Doctor doctor, Client client, LocalDate dateEvent,
+            LocalTime timeEvent, Appointment appointment, List<Service> services,
+            BigInteger terminalSum) {
         setId(id);
         setCreatedDate(createdDate);
         setModifyDate(modifyDate);
@@ -259,7 +259,7 @@ public class Visit extends BaseEntity {
      * @return the time label
      */
     public String getTimeLabel() {
-        return (getTimeEvent()!=null)?getTimeEvent().format(formatterTime):"-";
+        return (getTimeEvent() != null) ? getTimeEvent().format(formatterTime) : "-";
 
     }
 
@@ -269,14 +269,18 @@ public class Visit extends BaseEntity {
      * @return the date time label
      */
     public String getDateTimeLabel() {
-        return (getDateEvent()!=null && getTimeEvent()!=null)?getDateEvent().format(formatterDate)+" "+getTimeEvent().format(formatterTime):"-";
+        return (getDateEvent() != null && getTimeEvent() != null) ?
+                getDateEvent().format(formatterDate) + " " + getTimeEvent().format(formatterTime)
+                : "-";
 
     }
 
     @Override
     public boolean equals(Object o) {
 
-        if (o == this) return true;
+        if (o == this) {
+            return true;
+        }
         if (!(o instanceof Visit)) {
             return false;
         }

@@ -1,15 +1,14 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.utils;
@@ -26,7 +25,9 @@ import java.security.SecureRandom;
  */
 public class Utils {
 
-    public static String[] badSymbols = new String[]{"_",".",":","@",","," ","-","\\\\","/","'"};
+    public static String[] badSymbols = new String[]{"_", ".", ":", "@", ",", " ", "-", "\\\\", "/",
+            "'"};
+
     /**
      * Encrypt password to SHA-256 string.
      *
@@ -43,7 +44,7 @@ public class Utils {
             byte[] bytes = md.digest(password.getBytes());
             StringBuilder sb = new StringBuilder();
 
-            for(int i = 0; i < bytes.length; ++i) {
+            for (int i = 0; i < bytes.length; ++i) {
                 sb.append(Integer.toString((bytes[i] & 255) + 256, 16).substring(1));
             }
 
@@ -52,7 +53,7 @@ public class Utils {
             e.printStackTrace();
         }
 
-        return generatedPassword.toString().substring(0,16);
+        return generatedPassword.substring(0, 16);
     }
 
 
@@ -73,8 +74,7 @@ public class Utils {
                 hashtext = "0" + hashtext;
             }
             return hashtext;
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
@@ -108,12 +108,13 @@ public class Utils {
     public static String deleteNotNeedSymbol(String str, String[] symbols) {
         StringBuilder result = new StringBuilder();
         result.append(str);
-        for (int i=0; i<symbols.length;i++){
+        for (int i = 0; i < symbols.length; i++) {
             String[] tookens = result.toString().split(symbols[i]);
-            if (tookens.length>1){
+            if (tookens.length > 1) {
                 result = new StringBuilder();
-                for (int j = 0; j < tookens.length; j++)
+                for (int j = 0; j < tookens.length; j++) {
                     result.append(tookens[j]);
+                }
             }
         }
         return result.toString();

@@ -1,5 +1,18 @@
 package com.theshamuel.medreg.model.visit.service.impl;
 
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+
+import com.theshamuel.medreg.buiders.AppointmentBuilder;
+import com.theshamuel.medreg.buiders.DoctorBuilder;
+import com.theshamuel.medreg.buiders.ServiceBuilder;
+import com.theshamuel.medreg.buiders.VisitBuilder;
 import com.theshamuel.medreg.model.appointment.dao.AppointmentRepository;
 import com.theshamuel.medreg.model.appointment.entity.Appointment;
 import com.theshamuel.medreg.model.client.dao.ClientRepository;
@@ -13,27 +26,15 @@ import com.theshamuel.medreg.model.visit.dao.VisitRepository;
 import com.theshamuel.medreg.model.visit.dto.VisitDto;
 import com.theshamuel.medreg.model.visit.entity.Visit;
 import com.theshamuel.medreg.model.visit.service.VisitService;
-import com.theshamuel.medreg.buiders.AppointmentBuilder;
-import com.theshamuel.medreg.buiders.DoctorBuilder;
-import com.theshamuel.medreg.buiders.ServiceBuilder;
-import com.theshamuel.medreg.buiders.VisitBuilder;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsCollectionContaining.hasItems;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
 
 /**
  * The unit tests for {@link VisitServiceImpl}
@@ -65,78 +66,103 @@ public class VisitServiceImplTest {
     @Before
     public void setUp() {
         initMocks(this);
-        visitService = new VisitServiceImpl(visitRepository,doctorRepository,clientRepository,appointmentRepository,serviceRepository,serviceService);
+        visitService = new VisitServiceImpl(visitRepository, doctorRepository, clientRepository,
+                appointmentRepository, serviceRepository, serviceService);
     }
 
     @Test
-    public void testIsUniqueVisit(){
-        Appointment appointment = new AppointmentBuilder().id("app1").dateEvent(LocalDate.now()).timeEvent(LocalTime.parse("15:00")).build();
+    public void testIsUniqueVisit() {
+        Appointment appointment = new AppointmentBuilder().id("app1").dateEvent(LocalDate.now())
+                .timeEvent(LocalTime.parse("15:00")).build();
         Doctor doctor = new DoctorBuilder().id("doc1").build();
         when(appointmentRepository.findOne(appointment.getId())).thenReturn(appointment);
         when(doctorRepository.findOne(doctor.getId())).thenReturn(doctor);
-        when(visitRepository.findByDateTimeEventAndDoctor(doctor,appointment.getDateEvent(),appointment.getTimeEvent())).thenReturn(new VisitBuilder().id("visit01").build());
+        when(visitRepository.findByDateTimeEventAndDoctor(doctor, appointment.getDateEvent(),
+                appointment.getTimeEvent())).thenReturn(new VisitBuilder().id("visit01").build());
 
-        Boolean actual = visitService.isUniqueVisit(doctor.getId(),appointment.getId());
-        assertThat(actual,is(false));
+        Boolean actual = visitService.isUniqueVisit(doctor.getId(), appointment.getId());
+        assertThat(actual, is(false));
 
-        actual = visitService.isUniqueVisit(doctor.getId(),null);
-        assertThat(actual,is(true));
+        actual = visitService.isUniqueVisit(doctor.getId(), null);
+        assertThat(actual, is(true));
 
-        actual = visitService.isUniqueVisit(null,null);
-        assertThat(actual,is(true));
+        actual = visitService.isUniqueVisit(null, null);
+        assertThat(actual, is(true));
 
-        verify(appointmentRepository,times(1)).findOne(appointment.getId());
-        verify(doctorRepository,times(2)).findOne(doctor.getId());
-        verify(visitRepository,times(1)).findByDateTimeEventAndDoctor(doctor,LocalDate.now(),LocalTime.parse("15:00"));
+        verify(appointmentRepository, times(1)).findOne(appointment.getId());
+        verify(doctorRepository, times(2)).findOne(doctor.getId());
+        verify(visitRepository, times(1))
+                .findByDateTimeEventAndDoctor(doctor, LocalDate.now(), LocalTime.parse("15:00"));
 
     }
 
     @Test
-    public void testGetServices(){
-        Appointment appointment = new AppointmentBuilder().id("app1").dateEvent(LocalDate.now()).timeEvent(LocalTime.parse("15:00")).build();
+    public void testGetServices() {
+        Appointment appointment = new AppointmentBuilder().id("app1").dateEvent(LocalDate.now())
+                .timeEvent(LocalTime.parse("15:00")).build();
         Doctor doctor = new DoctorBuilder().id("doc1").build();
 
         List<Service> services = new ArrayList<>();
-        services.add(new ServiceBuilder().id("s01").label("Ultrasound 1").price(BigInteger.valueOf(1000)).build());
-        services.add(new ServiceBuilder().id("s02").label("Consultation 1").price(BigInteger.valueOf(500)).build());
+        services.add(
+                new ServiceBuilder().id("s01").label("Ultrasound 1").price(BigInteger.valueOf(1000))
+                        .build());
+        services.add(new ServiceBuilder().id("s02").label("Consultation 1")
+                .price(BigInteger.valueOf(500)).build());
 
-        Visit visit = new VisitBuilder().id("visit01").appointment(appointment).doctor(doctor).services(services).build();
+        Visit visit = new VisitBuilder().id("visit01").appointment(appointment).doctor(doctor)
+                .services(services).build();
 
         when(visitRepository.findOne(visit.getId())).thenReturn(visit);
-        when(serviceService.obj2dto(services.get(0))).thenReturn(new ServiceDto(services.get(0).getId(),services.get(0).getLabel(),services.get(0).getPrice(),services.get(0).getDiscount()));
-        when(serviceService.obj2dto(services.get(1))).thenReturn(new ServiceDto(services.get(1).getId(),services.get(1).getLabel(),services.get(1).getPrice(),services.get(1).getDiscount()));
+        when(serviceService.obj2dto(services.get(0))).thenReturn(
+                new ServiceDto(services.get(0).getId(), services.get(0).getLabel(),
+                        services.get(0).getPrice(), services.get(0).getDiscount()));
+        when(serviceService.obj2dto(services.get(1))).thenReturn(
+                new ServiceDto(services.get(1).getId(), services.get(1).getLabel(),
+                        services.get(1).getPrice(), services.get(1).getDiscount()));
 
         List<ServiceDto> actualDto = visitService.getServices(visit.getId());
-        List<ServiceDto> expectedDto = services.stream().map(serviceService::obj2dto).collect(Collectors.toList());
-        assertThat(actualDto.size(),is(2));
+        List<ServiceDto> expectedDto = services.stream().map(serviceService::obj2dto)
+                .collect(Collectors.toList());
+        assertThat(actualDto.size(), is(2));
 
-        assertThat(actualDto,hasItems(expectedDto.get(0),expectedDto.get(1)));
+        assertThat(actualDto, hasItems(expectedDto.get(0), expectedDto.get(1)));
 
-        verify(visitRepository,times(1)).findOne(visit.getId());
-        verify(serviceService,times(1)).obj2dto(services.get(0));
-        verify(serviceService,times(1)).obj2dto(services.get(1));
+        verify(visitRepository, times(1)).findOne(visit.getId());
+        verify(serviceService, times(1)).obj2dto(services.get(0));
+        verify(serviceService, times(1)).obj2dto(services.get(1));
 
     }
 
     @Test
-    public void testGetVisitsByDoctorAndDateEvent(){
-        Appointment appointment = new AppointmentBuilder().id("app1").dateEvent(LocalDate.now()).timeEvent(LocalTime.parse("15:00")).build();
-        Appointment appointment2 = new AppointmentBuilder().id("app2").dateEvent(LocalDate.now()).timeEvent(LocalTime.parse("16:00")).build();
-        Appointment appointment3 = new AppointmentBuilder().id("app3").dateEvent(LocalDate.now()).timeEvent(LocalTime.parse("17:00")).build();
+    public void testGetVisitsByDoctorAndDateEvent() {
+        Appointment appointment = new AppointmentBuilder().id("app1").dateEvent(LocalDate.now())
+                .timeEvent(LocalTime.parse("15:00")).build();
+        Appointment appointment2 = new AppointmentBuilder().id("app2").dateEvent(LocalDate.now())
+                .timeEvent(LocalTime.parse("16:00")).build();
+        Appointment appointment3 = new AppointmentBuilder().id("app3").dateEvent(LocalDate.now())
+                .timeEvent(LocalTime.parse("17:00")).build();
         List<Service> services = new ArrayList<>();
-        services.add(new ServiceBuilder().id("s01").label("Ultrasound 1").price(BigInteger.valueOf(1000)).build());
-        services.add(new ServiceBuilder().id("s02").label("Consultation 1").price(BigInteger.valueOf(500)).build());
+        services.add(
+                new ServiceBuilder().id("s01").label("Ultrasound 1").price(BigInteger.valueOf(1000))
+                        .build());
+        services.add(new ServiceBuilder().id("s02").label("Consultation 1")
+                .price(BigInteger.valueOf(500)).build());
 
         List<Service> services2 = new ArrayList<>();
-        services2.add(new ServiceBuilder().id("s201").label("Ultrasound 2").price(BigInteger.valueOf(500)).build());
-        services2.add(new ServiceBuilder().id("s202").label("Consultation 2").price(BigInteger.valueOf(100)).build());
+        services2.add(new ServiceBuilder().id("s201").label("Ultrasound 2")
+                .price(BigInteger.valueOf(500)).build());
+        services2.add(new ServiceBuilder().id("s202").label("Consultation 2")
+                .price(BigInteger.valueOf(100)).build());
 
         Doctor doctor = new DoctorBuilder().id("doc1").build();
         Doctor doctor2 = new DoctorBuilder().id("doc2").build();
 
-        Visit visit = new VisitBuilder().id("visit01").appointment(appointment).doctor(doctor).services(services).build();
-        Visit visit2 = new VisitBuilder().id("visit02").appointment(appointment2).doctor(doctor).services(services).build();
-        Visit visit3 = new VisitBuilder().id("visit03").appointment(appointment3).doctor(doctor2).services(services2).build();
+        Visit visit = new VisitBuilder().id("visit01").appointment(appointment).doctor(doctor)
+                .services(services).build();
+        Visit visit2 = new VisitBuilder().id("visit02").appointment(appointment2).doctor(doctor)
+                .services(services).build();
+        Visit visit3 = new VisitBuilder().id("visit03").appointment(appointment3).doctor(doctor2)
+                .services(services2).build();
         List<Visit> visits = new ArrayList<>();
         visits.add(visit);
         visits.add(visit2);
@@ -147,8 +173,9 @@ public class VisitServiceImplTest {
         when(doctorRepository.findOne(doctor.getId())).thenReturn(doctor);
         when(doctorRepository.findOne(doctor2.getId())).thenReturn(doctor2);
 
-        when(visitRepository.findByDateEventAndDoctor(doctor,LocalDate.now())).thenReturn(visits);
-        when(visitRepository.findByDateEventAndDoctor(doctor2,LocalDate.now())).thenReturn(visits2);
+        when(visitRepository.findByDateEventAndDoctor(doctor, LocalDate.now())).thenReturn(visits);
+        when(visitRepository.findByDateEventAndDoctor(doctor2, LocalDate.now()))
+                .thenReturn(visits2);
 
         List<VisitDto> expected = new ArrayList<>();
         expected.add(visitService.obj2dto(visit));
@@ -157,41 +184,52 @@ public class VisitServiceImplTest {
         List<VisitDto> expected2 = new ArrayList<>();
         expected2.add(visitService.obj2dto(visit3));
 
-        List<VisitDto> actual = visitService.getVisitsByDoctorAndDateEvent(doctor.getId(),LocalDate.now());
-        assertThat(actual,hasItems(expected.get(0), expected.get(1)));
-        assertThat(actual.get(0).getTotalSum(),is(BigInteger.valueOf(1500)));
-        assertThat(actual.get(1).getTotalSum(),is(BigInteger.valueOf(1500)));
+        List<VisitDto> actual = visitService
+                .getVisitsByDoctorAndDateEvent(doctor.getId(), LocalDate.now());
+        assertThat(actual, hasItems(expected.get(0), expected.get(1)));
+        assertThat(actual.get(0).getTotalSum(), is(BigInteger.valueOf(1500)));
+        assertThat(actual.get(1).getTotalSum(), is(BigInteger.valueOf(1500)));
 
-        actual =  visitService.getVisitsByDoctorAndDateEvent(doctor2.getId(),LocalDate.now());
-        assertThat(actual,hasItem(expected2.get(0)));
-        assertThat(actual.get(0).getTotalSum(),is(BigInteger.valueOf(600)));
+        actual = visitService.getVisitsByDoctorAndDateEvent(doctor2.getId(), LocalDate.now());
+        assertThat(actual, hasItem(expected2.get(0)));
+        assertThat(actual.get(0).getTotalSum(), is(BigInteger.valueOf(600)));
 
-
-        verify(doctorRepository,times(1)).findOne(doctor.getId());
-        verify(doctorRepository,times(1)).findOne(doctor2.getId());
-        verify(visitRepository,times(1)).findByDateEventAndDoctor(doctor,LocalDate.now());
-        verify(visitRepository,times(1)).findByDateEventAndDoctor(doctor2,LocalDate.now());
+        verify(doctorRepository, times(1)).findOne(doctor.getId());
+        verify(doctorRepository, times(1)).findOne(doctor2.getId());
+        verify(visitRepository, times(1)).findByDateEventAndDoctor(doctor, LocalDate.now());
+        verify(visitRepository, times(1)).findByDateEventAndDoctor(doctor2, LocalDate.now());
 
     }
 
     @Test
-    public void testGetVisitsByDateEvent(){
-        Appointment appointment = new AppointmentBuilder().id("app1").dateEvent(LocalDate.now()).timeEvent(LocalTime.parse("15:00")).build();
-        Appointment appointment2 = new AppointmentBuilder().id("app2").dateEvent(LocalDate.now()).timeEvent(LocalTime.parse("16:00")).build();
-        Appointment appointment3 = new AppointmentBuilder().id("app3").dateEvent(LocalDate.now()).timeEvent(LocalTime.parse("17:00")).build();
+    public void testGetVisitsByDateEvent() {
+        Appointment appointment = new AppointmentBuilder().id("app1").dateEvent(LocalDate.now())
+                .timeEvent(LocalTime.parse("15:00")).build();
+        Appointment appointment2 = new AppointmentBuilder().id("app2").dateEvent(LocalDate.now())
+                .timeEvent(LocalTime.parse("16:00")).build();
+        Appointment appointment3 = new AppointmentBuilder().id("app3").dateEvent(LocalDate.now())
+                .timeEvent(LocalTime.parse("17:00")).build();
         List<Service> services = new ArrayList<>();
-        services.add(new ServiceBuilder().id("s01").label("Ultrasound 1").price(BigInteger.valueOf(1000)).build());
-        services.add(new ServiceBuilder().id("s02").label("Consultation 1").price(BigInteger.valueOf(500)).build());
+        services.add(
+                new ServiceBuilder().id("s01").label("Ultrasound 1").price(BigInteger.valueOf(1000))
+                        .build());
+        services.add(new ServiceBuilder().id("s02").label("Consultation 1")
+                .price(BigInteger.valueOf(500)).build());
 
         List<Service> services2 = new ArrayList<>();
-        services2.add(new ServiceBuilder().id("s201").label("Ultrasound 2").price(BigInteger.valueOf(500)).build());
-        services2.add(new ServiceBuilder().id("s202").label("Consultation 2").price(BigInteger.valueOf(100)).build());
+        services2.add(new ServiceBuilder().id("s201").label("Ultrasound 2")
+                .price(BigInteger.valueOf(500)).build());
+        services2.add(new ServiceBuilder().id("s202").label("Consultation 2")
+                .price(BigInteger.valueOf(100)).build());
 
         Doctor doctor = new DoctorBuilder().id("doc1").build();
 
-        Visit visit = new VisitBuilder().id("visit01").appointment(appointment).doctor(doctor).services(services).build();
-        Visit visit2 = new VisitBuilder().id("visit02").appointment(appointment2).doctor(doctor).services(services).build();
-        Visit visit3 = new VisitBuilder().id("visit03").appointment(appointment3).doctor(doctor).services(services2).build();
+        Visit visit = new VisitBuilder().id("visit01").appointment(appointment).doctor(doctor)
+                .services(services).build();
+        Visit visit2 = new VisitBuilder().id("visit02").appointment(appointment2).doctor(doctor)
+                .services(services).build();
+        Visit visit3 = new VisitBuilder().id("visit03").appointment(appointment3).doctor(doctor)
+                .services(services2).build();
         List<Visit> visits = new ArrayList<>();
         visits.add(visit);
         visits.add(visit2);
@@ -206,13 +244,12 @@ public class VisitServiceImplTest {
 
         List<VisitDto> actual = visitService.getVisitsByDateEvent(LocalDate.now());
 
-        assertThat(actual,hasItems(expected.get(0),expected.get(1),expected.get(2)));
-        assertThat(actual.get(0).getTotalSum(),is(BigInteger.valueOf(1500)));
-        assertThat(actual.get(1).getTotalSum(),is(BigInteger.valueOf(1500)));
-        assertThat(actual.get(2).getTotalSum(),is(BigInteger.valueOf(600)));
+        assertThat(actual, hasItems(expected.get(0), expected.get(1), expected.get(2)));
+        assertThat(actual.get(0).getTotalSum(), is(BigInteger.valueOf(1500)));
+        assertThat(actual.get(1).getTotalSum(), is(BigInteger.valueOf(1500)));
+        assertThat(actual.get(2).getTotalSum(), is(BigInteger.valueOf(600)));
 
-
-        verify(visitRepository,times(1)).findByDateEvent(LocalDate.now());
+        verify(visitRepository, times(1)).findByDateEvent(LocalDate.now());
 
     }
 }

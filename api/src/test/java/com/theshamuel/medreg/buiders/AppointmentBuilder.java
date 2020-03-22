@@ -2,7 +2,6 @@ package com.theshamuel.medreg.buiders;
 
 import com.theshamuel.medreg.model.appointment.entity.Appointment;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -59,20 +58,20 @@ public class AppointmentBuilder {
         return this;
     }
 
-    public AppointmentBuilder hasVisit (Boolean hasVisit){
+    public AppointmentBuilder hasVisit(Boolean hasVisit) {
         appointment.setHasVisit(hasVisit);
         return this;
-    };
+    }
 
-    public AppointmentBuilder isHere (Boolean isHere){
+    public AppointmentBuilder isHere(Boolean isHere) {
         appointment.setIsHere(isHere);
         return this;
-    };
+    }
 
-    public AppointmentBuilder isDoubleAppointment (Boolean isDoubleAppointment){
+    public AppointmentBuilder isDoubleAppointment(Boolean isDoubleAppointment) {
         appointment.setIsDoubleAppointment(isDoubleAppointment);
         return this;
-    };
+    }
 
     public Appointment build() {
         return appointment;

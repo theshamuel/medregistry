@@ -1,18 +1,20 @@
 package com.theshamuel.medreg.utils;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 public final class BusinessGarbageCollectorDaemon {
-    private static final Logger logger = LoggerFactory.getLogger(BusinessGarbageCollectorDaemon.class);
+
+    private static final Logger logger = LoggerFactory
+            .getLogger(BusinessGarbageCollectorDaemon.class);
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
-    public static void start(){
-        
+
+    public static void start() {
+
         logger.info("Started business GC");
         scheduler.scheduleAtFixedRate(new Runnable() {
             @Override

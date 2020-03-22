@@ -1,15 +1,14 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.controllers;
@@ -18,6 +17,13 @@ import com.theshamuel.medreg.ResponsePage;
 import com.theshamuel.medreg.exception.DuplicateRecordException;
 import com.theshamuel.medreg.model.appointment.dto.AppointmentDto;
 import com.theshamuel.medreg.model.appointment.service.AppointmentService;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,15 +31,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.ServletException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * The Appointment's controller class.
@@ -43,6 +49,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class AppointmentController {
+
     /**
      * The com.theshamuel.medreg.model.appointment.entity.Appointment repository.
      */
@@ -62,29 +69,35 @@ public class AppointmentController {
     /**
      * Gets appointment order by label.
      *
-     * @param pgCount    the count response records
-     * @param pgStart    the start cursor position
+     * @param pgCount the count response records
+     * @param pgStart the start cursor position
      * @return the appointment order by label
      * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/appointments")
     public ResponseEntity<List> getAppointmentOrderByLabel(
-            @RequestParam(value="count", defaultValue = "15") int pgCount,
-            @RequestParam(value="start", defaultValue = "0") int pgStart,
-            @RequestParam(value="filter", defaultValue = "") String filter)throws ServletException {
+            @RequestParam(value = "count", defaultValue = "15") int pgCount,
+            @RequestParam(value = "start", defaultValue = "0") int pgStart,
+            @RequestParam(value = "filter", defaultValue = "") String filter)
+            throws ServletException {
         Sort.Direction sortDirection = Sort.Direction.ASC;
         int page = 0;
-        if (pgStart > 0)
+        if (pgStart > 0) {
             page = pgStart / 15;
+        }
         List<AppointmentDto> result = Collections.emptyList();
         ResponsePage grid = new ResponsePage();
 
-        if (filter!=null && filter.trim().length()>0) {
-            Page p = appointmentService.findByFilter(new PageRequest(page, pgCount, new Sort(new Sort.Order(sortDirection, "dateEvent"), new Sort.Order(sortDirection, "timeEvent"))),filter);
+        if (filter != null && filter.trim().length() > 0) {
+            Page p = appointmentService.findByFilter(new PageRequest(page, pgCount,
+                    new Sort(new Sort.Order(sortDirection, "dateEvent"),
+                            new Sort.Order(sortDirection, "timeEvent"))), filter);
             result = p.getContent();
             grid.setTotal_count(p.getTotalElements());
-        }else{
-            result = appointmentService.findAll(new PageRequest(page, pgCount, new Sort(new Sort.Order(sortDirection, "dateEvent"), new Sort.Order(sortDirection, "timeEvent")))).getContent();
+        } else {
+            result = appointmentService.findAll(new PageRequest(page, pgCount,
+                    new Sort(new Sort.Order(sortDirection, "dateEvent"),
+                            new Sort.Order(sortDirection, "timeEvent")))).getContent();
             grid.setTotal_count(appointmentService.count());
 
         }
@@ -102,10 +115,12 @@ public class AppointmentController {
      * @throws ServletException the servlet exception
      */
     @PostMapping(value = "/appointments", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<AppointmentDto> saveAppointment(@RequestBody AppointmentDto appointment) throws ServletException {
-        if (appointmentService.findByDoctorAndDateEventAndTimeEvent(appointment.getDoctorId(),appointment.getDateEvent(),appointment.getTimeEvent()))
+    public ResponseEntity<AppointmentDto> saveAppointment(@RequestBody AppointmentDto appointment)
+            throws ServletException {
+        if (appointmentService.findByDoctorAndDateEventAndTimeEvent(appointment.getDoctorId(),
+                appointment.getDateEvent(), appointment.getTimeEvent())) {
             throw new DuplicateRecordException("Запись на данной время уже существует");
-        else {
+        } else {
             LocalDateTime now = LocalDateTime.now();
             appointment.setModifyDate(now);
             appointment.setCreatedDate(now);
@@ -122,9 +137,10 @@ public class AppointmentController {
      * @throws ServletException the servlet exception
      */
     @PutMapping(value = "/appointments/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<AppointmentDto> updateAppointment(@PathVariable("id") String id, @RequestBody AppointmentDto appointment) throws ServletException{
+    public ResponseEntity<AppointmentDto> updateAppointment(@PathVariable("id") String id,
+            @RequestBody AppointmentDto appointment) throws ServletException {
         AppointmentDto currentAppointment = appointmentService.findOne(id);
-        if (appointment==null) {
+        if (appointment == null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
 
@@ -149,11 +165,13 @@ public class AppointmentController {
      * @return the response entity with appointment
      * @throws ServletException the servlet exception
      */
-    @DeleteMapping (value = "/appointments/{id}")
-    public ResponseEntity<AppointmentDto> deleteAppointment(@PathVariable(value = "id") String id) throws ServletException {
+    @DeleteMapping(value = "/appointments/{id}")
+    public ResponseEntity<AppointmentDto> deleteAppointment(@PathVariable(value = "id") String id)
+            throws ServletException {
         AppointmentDto appointment = appointmentService.findOne(id);
-        if (appointment == null)
+        if (appointment == null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
         appointmentService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -164,7 +182,7 @@ public class AppointmentController {
      * @return the response entity with status operation
      * @throws ServletException the servlet exception
      */
-    @DeleteMapping (value = "/appointments/outdated")
+    @DeleteMapping(value = "/appointments/outdated")
     public ResponseEntity deleteOutdatedAppointments() throws ServletException {
         appointmentService.deleteOutdatedAppointments();
         return new ResponseEntity(HttpStatus.OK);
@@ -175,21 +193,23 @@ public class AppointmentController {
      *
      * @param doctor    the doctor id
      * @param dateEvent the date for getting gaps in schedule of doctor
-     * @param id        the id of appointment if you want add in response list current appointment           which is using.
+     * @param id        the id of appointment if you want add in response list current appointment
+     *                  which is using.
      * @return the response entity includes list of string (time of appointments)
      * @throws ServletException the servlet exception
      */
-    @GetMapping (value = "/appointments/freetime")
+    @GetMapping(value = "/appointments/freetime")
     public ResponseEntity<List<String>> freeAppointmentsTimeEventsByDoctorDateEvent(
             @RequestParam(value = "doctorId") String doctor,
             @RequestParam(value = "dateEvent") String dateEvent,
-            @RequestParam (value = "id") String id) throws ServletException {
-        List<AppointmentDto> dtos = appointmentService.getFreeTimeAppointmentsByDoctorDateEvent(doctor, LocalDate.parse(dateEvent), id);
+            @RequestParam(value = "id") String id) throws ServletException {
+        List<AppointmentDto> dtos = appointmentService
+                .getFreeTimeAppointmentsByDoctorDateEvent(doctor, LocalDate.parse(dateEvent), id);
         List<String> result = new ArrayList<>();
-        dtos.forEach(item->{
+        dtos.forEach(item -> {
             result.add(item.getValue());
         });
-        return new ResponseEntity(result,HttpStatus.OK);
+        return new ResponseEntity(result, HttpStatus.OK);
     }
 
     /**
@@ -200,12 +220,14 @@ public class AppointmentController {
      * @return the response entity included list of appointments
      * @throws ServletException the servlet exception
      */
-    @GetMapping (value = "/appointments/all")
+    @GetMapping(value = "/appointments/all")
     public ResponseEntity<List<AppointmentDto>> freeAppointmentsByDoctorDateEvent(
             @RequestParam(value = "dateEvent") String dateEvent,
-            @RequestParam (value = "timeEvent") String timeEvent) throws ServletException {
-        List<AppointmentDto> result = appointmentService.getAllAppointmentsByDateEventAfterTimeEvent(LocalDate.parse(dateEvent),  LocalTime.parse(timeEvent).minusMinutes(15));
-        return new ResponseEntity(result,HttpStatus.OK);
+            @RequestParam(value = "timeEvent") String timeEvent) throws ServletException {
+        List<AppointmentDto> result = appointmentService
+                .getAllAppointmentsByDateEventAfterTimeEvent(LocalDate.parse(dateEvent),
+                        LocalTime.parse(timeEvent).minusMinutes(15));
+        return new ResponseEntity(result, HttpStatus.OK);
     }
 
     /**
@@ -216,12 +238,13 @@ public class AppointmentController {
      * @return the response entity included  list of appointments
      * @throws ServletException the servlet exception
      */
-    @GetMapping (value = "/appointments/schedule")
+    @GetMapping(value = "/appointments/schedule")
     public ResponseEntity<List<AppointmentDto>> freeAppointmentsInSchedule(
             @RequestParam(value = "doctorId") String doctorId,
             @RequestParam(value = "dateEvent") String dateEvent) throws ServletException {
-            List<AppointmentDto> result = appointmentService.getAppointmentsByDoctorDateEventWithState(doctorId, LocalDate.parse(dateEvent));
-            return new ResponseEntity(result,HttpStatus.OK);
+        List<AppointmentDto> result = appointmentService
+                .getAppointmentsByDoctorDateEventWithState(doctorId, LocalDate.parse(dateEvent));
+        return new ResponseEntity(result, HttpStatus.OK);
     }
 
     /**
@@ -231,10 +254,11 @@ public class AppointmentController {
      * @return the response entity included status of request
      * @throws ServletException the servlet exception
      */
-    @GetMapping (value = "/appointments/isHere/{id}")
-    public ResponseEntity setIsHereForAppointment(@PathVariable(value = "id") String id) throws ServletException {
-       appointmentService.setIsHereForAppointment(id);
-       return new ResponseEntity(HttpStatus.OK);
+    @GetMapping(value = "/appointments/isHere/{id}")
+    public ResponseEntity setIsHereForAppointment(@PathVariable(value = "id") String id)
+            throws ServletException {
+        appointmentService.setIsHereForAppointment(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     /**
@@ -245,12 +269,13 @@ public class AppointmentController {
      * @return the reserved appointments by doctor
      * @throws ServletException the servlet exception
      */
-    @GetMapping (value = "/appointments/reserved")
+    @GetMapping(value = "/appointments/reserved")
     public ResponseEntity<List> getReservedAppointmentsByDoctor(
             @RequestParam(value = "doctorId") String doctorId,
             @RequestParam(value = "dateEvent") String dateEvent) throws ServletException {
-        List result = appointmentService.getReservedAppointmentsByDoctorDateEvent(doctorId, LocalDate.parse(dateEvent));
-        return new ResponseEntity(result,HttpStatus.OK);
+        List result = appointmentService
+                .getReservedAppointmentsByDoctorDateEvent(doctorId, LocalDate.parse(dateEvent));
+        return new ResponseEntity(result, HttpStatus.OK);
     }
 
     /**
@@ -263,14 +288,16 @@ public class AppointmentController {
      * @return the response entity included reserved appointments by doctor
      * @throws ServletException the servlet exception
      */
-    @GetMapping (value = "/appointments/reserved/hasvisit")
+    @GetMapping(value = "/appointments/reserved/hasvisit")
     public ResponseEntity<List> getReservedAppointmentsByDoctorHasVisit(
             @RequestParam(value = "doctorId") String doctorId,
             @RequestParam(value = "dateEvent") String dateEvent,
             @RequestParam(value = "hasVisit") String hasVisit,
             @RequestParam(value = "visitId") String visitId) throws ServletException {
 
-        List result = appointmentService.getReservedAppointmentsByDoctorDateEventHasVisit(doctorId, !dateEvent.equals("")?LocalDate.parse(dateEvent):null,Boolean.valueOf(hasVisit),visitId);
-        return new ResponseEntity(result,HttpStatus.OK);
+        List result = appointmentService.getReservedAppointmentsByDoctorDateEventHasVisit(doctorId,
+                !dateEvent.equals("") ? LocalDate.parse(dateEvent) : null,
+                Boolean.valueOf(hasVisit), visitId);
+        return new ResponseEntity(result, HttpStatus.OK);
     }
 }

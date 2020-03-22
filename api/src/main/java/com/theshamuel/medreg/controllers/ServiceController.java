@@ -1,15 +1,14 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.controllers;
@@ -19,16 +18,23 @@ import com.theshamuel.medreg.model.service.dao.ServiceRepository;
 import com.theshamuel.medreg.model.service.entity.PersonalRate;
 import com.theshamuel.medreg.model.service.entity.Service;
 import com.theshamuel.medreg.model.service.service.ServiceService;
+import java.time.LocalDateTime;
+import java.util.List;
+import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.ServletException;
-import java.time.LocalDateTime;
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * The Service's controller class.
@@ -70,12 +76,14 @@ public class ServiceController {
      * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/services")
-    public ResponseEntity<List<Service>> getServiceOrderByLabel(@RequestParam(value="sort",
-            defaultValue="ASC") String sort) throws ServletException {
+    public ResponseEntity<List<Service>> getServiceOrderByLabel(@RequestParam(value = "sort",
+            defaultValue = "ASC") String sort) throws ServletException {
         Sort.Direction sortDirection = Sort.Direction.ASC;
-        if (sort.toUpperCase().equals("DESC"))
+        if (sort.toUpperCase().equals("DESC")) {
             sortDirection = Sort.Direction.DESC;
-        List<Service> result = serviceRepository.findAll(new Sort(new Sort.Order(sortDirection,"label")));
+        }
+        List<Service> result = serviceRepository
+                .findAll(new Sort(new Sort.Order(sortDirection, "label")));
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
@@ -86,11 +94,13 @@ public class ServiceController {
      * @return the response entity included saved service
      * @throws ServletException the servlet exception
      */
-    @PostMapping (value = "/services", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Service> saveService(@RequestBody Service service) throws ServletException {
-        if (!serviceRepository.isUniqueService(service.getLabel().trim(),service.getPrice()))
-            throw new DuplicateRecordException("Услуга с данным наименованием и ценой уже существует");
-        else {
+    @PostMapping(value = "/services", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Service> saveService(@RequestBody Service service)
+            throws ServletException {
+        if (!serviceRepository.isUniqueService(service.getLabel().trim(), service.getPrice())) {
+            throw new DuplicateRecordException(
+                    "Услуга с данным наименованием и ценой уже существует");
+        } else {
             LocalDateTime now = LocalDateTime.now();
             service.setModifyDate(now);
             service.setCreatedDate(now);
@@ -106,7 +116,8 @@ public class ServiceController {
      * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/services/{id}/service", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<PersonalRate>> getPersonalRatesOfService(@PathVariable("id") String id) throws ServletException{
+    public ResponseEntity<List<PersonalRate>> getPersonalRatesOfService(
+            @PathVariable("id") String id) throws ServletException {
 
         return new ResponseEntity(serviceService.getPersonalRatesByServiceId(id), HttpStatus.OK);
     }
@@ -119,7 +130,8 @@ public class ServiceController {
      * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/services/{id}/doctor", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<PersonalRate>> getPersonalRatesOfDoctor(@PathVariable("id") String id) throws ServletException{
+    public ResponseEntity<List<PersonalRate>> getPersonalRatesOfDoctor(
+            @PathVariable("id") String id) throws ServletException {
 
         return new ResponseEntity(serviceService.getPersonalRatesByDoctorId(id), HttpStatus.OK);
     }
@@ -134,8 +146,8 @@ public class ServiceController {
      */
     @PostMapping(value = "/services/{id}/personalRate", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity addServiceOfVisit(@PathVariable("id") String id,
-                                            @RequestBody PersonalRate personalRate) throws ServletException{
-        serviceService.addPersonalRate(id,personalRate);
+            @RequestBody PersonalRate personalRate) throws ServletException {
+        serviceService.addPersonalRate(id, personalRate);
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -149,8 +161,8 @@ public class ServiceController {
      */
     @DeleteMapping(value = "/services/{id}/personalRate", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity deleteServiceOfVisit(@PathVariable("id") String id,
-                                               @RequestBody PersonalRate personalRate) throws ServletException{
-        serviceService.deletePersonalRate(id,personalRate);
+            @RequestBody PersonalRate personalRate) throws ServletException {
+        serviceService.deletePersonalRate(id, personalRate);
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -163,13 +175,17 @@ public class ServiceController {
      * @throws ServletException the servlet exception
      */
     @PutMapping(value = "/services/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Service> updateService(@PathVariable("id") String id, @RequestBody Service service) throws ServletException{
+    public ResponseEntity<Service> updateService(@PathVariable("id") String id,
+            @RequestBody Service service) throws ServletException {
 
         Service currentService = serviceRepository.findOne(id);
-        if (!currentService.getLabel().toLowerCase().trim().equals(service.getLabel().toLowerCase().trim()) ||
+        if (!currentService.getLabel().toLowerCase().trim()
+                .equals(service.getLabel().toLowerCase().trim()) ||
                 !currentService.getPrice().equals(service.getPrice())) {
-            if (!serviceRepository.isUniqueService(service.getLabel().trim(),service.getPrice()))
-                throw new DuplicateRecordException("Услуга с данным наименованием и ценой уже существует");
+            if (!serviceRepository.isUniqueService(service.getLabel().trim(), service.getPrice())) {
+                throw new DuplicateRecordException(
+                        "Услуга с данным наименованием и ценой уже существует");
+            }
         }
         currentService.setLabel(service.getLabel());
         currentService.setCategory(service.getCategory());
@@ -190,11 +206,13 @@ public class ServiceController {
      * @return the response entity with status of operation
      * @throws ServletException the servlet exception
      */
-    @DeleteMapping (value = "/services/{id}")
-    public ResponseEntity deleteService(@PathVariable(value = "id") String id) throws ServletException {
+    @DeleteMapping(value = "/services/{id}")
+    public ResponseEntity deleteService(@PathVariable(value = "id") String id)
+            throws ServletException {
         Service service = serviceRepository.findOne(id);
-        if (service == null)
+        if (service == null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
         serviceRepository.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }

@@ -1,7 +1,6 @@
 package com.theshamuel.medreg.buiders;
 
 import com.theshamuel.medreg.model.user.entity.User;
-
 import java.util.Map;
 
 public class UserBuilder {

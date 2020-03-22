@@ -1,21 +1,22 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.model.service.entity;
 
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
 import com.theshamuel.medreg.model.types.CategoryOfService;
+import java.math.BigInteger;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -23,18 +24,15 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.math.BigInteger;
-import java.util.List;
-
 /**
  * The Service entity.
- *
+ * <p>
  * The class describe info about service which provide medical center.
  *
  * @author Alex Gladkikh
  */
 @Document(collection = "services")
-public class Service extends BaseEntity{
+public class Service extends BaseEntity {
 
     @Field("label")
     private String label;
@@ -222,17 +220,18 @@ public class Service extends BaseEntity{
      * @return the category label
      */
     public String getCategoryLabel() {
-        if (getCategory()!=null && !getCategory().isEmpty()) {
-            if (getCategory().equals(CategoryOfService.ULTRA))
+        if (getCategory() != null && !getCategory().isEmpty()) {
+            if (getCategory().equals(CategoryOfService.ULTRA)) {
                 return "УЗИ";
-            else if (getCategory().equals(CategoryOfService.CONSUTLATION))
+            } else if (getCategory().equals(CategoryOfService.CONSUTLATION)) {
                 return "Консультации";
-            else if (getCategory().equals(CategoryOfService.ANALYZES))
+            } else if (getCategory().equals(CategoryOfService.ANALYZES)) {
                 return "Анализы";
-            else if (getCategory().equals(CategoryOfService.MAZOK))
+            } else if (getCategory().equals(CategoryOfService.MAZOK)) {
                 return "Мазок";
-            else if (getCategory().equals(CategoryOfService.PCR))
+            } else if (getCategory().equals(CategoryOfService.PCR)) {
                 return "ПЦР";
+            }
         }
         return StringUtils.EMPTY;
     }
@@ -244,9 +243,10 @@ public class Service extends BaseEntity{
      * @return the doctor percent label
      */
     public String getDoctorPercentLabel() {
-        if (getDoctorPayType()!=null && !getDoctorPayType().isEmpty()) {
-           if (getDoctorPayType().equals("percent") && getDoctorPay()!=null )
-                    return getDoctorPay().toString();
+        if (getDoctorPayType() != null && !getDoctorPayType().isEmpty()) {
+            if (getDoctorPayType().equals("percent") && getDoctorPay() != null) {
+                return getDoctorPay().toString();
+            }
         }
         return "-";
     }
@@ -257,9 +257,10 @@ public class Service extends BaseEntity{
      * @return the doctor sum label
      */
     public String getDoctorSumLabel() {
-        if (getDoctorPayType()!=null && !getDoctorPayType().isEmpty()) {
-            if (getDoctorPayType().equals("sum") && getDoctorPay()!=null)
+        if (getDoctorPayType() != null && !getDoctorPayType().isEmpty()) {
+            if (getDoctorPayType().equals("sum") && getDoctorPay() != null) {
                 return getDoctorPay().toString();
+            }
         }
         return "-";
     }
@@ -290,7 +291,9 @@ public class Service extends BaseEntity{
     @Override
     public boolean equals(Object o) {
 
-        if (o == this) return true;
+        if (o == this) {
+            return true;
+        }
         if (!(o instanceof Service)) {
             return false;
         }

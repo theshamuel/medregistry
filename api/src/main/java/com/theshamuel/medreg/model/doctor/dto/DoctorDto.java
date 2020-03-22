@@ -1,23 +1,21 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.model.doctor.dto;
 
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
-import org.springframework.data.annotation.Transient;
-
 import java.time.LocalDateTime;
+import org.springframework.data.annotation.Transient;
 
 /**
  * The Doctor data transaction object class.
@@ -25,6 +23,7 @@ import java.time.LocalDateTime;
  * @author Alex Gladkikh
  */
 public class DoctorDto extends BaseEntity {
+
     private String name;
 
     private String surname;
@@ -51,24 +50,6 @@ public class DoctorDto extends BaseEntity {
     private String positionLabel;
 
     /**
-     * Gets position label.
-     *
-     * @return the position label
-     */
-    public String getPositionLabel() {
-        return positionLabel;
-    }
-
-    /**
-     * Sets position label.
-     *
-     * @param positionLabel the position label
-     */
-    public void setPositionLabel(String positionLabel) {
-        this.positionLabel = positionLabel;
-    }
-
-    /**
      * Instantiates a new Doctor dto.
      */
     public DoctorDto() {
@@ -93,7 +74,10 @@ public class DoctorDto extends BaseEntity {
      * @param positionLabel     the position label
      * @param value             the value
      */
-    public DoctorDto(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author, String name, String surname, String middlename, String position, String phone,Integer isNotWork, Integer excludeFromReport, Integer contractor, String personalRateLabel,  String positionLabel, String value) {
+    public DoctorDto(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author,
+            String name, String surname, String middlename, String position, String phone,
+            Integer isNotWork, Integer excludeFromReport, Integer contractor,
+            String personalRateLabel, String positionLabel, String value) {
         setId(id);
         setCreatedDate(createdDate);
         setModifyDate(modifyDate);
@@ -110,6 +94,24 @@ public class DoctorDto extends BaseEntity {
         this.personalRateLabel = personalRateLabel;
         this.positionLabel = positionLabel;
         setValue(value);
+    }
+
+    /**
+     * Gets position label.
+     *
+     * @return the position label
+     */
+    public String getPositionLabel() {
+        return positionLabel;
+    }
+
+    /**
+     * Sets position label.
+     *
+     * @param positionLabel the position label
+     */
+    public void setPositionLabel(String positionLabel) {
+        this.positionLabel = positionLabel;
     }
 
     /**
@@ -212,21 +214,21 @@ public class DoctorDto extends BaseEntity {
     }
 
     /**
-     * Sets is not work.
-     *
-     * @param isNotWork the is not work
-     */
-    public void setIsNotWork(Integer isNotWork) {
-        this.isNotWork = isNotWork;
-    }
-
-    /**
      * Gets is not work.
      *
      * @return the is not work
      */
     public Integer getIsNotWork() {
         return isNotWork;
+    }
+
+    /**
+     * Sets is not work.
+     *
+     * @param isNotWork the is not work
+     */
+    public void setIsNotWork(Integer isNotWork) {
+        this.isNotWork = isNotWork;
     }
 
     /**
@@ -271,10 +273,11 @@ public class DoctorDto extends BaseEntity {
      * @return the is not work label
      */
     public String getIsNotWorkLabel() {
-        if (getIsNotWork()!=null && getIsNotWork().equals(1))
+        if (getIsNotWork() != null && getIsNotWork().equals(1)) {
             return "Уволен";
-        else
+        } else {
             return "В штате";
+        }
     }
 
 }

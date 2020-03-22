@@ -1,15 +1,14 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.controllers;
@@ -19,16 +18,23 @@ import com.theshamuel.medreg.model.doctor.dao.DoctorRepository;
 import com.theshamuel.medreg.model.doctor.dto.DoctorDto;
 import com.theshamuel.medreg.model.doctor.entity.Position;
 import com.theshamuel.medreg.model.doctor.service.DoctorService;
+import java.time.LocalDateTime;
+import java.util.List;
+import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.ServletException;
-import java.time.LocalDateTime;
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * The Doctor controller class.
@@ -70,12 +76,14 @@ public class DoctorController {
      * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/doctors")
-    public ResponseEntity<List> getDoctorsOrderBySurname(@RequestParam(value="sort",
-            defaultValue="ASC") String sort) throws ServletException {
+    public ResponseEntity<List> getDoctorsOrderBySurname(@RequestParam(value = "sort",
+            defaultValue = "ASC") String sort) throws ServletException {
         Sort.Direction sortDirection = Sort.Direction.ASC;
-        if (sort.toUpperCase().equals("DESC"))
+        if (sort.toUpperCase().equals("DESC")) {
             sortDirection = Sort.Direction.DESC;
-        List<DoctorDto> result = doctorService.findAll(new Sort(new Sort.Order(sortDirection,"surname")));
+        }
+        List<DoctorDto> result = doctorService
+                .findAll(new Sort(new Sort.Order(sortDirection, "surname")));
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
@@ -87,9 +95,12 @@ public class DoctorController {
      * @throws ServletException the servlet exception
      */
     @PostMapping(value = "/doctors", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<DoctorDto> saveDoctor(@RequestBody DoctorDto doctor) throws ServletException {
-        if (!doctorRepository.isUniqueService(doctor.getName(),doctor.getSurname(),doctor.getMiddlename()))
+    public ResponseEntity<DoctorDto> saveDoctor(@RequestBody DoctorDto doctor)
+            throws ServletException {
+        if (!doctorRepository
+                .isUniqueService(doctor.getName(), doctor.getSurname(), doctor.getMiddlename())) {
             throw new DuplicateRecordException("Доктор с таким ФИО уже заведен");
+        }
         LocalDateTime now = LocalDateTime.now();
         doctor.setModifyDate(now);
         doctor.setCreatedDate(now);
@@ -120,13 +131,20 @@ public class DoctorController {
      * @throws ServletException the servlet exception
      */
     @PutMapping(value = "/doctors/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<DoctorDto> updateDoctor(@PathVariable("id") String id, @RequestBody DoctorDto doctor) throws ServletException{
+    public ResponseEntity<DoctorDto> updateDoctor(@PathVariable("id") String id,
+            @RequestBody DoctorDto doctor) throws ServletException {
         DoctorDto currentDoctor = doctorService.findOne(id);
-        if (!doctor.getName().toLowerCase().trim().equals(currentDoctor.getName().toLowerCase().trim()) ||
-                !doctor.getSurname().toLowerCase().trim().equals(currentDoctor.getSurname().toLowerCase().trim()) ||
-                !doctor.getMiddlename().toLowerCase().trim().equals(currentDoctor.getMiddlename().toLowerCase().trim())){
-            if (!doctorRepository.isUniqueService(doctor.getName(),doctor.getSurname(),doctor.getMiddlename()))
+        if (!doctor.getName().toLowerCase().trim()
+                .equals(currentDoctor.getName().toLowerCase().trim()) ||
+                !doctor.getSurname().toLowerCase().trim()
+                        .equals(currentDoctor.getSurname().toLowerCase().trim()) ||
+                !doctor.getMiddlename().toLowerCase().trim()
+                        .equals(currentDoctor.getMiddlename().toLowerCase().trim())) {
+            if (!doctorRepository
+                    .isUniqueService(doctor.getName(), doctor.getSurname(),
+                            doctor.getMiddlename())) {
                 throw new DuplicateRecordException("Доктор с таким ФИО уже заведен");
+            }
         }
         currentDoctor.setName(doctor.getName().trim());
         currentDoctor.setSurname(doctor.getSurname().trim());
@@ -151,11 +169,13 @@ public class DoctorController {
      * @return the response entity with status of operation
      * @throws ServletException the servlet exception
      */
-    @DeleteMapping (value = "/doctors/{id}")
-    public ResponseEntity deleteDoctor(@PathVariable(value = "id") String id) throws ServletException {
+    @DeleteMapping(value = "/doctors/{id}")
+    public ResponseEntity deleteDoctor(@PathVariable(value = "id") String id)
+            throws ServletException {
         DoctorDto doctor = doctorService.findOne(id);
-        if (doctor == null)
+        if (doctor == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
         doctorService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }

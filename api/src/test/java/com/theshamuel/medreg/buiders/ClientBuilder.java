@@ -1,7 +1,6 @@
 package com.theshamuel.medreg.buiders;
 
 import com.theshamuel.medreg.model.client.entity.Client;
-
 import java.time.LocalDate;
 
 /**
@@ -56,6 +55,7 @@ public class ClientBuilder {
         doctor.setPassportNumber(passportNumber);
         return this;
     }
+
     public ClientBuilder passportPlace(String passportPlace) {
         doctor.setPassportPlace(passportPlace);
         return this;

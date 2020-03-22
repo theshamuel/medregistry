@@ -5,7 +5,6 @@ import com.theshamuel.medreg.model.client.entity.Client;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
 import com.theshamuel.medreg.model.service.entity.Service;
 import com.theshamuel.medreg.model.visit.entity.Visit;
-
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalTime;

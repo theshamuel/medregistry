@@ -1,27 +1,25 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.model.client.entity;
 
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
+import java.time.LocalDate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.time.LocalDate;
 
 /**
  * The Client entity class.
@@ -300,15 +298,6 @@ public class Client extends BaseEntity {
     }
 
     /**
-     * Sets passport label.
-     *
-     * @param passportLabel the passport label
-     */
-    public void setPassportLabel(String passportLabel) {
-        this.passportLabel = passportLabel;
-    }
-
-    /**
      * Gets passport date.
      *
      * @return the passport date
@@ -332,13 +321,24 @@ public class Client extends BaseEntity {
      * @return the passport label
      */
     public String getPassportLabel() {
-        if (getPassportSerial()!=null && getPassportNumber()!=null)
+        if (getPassportSerial() != null && getPassportNumber() != null) {
             return getPassportSerial().concat("/").concat(getPassportNumber());
-        else if (getPassportSerial()!=null)
+        } else if (getPassportSerial() != null) {
             return getPassportSerial().concat("/");
-        else if (getPassportNumber()!=null)
+        } else if (getPassportNumber() != null) {
             return "/".concat(getPassportNumber());
-        else return "-";
+        } else {
+            return "-";
+        }
+    }
+
+    /**
+     * Sets passport label.
+     *
+     * @param passportLabel the passport label
+     */
+    public void setPassportLabel(String passportLabel) {
+        this.passportLabel = passportLabel;
     }
 
     /**
@@ -362,16 +362,17 @@ public class Client extends BaseEntity {
     @Override
     public String getValue() {
         StringBuilder value = new StringBuilder();
-        if (getSurname()!=null)
+        if (getSurname() != null) {
             value.append(getSurname());
-        if (getName()!=null && getName().length()>0){
+        }
+        if (getName() != null && getName().length() > 0) {
             value.append(" ");
-            value.append(getName().substring(0,1).toUpperCase());
+            value.append(getName().substring(0, 1).toUpperCase());
             value.append(".");
         }
-        if (getMiddlename()!=null && getMiddlename().length()>0){
+        if (getMiddlename() != null && getMiddlename().length() > 0) {
             value.append(" ");
-            value.append(getMiddlename().substring(0,1).toUpperCase());
+            value.append(getMiddlename().substring(0, 1).toUpperCase());
             value.append(".");
         }
         return value.toString();
@@ -398,7 +399,9 @@ public class Client extends BaseEntity {
     @Override
     public boolean equals(Object o) {
 
-        if (o == this) return true;
+        if (o == this) {
+            return true;
+        }
         if (!(o instanceof Client)) {
             return false;
         }

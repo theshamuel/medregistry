@@ -1,15 +1,14 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.model.visit.dto;
@@ -17,14 +16,13 @@ package com.theshamuel.medreg.model.visit.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
 import com.theshamuel.medreg.model.service.entity.Service;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The Visit data transaction object class.
@@ -93,7 +91,11 @@ public class VisitDto extends BaseEntity {
      * @param phoneLabel    the phone label
      * @param passportLabel the passport label
      */
-    public VisitDto(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author, String contractNum,String doctorId, String doctorLabel, String clientId, List<Service> services,  BigInteger terminalSum, BigInteger totalSum, LocalDate dateEvent, LocalTime timeEvent, String clientLabel, String appointmentId, String dateTimeLabel, String timeLabel, String phoneLabel, String passportLabel) {
+    public VisitDto(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author,
+            String contractNum, String doctorId, String doctorLabel, String clientId,
+            List<Service> services, BigInteger terminalSum, BigInteger totalSum,
+            LocalDate dateEvent, LocalTime timeEvent, String clientLabel, String appointmentId,
+            String dateTimeLabel, String timeLabel, String phoneLabel, String passportLabel) {
         setId(id);
         setCreatedDate(createdDate);
         setModifyDate(modifyDate);
@@ -179,6 +181,15 @@ public class VisitDto extends BaseEntity {
     }
 
     /**
+     * Sets client id.
+     *
+     * @param clientId the client id
+     */
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    /**
      * Gets date event.
      *
      * @return the date event
@@ -212,15 +223,6 @@ public class VisitDto extends BaseEntity {
      */
     public void setTimeEvent(LocalTime timeEvent) {
         this.timeEvent = timeEvent;
-    }
-
-    /**
-     * Sets client id.
-     *
-     * @param clientId the client id
-     */
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
     }
 
     /**
@@ -380,7 +382,9 @@ public class VisitDto extends BaseEntity {
     @Override
     public boolean equals(Object o) {
 
-        if (o == this) return true;
+        if (o == this) {
+            return true;
+        }
         if (!(o instanceof VisitDto)) {
             return false;
         }

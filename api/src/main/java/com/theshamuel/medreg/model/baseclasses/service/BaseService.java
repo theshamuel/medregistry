@@ -1,25 +1,23 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.model.baseclasses.service;
 
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-
-import java.util.List;
 
 /**
  * The interface Base service class.
@@ -61,7 +59,7 @@ public interface BaseService<T extends BaseEntity, E extends BaseEntity> {
      *
      * @return the size of collection
      */
-    long count ();
+    long count();
 
     /**
      * Save dto.
@@ -69,7 +67,7 @@ public interface BaseService<T extends BaseEntity, E extends BaseEntity> {
      * @param dto the dto
      * @return the saved dto
      */
-    T save (T dto);
+    T save(T dto);
 
     /**
      * Find dto by id.

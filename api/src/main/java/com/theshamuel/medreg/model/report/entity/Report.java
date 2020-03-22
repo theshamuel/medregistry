@@ -1,29 +1,27 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.model.report.entity;
 
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
 import com.theshamuel.medreg.model.service.entity.Service;
+import java.time.LocalDateTime;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.time.LocalDateTime;
 
 /**
  * The Report entity class.
@@ -32,6 +30,15 @@ import java.time.LocalDateTime;
  */
 @Document(collection = "reports")
 public class Report extends BaseEntity {
+
+    @Field("label")
+    private String label;
+    @DBRef
+    private Service service;
+    @Field("template")
+    private String template;
+    @Transient
+    private String serviceLabel;
 
     /**
      * Instantiates a new Report.
@@ -50,7 +57,8 @@ public class Report extends BaseEntity {
      * @param service     the service
      * @param template    the template
      */
-    public Report(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author, String label, Service service, String template) {
+    public Report(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author,
+            String label, Service service, String template) {
         setId(id);
         setCreatedDate(createdDate);
         setModifyDate(modifyDate);
@@ -59,18 +67,6 @@ public class Report extends BaseEntity {
         this.service = service;
         this.template = template;
     }
-
-    @Field("label")
-    private String label;
-
-    @DBRef
-    private Service service;
-
-    @Field("template")
-    private String template;
-
-    @Transient
-    private String serviceLabel;
 
     /**
      * Gets label.
@@ -132,13 +128,15 @@ public class Report extends BaseEntity {
      * @return the service label
      */
     public String getServiceLabel() {
-        return getService()!=null?getService().getLabel():"";
+        return getService() != null ? getService().getLabel() : "";
     }
 
     @Override
     public boolean equals(Object o) {
 
-        if (o == this) return true;
+        if (o == this) {
+            return true;
+        }
         if (!(o instanceof Report)) {
             return false;
         }

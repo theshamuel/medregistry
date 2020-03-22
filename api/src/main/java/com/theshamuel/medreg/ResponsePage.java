@@ -1,7 +1,6 @@
 package com.theshamuel.medreg;
 
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
-
 import java.util.List;
 
 /**

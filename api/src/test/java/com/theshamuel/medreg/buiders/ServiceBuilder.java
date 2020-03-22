@@ -2,7 +2,6 @@ package com.theshamuel.medreg.buiders;
 
 import com.theshamuel.medreg.model.service.entity.PersonalRate;
 import com.theshamuel.medreg.model.service.entity.Service;
-
 import java.math.BigInteger;
 import java.util.List;
 

@@ -1,15 +1,14 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.model.schedule.entity;
@@ -17,16 +16,15 @@ package com.theshamuel.medreg.model.schedule.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 /**
  * The Schedule entity class.
@@ -69,6 +67,8 @@ public class Schedule extends BaseEntity implements Comparable {
 
     @Field("intervalOnline")
     private Integer intervalOnline;
+    @Transient
+    private String dateWorkLabel;
 
     /**
      * Instantiates a new Schedule.
@@ -92,7 +92,10 @@ public class Schedule extends BaseEntity implements Comparable {
      * @param timeToOnline   the time to online
      * @param intervalOnline the interval online
      */
-    public Schedule(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author, Doctor doctor, LocalDate dateWork, LocalTime timeFrom, LocalTime timeTo, LocalTime breakFrom, LocalTime breakTo, Integer interval, LocalTime timeFromOnline, LocalTime timeToOnline, Integer intervalOnline) {
+    public Schedule(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author,
+            Doctor doctor, LocalDate dateWork, LocalTime timeFrom, LocalTime timeTo,
+            LocalTime breakFrom, LocalTime breakTo, Integer interval, LocalTime timeFromOnline,
+            LocalTime timeToOnline, Integer intervalOnline) {
         setId(id);
         setCreatedDate(createdDate);
         setModifyDate(modifyDate);
@@ -108,9 +111,6 @@ public class Schedule extends BaseEntity implements Comparable {
         this.timeToOnline = timeToOnline;
         this.intervalOnline = intervalOnline;
     }
-
-    @Transient
-    private String dateWorkLabel;
 
     /**
      * Gets doctor.
@@ -136,8 +136,9 @@ public class Schedule extends BaseEntity implements Comparable {
      * @return the doctor label
      */
     public String getDoctorLabel() {
-        if (getDoctor()!=null)
+        if (getDoctor() != null) {
             return getDoctor().getValue();
+        }
         return "";
     }
 
@@ -165,7 +166,7 @@ public class Schedule extends BaseEntity implements Comparable {
      * @return the date work label
      */
     public String getDateWorkLabel() {
-        return dateWork!=null?dateWork.format(formatterDate):"";
+        return dateWork != null ? dateWork.format(formatterDate) : "";
     }
 
     /**
@@ -321,7 +322,9 @@ public class Schedule extends BaseEntity implements Comparable {
     @Override
     public boolean equals(Object o) {
 
-        if (o == this) return true;
+        if (o == this) {
+            return true;
+        }
         if (!(o instanceof Schedule)) {
             return false;
         }

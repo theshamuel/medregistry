@@ -1,15 +1,14 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.controllers;
@@ -20,6 +19,7 @@ import com.theshamuel.medreg.model.user.entity.User;
 import com.theshamuel.medreg.utils.Utils;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +30,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-
 /**
  * The Auth controller class.
  *
@@ -39,7 +37,8 @@ import java.util.Date;
  */
 @RestController
 public class AuthController {
-    private static Logger logger =  LoggerFactory.getLogger(UserController.class);
+
+    private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
 
     private UserRepository userRepository;
@@ -56,27 +55,32 @@ public class AuthController {
      * @return the response entity
      * @throws NotFoundEntityException
      */
-    @PostMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes=MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity auth(@RequestBody final LoginForm loginForm)
             throws NotFoundEntityException {
 
         User user = userRepository.findByLogin(loginForm.login);
 
-        if (loginForm.login!= null && user!=null) {
-            if (user.getIsBlock()!=null && !user.getIsBlock().equals(1)) {
-                if (user.getPassword().equals(Utils.pwd2sha256(loginForm.password, user.getSalt()))) {
-                    LoginResponse result = new LoginResponse(Jwts.builder().setSubject(loginForm.login)
-                            .claim("roles", user.getRoles()).setIssuedAt(new Date())
-                            .signWith(SignatureAlgorithm.HS256, "secretkey").setExpiration(new Date(System.currentTimeMillis() + 43200000)).compact(),user.getFullname());
+        if (loginForm.login != null && user != null) {
+            if (user.getIsBlock() != null && !user.getIsBlock().equals(1)) {
+                if (user.getPassword()
+                        .equals(Utils.pwd2sha256(loginForm.password, user.getSalt()))) {
+                    LoginResponse result = new LoginResponse(
+                            Jwts.builder().setSubject(loginForm.login)
+                                    .claim("roles", user.getRoles()).setIssuedAt(new Date())
+                                    .signWith(SignatureAlgorithm.HS256, "secretkey")
+                                    .setExpiration(new Date(System.currentTimeMillis() + 43200000))
+                                    .compact(), user.getFullname());
                     return new ResponseEntity(result, HttpStatus.OK);
                 } else {
                     throw new NotFoundEntityException("Неверный пароль");
                 }
-            }else {
+            } else {
                 throw new NotFoundEntityException("Пользователь заблокирован");
             }
-        }else
+        } else {
             throw new NotFoundEntityException("Пользователя с данным логином не существует");
+        }
 
     }
 
@@ -99,9 +103,9 @@ public class AuthController {
          * Instantiates a new Login response.
          *
          * @param token the token
-         * @param name the user name
+         * @param name  the user name
          */
-        public LoginResponse(final String token, final String name ) {
+        public LoginResponse(final String token, final String name) {
             this.token = token;
             this.name = name;
         }

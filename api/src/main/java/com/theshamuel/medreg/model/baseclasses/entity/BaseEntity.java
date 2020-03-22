@@ -1,28 +1,26 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.model.baseclasses.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.mapping.Field;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * The Base entity class.
@@ -30,19 +28,22 @@ import java.util.Locale;
  * @author Alex Gladkikh
  */
 public class BaseEntity implements Serializable {
+
     /**
      * The constant formatterDate (dd.mm.yyyy).
      */
     @Transient
     @JsonIgnore
-    public static final DateTimeFormatter  formatterDate = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault());
+    public static final DateTimeFormatter formatterDate = DateTimeFormatter
+            .ofPattern("dd.MM.yyyy", Locale.getDefault());
 
     /**
      * The constant formatterTime (hh:mm).
      */
     @Transient
     @JsonIgnore
-    public static final  DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault());
+    public static final DateTimeFormatter formatterTime = DateTimeFormatter
+            .ofPattern("HH:mm", Locale.getDefault());
 
 
     @Id
@@ -60,7 +61,7 @@ public class BaseEntity implements Serializable {
     private LocalDateTime modifyDate;
 
     @Transient
-    private String  modifyDateLabel;
+    private String modifyDateLabel;
 
     @Field("author")
     private String author;
@@ -111,7 +112,7 @@ public class BaseEntity implements Serializable {
      * @return the created date string
      */
     public String getCreatedDateLabel() {
-        return createdDate!=null?createdDate.format(formatterDate):"";
+        return createdDate != null ? createdDate.format(formatterDate) : "";
     }
 
     /**
@@ -147,7 +148,7 @@ public class BaseEntity implements Serializable {
      * @return the modify date label
      */
     public String getModifyDateLabel() {
-        return modifyDate!=null?modifyDate.format(formatterDate):"";
+        return modifyDate != null ? modifyDate.format(formatterDate) : "";
     }
 
     /**
@@ -182,16 +183,16 @@ public class BaseEntity implements Serializable {
      *
      * @return the string
      */
-    public String getValue(){
+    public String getValue() {
         return value;
-    };
+    }
 
     /**
      * Set value.
      *
      * @param value the value
      */
-    public void setValue(String value){
+    public void setValue(String value) {
         this.value = value;
     }
 }

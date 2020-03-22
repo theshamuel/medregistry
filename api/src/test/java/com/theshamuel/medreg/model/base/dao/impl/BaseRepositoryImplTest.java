@@ -6,12 +6,11 @@ import com.mongodb.client.MongoDatabase;
 import com.theshamuel.medreg.base.dao.BaseRepositoryTest;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.mongo.tests.MongodForTestsFactory;
+import java.io.IOException;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.springframework.data.mongodb.core.MongoTemplate;
-
-import java.io.IOException;
 
 
 public abstract class BaseRepositoryImplTest implements BaseRepositoryTest {
@@ -19,8 +18,8 @@ public abstract class BaseRepositoryImplTest implements BaseRepositoryTest {
 
     private static final String DB_NAME = "medregDBTest";
     protected static MongoCollection collection;
-    private static MongoClient mongo;
     protected static MongoTemplate template;
+    private static MongoClient mongo;
     private static MongodForTestsFactory factory = null;
     private static MongoDatabase db;
 
@@ -37,8 +36,9 @@ public abstract class BaseRepositoryImplTest implements BaseRepositoryTest {
 
     @AfterClass
     public static void closeDb() {
-        if (factory != null)
+        if (factory != null) {
             factory.shutdown();
+        }
     }
 
     @Before

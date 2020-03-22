@@ -1,27 +1,25 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.model.report.entity;
 
+import java.math.BigInteger;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.math.BigInteger;
-
 /**
- * The Report of workday record class.
- * The one record in report table contained all info about particular service provided in work day
+ * The Report of workday record class. The one record in report table contained all info about
+ * particular service provided in work day
  *
  * @author Alex Gladkikh
  */
@@ -51,7 +49,7 @@ public class ReportOfWorkDayRecord {
      * @param price     the price
      */
     public ReportOfWorkDayRecord(String serviceId, String label, BigInteger price) {
-        this(serviceId,label,price,null,null);
+        this(serviceId, label, price, null, null);
     }
 
     /**
@@ -63,7 +61,8 @@ public class ReportOfWorkDayRecord {
      * @param doctorPayPersonal     the doctor pay personal
      * @param doctorPayTypePersonal the doctor pay type personal
      */
-    public ReportOfWorkDayRecord(String serviceId, String label, BigInteger price, BigInteger doctorPayPersonal, String doctorPayTypePersonal) {
+    public ReportOfWorkDayRecord(String serviceId, String label, BigInteger price,
+            BigInteger doctorPayPersonal, String doctorPayTypePersonal) {
         this.serviceId = serviceId;
         this.label = label;
         this.price = price;
@@ -149,8 +148,9 @@ public class ReportOfWorkDayRecord {
      * @return the sum
      */
     public BigInteger getSum() {
-        if (price!=null)
+        if (price != null) {
             return price.multiply(BigInteger.valueOf(amount));
+        }
         return BigInteger.valueOf(-1);
     }
 
@@ -196,11 +196,12 @@ public class ReportOfWorkDayRecord {
      * @return the salary
      */
     public BigInteger getSalary() {
-        if (doctorPayPersonal!=null && doctorPayTypePersonal!=null){
-            if (doctorPayTypePersonal.equals("percent"))
+        if (doctorPayPersonal != null && doctorPayTypePersonal != null) {
+            if (doctorPayTypePersonal.equals("percent")) {
                 return getSum().multiply(doctorPayPersonal).divide(BigInteger.valueOf(100));
-            else
+            } else {
                 return doctorPayPersonal;
+            }
         }
         return BigInteger.valueOf(0);
     }
@@ -208,7 +209,9 @@ public class ReportOfWorkDayRecord {
     @Override
     public boolean equals(Object o) {
 
-        if (o == this) return true;
+        if (o == this) {
+            return true;
+        }
         if (!(o instanceof ReportOfWorkDayRecord)) {
             return false;
         }

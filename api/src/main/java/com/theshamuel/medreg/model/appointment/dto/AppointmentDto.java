@@ -1,29 +1,27 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.model.appointment.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
 /**
@@ -31,9 +29,10 @@ import java.util.Locale;
  *
  * @author Alex Gladkikh
  */
-public class AppointmentDto extends BaseEntity implements Comparable{
+public class AppointmentDto extends BaseEntity implements Comparable {
 
-    private DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault());
+    private DateTimeFormatter formatterTime = DateTimeFormatter
+            .ofPattern("HH:mm", Locale.getDefault());
 
     private LocalDate dateEvent;
 
@@ -91,7 +90,10 @@ public class AppointmentDto extends BaseEntity implements Comparable{
      * @param isHere              the is here
      * @param isDoubleAppointment the is double appointment
      */
-    public AppointmentDto(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author, LocalDate dateEvent, LocalTime timeEvent, String doctorId, String client, String phone, String service, String doctorLabel, String dateTimeEventLabel, Boolean hasVisit, Boolean isHere, Boolean isDoubleAppointment) {
+    public AppointmentDto(String id, LocalDateTime createdDate, LocalDateTime modifyDate,
+            String author, LocalDate dateEvent, LocalTime timeEvent, String doctorId, String client,
+            String phone, String service, String doctorLabel, String dateTimeEventLabel,
+            Boolean hasVisit, Boolean isHere, Boolean isDoubleAppointment) {
 
         setId(id);
         setCreatedDate(createdDate);
@@ -262,12 +264,15 @@ public class AppointmentDto extends BaseEntity implements Comparable{
      */
     public String getTitle() {
         StringBuilder sb = new StringBuilder();
-        if (getTimeEvent()!=null)
+        if (getTimeEvent() != null) {
             sb.append(getTimeEvent());
-        if (getClient()!=null)
+        }
+        if (getClient() != null) {
             sb.append(" ".concat(client));
-        if (getService()!=null)
+        }
+        if (getService() != null) {
             sb.append(" ".concat(service));
+        }
         return sb.toString();
     }
 
@@ -381,18 +386,26 @@ public class AppointmentDto extends BaseEntity implements Comparable{
 
     @Override
     public int compareTo(Object o) {
-        if (o instanceof AppointmentDto){
+        if (o instanceof AppointmentDto) {
             AppointmentDto appointment = (AppointmentDto) o;
-            if (getDateEvent()!=null && appointment.getDateEvent() !=null && getDateEvent().isAfter(appointment.getDateEvent()))
+            if (getDateEvent() != null && appointment.getDateEvent() != null && getDateEvent()
+                    .isAfter(appointment.getDateEvent())) {
                 return 1;
-            else if (getDateEvent()!=null && appointment.getDateEvent()!=null && getDateEvent().isBefore(appointment.getDateEvent()))
+            } else if (getDateEvent() != null && appointment.getDateEvent() != null
+                    && getDateEvent()
+                    .isBefore(appointment.getDateEvent())) {
                 return -1;
-            else if (getTimeEvent()!=null && appointment.getTimeEvent()!=null && getTimeEvent().isAfter(appointment.getTimeEvent()))
+            } else if (getTimeEvent() != null && appointment.getTimeEvent() != null
+                    && getTimeEvent()
+                    .isAfter(appointment.getTimeEvent())) {
                 return 1;
-            else if (getTimeEvent()!=null && appointment.getTimeEvent()!=null && getTimeEvent().isBefore(appointment.getTimeEvent()))
+            } else if (getTimeEvent() != null && appointment.getTimeEvent() != null
+                    && getTimeEvent()
+                    .isBefore(appointment.getTimeEvent())) {
                 return -1;
-            else
+            } else {
                 return 0;
+            }
 
         }
         return 0;
@@ -401,7 +414,9 @@ public class AppointmentDto extends BaseEntity implements Comparable{
     @Override
     public boolean equals(Object o) {
 
-        if (o == this) return true;
+        if (o == this) {
+            return true;
+        }
         if (!(o instanceof AppointmentDto)) {
             return false;
         }

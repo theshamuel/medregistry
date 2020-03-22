@@ -1,31 +1,29 @@
 /**
- * This private project is a project which automatizate workflow in medical center AVESTA (http://avesta-center.com) called "MedRegistry".
- * The "MedRegistry" demonstrates my programming skills to * potential employers.
- *
- * Here is short description: ( for more detailed description please read README.md or
- * go to https://github.com/theshamuel/medregistry )
- *
- * Front-end: JS, HTML, CSS (basic simple functionality)
- * Back-end: Spring (Spring Boot, Spring IoC, Spring Data, Spring Test), JWT library, Java8
- * DB: MongoDB
- * Tools: git,maven,docker.
- *
+ * This private project is a project which automatizate workflow in medical center AVESTA
+ * (http://avesta-center.com) called "MedRegistry". The "MedRegistry" demonstrates my programming
+ * skills to * potential employers.
+ * <p>
+ * Here is short description: ( for more detailed description please read README.md or go to
+ * https://github.com/theshamuel/medregistry )
+ * <p>
+ * Front-end: JS, HTML, CSS (basic simple functionality) Back-end: Spring (Spring Boot, Spring IoC,
+ * Spring Data, Spring Test), JWT library, Java8 DB: MongoDB Tools: git,maven,docker.
+ * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
 package com.theshamuel.medreg.model.appointment.entity;
 
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 /**
  * The Appointment entity class.
@@ -90,7 +88,10 @@ public class Appointment extends BaseEntity {
      * @param hasVisit    the has visit
      * @param isHere      the is here
      */
-    public Appointment(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author, LocalDate dateEvent, LocalTime timeEvent, Doctor doctor, String client, String phone, String service, Boolean hasVisit, Boolean isHere, Boolean isDoubleAppointment) {
+    public Appointment(String id, LocalDateTime createdDate, LocalDateTime modifyDate,
+            String author, LocalDate dateEvent, LocalTime timeEvent, Doctor doctor, String client,
+            String phone, String service, Boolean hasVisit, Boolean isHere,
+            Boolean isDoubleAppointment) {
         setId(id);
         setCreatedDate(createdDate);
         setModifyDate(modifyDate);
@@ -239,10 +240,11 @@ public class Appointment extends BaseEntity {
      * @return the doctor label
      */
     public String getDoctorLabel() {
-        if (getDoctor()!=null)
+        if (getDoctor() != null) {
             return getDoctor().getValue();
-        else
+        } else {
             return "-";
+        }
     }
 
     /**
@@ -287,12 +289,16 @@ public class Appointment extends BaseEntity {
      * @return the date time event label
      */
     public String getDateTimeEventLabel() {
-        return (getDateEvent()!=null && getTimeEvent()!=null)?getDateEvent().format(formatterDate)+" "+timeEvent.format(formatterTime):"-";
+        return (getDateEvent() != null && getTimeEvent() != null) ?
+                getDateEvent().format(formatterDate) + " " + timeEvent.format(formatterTime) : "-";
     }
+
     @Override
     public boolean equals(Object o) {
 
-        if (o == this) return true;
+        if (o == this) {
+            return true;
+        }
         if (!(o instanceof Appointment)) {
             return false;
         }
