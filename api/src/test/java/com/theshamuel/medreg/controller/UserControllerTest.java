@@ -69,7 +69,7 @@ public class UserControllerTest {
         testUser.setId(id);
         when(userRepository.findOne(id)).thenReturn(testUser);
 
-        mockMvc.perform(get("/api/users/" + id).accept(MediaType.APPLICATION_JSON_UTF8))
+        mockMvc.perform(get("/api/v1/users/" + id).accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(12)));
 
@@ -82,7 +82,7 @@ public class UserControllerTest {
         String id = "00001";
         when(userRepository.findOne(id)).thenReturn(testUser);
 
-        mockMvc.perform(get("/api/users/00001").accept(MediaType.APPLICATION_JSON_UTF8))
+        mockMvc.perform(get("/api/v1/users/00001").accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.*", hasSize(2)))
                 .andExpect(jsonPath("$.message", is("Пользователь с id [00001] не найден")));
@@ -100,7 +100,7 @@ public class UserControllerTest {
 
         when(userRepository.save(testUser)).thenReturn(resultUser);
 
-        mockMvc.perform(post("/api/users/").contentType(MediaType.APPLICATION_JSON_UTF8)
+        mockMvc.perform(post("/api/v1/users/").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(TestUtils.convertObjectToJson(testUser)))
                 .andExpect(status().isCreated());
 
@@ -116,7 +116,7 @@ public class UserControllerTest {
         String login = "admin";
         when(userRepository.findByLogin(login)).thenReturn(testUser);
 
-        mockMvc.perform(post("/api/users/").contentType(MediaType.APPLICATION_JSON_UTF8)
+        mockMvc.perform(post("/api/v1/users/").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(TestUtils.convertObjectToJson(testUser)))
                 .andExpect(status().isConflict());
 
@@ -136,7 +136,7 @@ public class UserControllerTest {
         when(userRepository.findOne("111")).thenReturn(resultUser);
         when(userRepository.save(testUser)).thenReturn(resultUser);
 
-        mockMvc.perform(put("/api/users/111").contentType(MediaType.APPLICATION_JSON_UTF8)
+        mockMvc.perform(put("/api/v1/users/111").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(TestUtils.convertObjectToJson(testUser)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(12)))
@@ -163,7 +163,7 @@ public class UserControllerTest {
         when(userRepository.findOne("111")).thenReturn(resultUser);
         when(userRepository.save(testUser)).thenReturn(resultUser);
 
-        mockMvc.perform(put("/api/users/111").contentType(MediaType.APPLICATION_JSON_UTF8)
+        mockMvc.perform(put("/api/v1/users/111").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(TestUtils.convertObjectToJson(testUser)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(12)))
@@ -186,7 +186,7 @@ public class UserControllerTest {
 
         when(userRepository.findOne("111")).thenReturn(null);
 
-        mockMvc.perform(put("/api/users/111").contentType(MediaType.APPLICATION_JSON_UTF8)
+        mockMvc.perform(put("/api/v1/users/111").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(TestUtils.convertObjectToJson(testUser)))
                 .andExpect(status().isNoContent());
 
@@ -204,7 +204,7 @@ public class UserControllerTest {
         when(userRepository.findOne(testUser.getId())).thenReturn(testUser);
 
         mockMvc.perform(
-                delete("/api/users/" + testUser.getId()).accept(MediaType.APPLICATION_JSON_UTF8))
+                delete("/api/v1/users/" + testUser.getId()).accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
@@ -218,7 +218,7 @@ public class UserControllerTest {
 
         when(userRepository.findOne("111")).thenReturn(null);
 
-        mockMvc.perform(delete("/api/users/111").accept(MediaType.APPLICATION_JSON_UTF8))
+        mockMvc.perform(delete("/api/v1/users/111").accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNoContent());
 
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
@@ -238,7 +238,7 @@ public class UserControllerTest {
         when(userRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "fullname"))))
                 .thenReturn(expectedList);
 
-        mockMvc.perform(get("/api/users/").accept(MediaType.APPLICATION_JSON_UTF8))
+        mockMvc.perform(get("/api/v1/users/").accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(2)))
                 .andExpect(jsonPath("$[0].login", is("admin")))
@@ -259,7 +259,7 @@ public class UserControllerTest {
                 .thenReturn(expectedList);
 
         mockMvc.perform(
-                get("/api/users/").accept(MediaType.APPLICATION_JSON_UTF8).param("sort", "DESC"))
+                get("/api/v1/users/").accept(MediaType.APPLICATION_JSON_UTF8).param("sort", "DESC"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(2)))
                 .andExpect(jsonPath("$[0].login", is("evgit")))
