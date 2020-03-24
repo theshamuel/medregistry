@@ -173,8 +173,8 @@ public class VisitServiceImplTest {
         when(doctorRepository.findOne(doctor.getId())).thenReturn(doctor);
         when(doctorRepository.findOne(doctor2.getId())).thenReturn(doctor2);
 
-        when(visitRepository.findByDateEventAndDoctor(doctor, LocalDate.now())).thenReturn(visits);
-        when(visitRepository.findByDateEventAndDoctor(doctor2, LocalDate.now()))
+        when(visitRepository.findByDoctorAndDateEvent(doctor, LocalDate.now())).thenReturn(visits);
+        when(visitRepository.findByDoctorAndDateEvent(doctor2, LocalDate.now()))
                 .thenReturn(visits2);
 
         List<VisitDto> expected = new ArrayList<>();
@@ -196,8 +196,8 @@ public class VisitServiceImplTest {
 
         verify(doctorRepository, times(1)).findOne(doctor.getId());
         verify(doctorRepository, times(1)).findOne(doctor2.getId());
-        verify(visitRepository, times(1)).findByDateEventAndDoctor(doctor, LocalDate.now());
-        verify(visitRepository, times(1)).findByDateEventAndDoctor(doctor2, LocalDate.now());
+        verify(visitRepository, times(1)).findByDoctorAndDateEvent(doctor, LocalDate.now());
+        verify(visitRepository, times(1)).findByDoctorAndDateEvent(doctor2, LocalDate.now());
 
     }
 

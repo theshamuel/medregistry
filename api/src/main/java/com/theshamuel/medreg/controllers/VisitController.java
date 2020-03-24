@@ -132,6 +132,32 @@ public class VisitController {
     }
 
     /**
+     * Gets visit by doctor and between dates of event.
+     *
+     * @param doctorId       the doctor's id
+     * @param startDateEvent the date event
+     * @param endDateEvent   the date event
+     * @return the list of visit by doctor's id and date event
+     */
+    @GetMapping(value = "/visits/{doctorId}/{startDateEvent}/{endDateEvent}")
+    public ResponseEntity<List<VisitDto>> getVisitByDoctorAndBetweenDateEvent(
+            @PathVariable(value = "doctorId") String doctorId,
+            @PathVariable(value = "startDateEvent") String startDateEvent,
+            @PathVariable(value = "endDateEvent") String endDateEvent) {
+
+        List<VisitDto> result;
+        if (!doctorId.equals("-1")) {
+            result = visitService
+                    .getVisitsByDoctorAndBetweenDateEvent(doctorId, LocalDate.parse(startDateEvent),
+                            LocalDate.parse(endDateEvent));
+        } else {
+            result = visitService.getVisitsBetweenDateEvent(LocalDate.parse(startDateEvent),
+                    LocalDate.parse(endDateEvent));
+        }
+        return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+    /**
      * Save visit.
      *
      * @param visit the visit

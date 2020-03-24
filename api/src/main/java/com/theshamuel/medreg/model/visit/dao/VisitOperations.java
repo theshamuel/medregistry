@@ -53,7 +53,17 @@ public interface VisitOperations {
      * @param dateEvent the date event
      * @return the list
      */
-    List<Visit> findByDateEventAndDoctor(Doctor doctor, LocalDate dateEvent);
+    List<Visit> findByDoctorAndDateEvent(Doctor doctor, LocalDate dateEvent);
+
+    /**
+     * Find by date event and doctor.
+     *
+     * @param doctor    the doctor
+     * @param startDateEvent the start date of period (>=)
+     * @param endDateEvent the end date of period (<=)
+     * @return the list
+     */
+    List<Visit> findByDoctorAndBetweenDateEvent(Doctor doctor, LocalDate startDateEvent, LocalDate endDateEvent);
 
     /**
      * Find all client visits list.

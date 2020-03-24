@@ -53,11 +53,23 @@ public class VisitRepositoryImplTest extends BaseRepositoryImplTest {
     }
 
     @Test
-    public void testFindByDateEventAndDoctor() {
-        List<Visit> actual = visitRepositoryImpl.findByDateEventAndDoctor(doc1, LocalDate.now());
+    public void testFindByDoctorAndDateEvent() {
+        List<Visit> actual = visitRepositoryImpl.findByDoctorAndDateEvent(doc1, LocalDate.now());
         assertThat(actual.size(), is(1));
         actual = visitRepositoryImpl
-                .findByDateEventAndDoctor(new Doctor(), LocalDate.now().plusDays(1));
+                .findByDoctorAndDateEvent(new Doctor(), LocalDate.now().plusDays(1));
+        assertThat(actual.size(), is(0));
+    }
+
+    @Test
+    public void testFindByDoctorAndBetweenDateEvent() {
+        List<Visit> actual = visitRepositoryImpl
+                .findByDoctorAndBetweenDateEvent(doc3, LocalDate.now().minusDays(1),
+                        LocalDate.now());
+        assertThat(actual.size(), is(2));
+        actual = visitRepositoryImpl
+                .findByDoctorAndBetweenDateEvent(new Doctor(), LocalDate.now().minusDays(1),
+                        LocalDate.now());
         assertThat(actual.size(), is(0));
     }
 
@@ -74,7 +86,7 @@ public class VisitRepositoryImplTest extends BaseRepositoryImplTest {
     public void testFindAllClientVisits() {
         List<Visit> actual = visitRepositoryImpl
                 .findAllClientVisits(client1.getId(), CategoryOfService.CONSUTLATION);
-        assertThat(actual.size(), is(1));
+        assertThat(actual.size(), is(2));
         actual = visitRepositoryImpl.findAllClientVisits(client2.getId(), CategoryOfService.ULTRA);
         assertThat(actual.size(), is(0));
     }
@@ -107,9 +119,18 @@ public class VisitRepositoryImplTest extends BaseRepositoryImplTest {
         Appointment appointment3 = new AppointmentBuilder().client("Sidorova Anna")
                 .service("surgeon operation").doctor(doc3).dateEvent(LocalDate.now())
                 .timeEvent(LocalTime.parse("16:00")).build();
+        Appointment appointment4 = new AppointmentBuilder().client("Lenkova Lena")
+                .service("checking").doctor(doc3).dateEvent(LocalDate.now().minusDays(1))
+                .timeEvent(LocalTime.parse("09:00")).build();
+        Appointment appointment5 = new AppointmentBuilder().client("Kotov Kot")
+                .service("surgeon operation").doctor(doc3).dateEvent(LocalDate.now().minusDays(2))
+                .timeEvent(LocalTime.parse("18:00")).build();
+
         template.save(appointment1);
         template.save(appointment2);
         template.save(appointment3);
+        template.save(appointment4);
+        template.save(appointment5);
 
         initCollection("services");
         template.findAllAndRemove(Query.query(Criteria.where("id").exists(true)), Service.class);
@@ -139,23 +160,40 @@ public class VisitRepositoryImplTest extends BaseRepositoryImplTest {
 
         List<Service> services = new ArrayList<>();
         services.add(service1);
+
         Visit visit1 = new VisitBuilder().appointment(appointment1).doctor(doc1).client(client1)
                 .dateEvent(appointment1.getDateEvent()).timeEvent(appointment1.getTimeEvent())
                 .services(services).build();
         services.clear();
         services.add(service2);
+
         Visit visit2 = new VisitBuilder().appointment(appointment2).doctor(doc2).client(client2)
                 .dateEvent(appointment2.getDateEvent()).timeEvent(appointment2.getTimeEvent())
                 .services(services).build();
         services.clear();
         services.add(service3);
+
         visit3 = new VisitBuilder().appointment(appointment3).doctor(doc3).client(client3)
                 .dateEvent(appointment3.getDateEvent()).timeEvent(appointment3.getTimeEvent())
                 .services(services).build();
+
+        Visit visit4 = new VisitBuilder().appointment(appointment4).doctor(doc3).client(client2)
+                .dateEvent(appointment4.getDateEvent()).timeEvent(appointment4.getTimeEvent())
+                .services(services).build();
+        services.clear();
+        services.add(service3);
+
+        Visit visit5 = new VisitBuilder().appointment(appointment5).doctor(doc3).client(client1)
+                .dateEvent(appointment5.getDateEvent()).timeEvent(appointment5.getTimeEvent())
+                .services(services).build();
+        services.clear();
+        services.add(service3);
+
         template.save(visit1);
         template.save(visit2);
         template.save(visit3);
-
+        template.save(visit4);
+        template.save(visit5);
     }
 
     @Override

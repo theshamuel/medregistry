@@ -143,37 +143,32 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
      * {@inheritDoc}
      */
     @Override
-    public List getVisitsByDoctorAndDateEvent(String doctorId, LocalDate dateEvent) {
-        Optional<Doctor> doctor = Optional.ofNullable(doctorRepository.findOne(doctorId));
-        List<VisitDto> result = new ArrayList<>();
-        doctor.ifPresent(e -> {
-            List<Visit> list = visitRepository.findByDateEventAndDoctor(e, dateEvent);
-            result.addAll(list.stream().map(i -> obj2dto(i)).collect(Collectors.toList()));
-            //Calculation sum of visit
-            result.forEach(item -> {
-                if (item.getServices() != null) {
-                    BigInteger totalSum = item.getServices().stream()
-                            .reduce(BigInteger.valueOf(0), (res, p) -> {
-                                        BigInteger percentDiscount = (p.getDiscount() != null
-                                                && p.getDiscount().compareTo(BigInteger.valueOf(0)) > 0) ? p
-                                                .getDiscount() : BigInteger.valueOf(1);
-                                        if (percentDiscount.compareTo(BigInteger.valueOf(1)) > 0) {
-                                            return res = res
-                                                    .add(BigInteger.valueOf(100).subtract(percentDiscount)
-                                                            .multiply(p.getPrice()).abs()
-                                                            .divide(BigInteger.valueOf(100)));
-                                        } else {
-                                            return res = res.add(percentDiscount.multiply(p.getPrice()));
-                                        }
-                                    },
-                                    (sum1, sum2) -> {
-                                        return sum1.add(sum2);
-                                    });
-                    item.setTotalSum(totalSum);
-                }
-            });
-        });
+    public List<VisitDto> getVisitsByDoctorAndDateEvent(String doctorId, LocalDate dateEvent) {
 
+        Doctor doctor = doctorRepository.findOne(doctorId);
+        if (doctor == null)
+            return Collections.emptyList();
+
+        List<VisitDto> result = new ArrayList<>();
+        List<Visit> visitList = visitRepository.findByDoctorAndDateEvent(doctor, dateEvent);
+
+        result.addAll(visitList.stream().map(i -> obj2dto(i)).collect(Collectors.toList()));
+        calculateTotalSumByServices(result);
+
+        return result;
+    }
+
+    @Override
+    public List<VisitDto> getVisitsByDoctorAndBetweenDateEvent(String doctorId,
+            LocalDate startDateEvent, LocalDate endDateEvent) {
+        Doctor doctor = doctorRepository.findOne(doctorId);
+        if (doctor == null)
+            return Collections.emptyList();
+        List<VisitDto> result = new ArrayList<>();
+        List<Visit> visitList = visitRepository.findByDoctorAndBetweenDateEvent(doctor, startDateEvent, endDateEvent);
+
+        result.addAll(visitList.stream().map(i -> obj2dto(i)).collect(Collectors.toList()));
+        calculateTotalSumByServices(result);
         return result;
     }
 
@@ -183,33 +178,12 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
      */
     @Override
     public List<VisitDto> getVisitsByDateEvent(LocalDate dateEvent) {
-        List<VisitDto> result = new ArrayList<>();
 
+        List<VisitDto> result = new ArrayList<>();
         List<Visit> list = visitRepository.findByDateEvent(dateEvent);
+
         result.addAll(list.stream().map(i -> obj2dto(i)).collect(Collectors.toList()));
-        //Calculation sum of visit
-        result.forEach(item -> {
-            if (item.getServices() != null) {
-                BigInteger totalSum = item.getServices().stream()
-                        .reduce(BigInteger.valueOf(0), (res, p) -> {
-                                    BigInteger percentDiscount = (p.getDiscount() != null
-                                            && p.getDiscount().compareTo(BigInteger.valueOf(0)) > 0) ? p
-                                            .getDiscount() : BigInteger.valueOf(1);
-                                    if (percentDiscount.compareTo(BigInteger.valueOf(1)) > 0) {
-                                        return res = res
-                                                .add(BigInteger.valueOf(100).subtract(percentDiscount)
-                                                        .multiply(p.getPrice()).abs()
-                                                        .divide(BigInteger.valueOf(100)));
-                                    } else {
-                                        return res = res.add(percentDiscount.multiply(p.getPrice()));
-                                    }
-                                },
-                                (sum1, sum2) -> {
-                                    return sum1.add(sum2);
-                                });
-                item.setTotalSum(totalSum);
-            }
-        });
+        calculateTotalSumByServices(result);
 
         return result;
     }
@@ -415,5 +389,29 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
                 dto.getAuthor(), dto.getContractNum(), doctor,
                 client, dto.getDateEvent(), dto.getTimeEvent(), appointment, dto.getServices(),
                 dto.getTerminalSum());
+    }
+
+    //Calculation sum of visit
+    public void calculateTotalSumByServices (List<VisitDto> visits) {
+        visits.forEach(item -> {
+            if (item.getServices() != null) {
+                BigInteger totalSum = item.getServices().stream()
+                        .reduce(BigInteger.valueOf(0), (res, p) -> {
+                                    BigInteger percentDiscount = (p.getDiscount() != null
+                                            && p.getDiscount().compareTo(BigInteger.valueOf(0)) > 0) ? p
+                                            .getDiscount() : BigInteger.valueOf(1);
+                                    if (percentDiscount.compareTo(BigInteger.valueOf(1)) > 0) {
+                                        return res
+                                                .add(BigInteger.valueOf(100).subtract(percentDiscount)
+                                                        .multiply(p.getPrice()).abs()
+                                                        .divide(BigInteger.valueOf(100)));
+                                    } else {
+                                        return res.add(percentDiscount.multiply(p.getPrice()));
+                                    }
+                                },
+                                (sum1, sum2) -> sum1.add(sum2));
+                item.setTotalSum(totalSum);
+            }
+        });
     }
 }

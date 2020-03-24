@@ -79,10 +79,25 @@ public class VisitRepositoryImpl implements VisitOperations {
      * {@inheritDoc}
      */
     @Override
-    public List<Visit> findByDateEventAndDoctor(Doctor doctor, LocalDate dateEvent) {
+    public List<Visit> findByDoctorAndDateEvent(Doctor doctor, LocalDate dateEvent) {
         if (doctor.getId() != null) {
             Criteria where = Criteria.where("doctor._id").is(new ObjectId(doctor.getId()))
                     .and("dateEvent").is(dateEvent);
+            Query query = Query.query(where);
+            return mongo.find(query, Visit.class);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Visit> findByDoctorAndBetweenDateEvent(Doctor doctor, LocalDate startDateEvent, LocalDate endDateEvent) {
+        if (doctor.getId() != null) {
+            Criteria where = Criteria.where("doctor._id").is(new ObjectId(doctor.getId()))
+                    .and("dateEvent").gte(startDateEvent).lte(endDateEvent);
             Query query = Query.query(where);
             return mongo.find(query, Visit.class);
         } else {
