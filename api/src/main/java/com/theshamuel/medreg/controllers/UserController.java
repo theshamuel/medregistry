@@ -21,9 +21,6 @@ import com.theshamuel.medreg.model.user.entity.User;
 import com.theshamuel.medreg.utils.Utils;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.servlet.ServletException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -48,8 +45,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class UserController {
 
-    private static Logger logger = LoggerFactory.getLogger(UserController.class);
-
     private UserRepository userRepository;
 
     /**
@@ -67,11 +62,10 @@ public class UserController {
      *
      * @param sort the kind of sort
      * @return the user order by fullname
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/users")
     public ResponseEntity<List<User>> getUsersOrderByFullname(@RequestParam(value = "sort",
-            defaultValue = "ASC") String sort) throws ServletException {
+            defaultValue = "ASC") String sort) {
         Sort.Direction sortDirection = Sort.Direction.ASC;
         if (sort.toUpperCase().equals("DESC")) {
             sortDirection = Sort.Direction.DESC;
@@ -87,11 +81,9 @@ public class UserController {
      *
      * @param id the user's id
      * @return the response entity included user
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/users/{id}")
-    public ResponseEntity<User> findUserById(@PathVariable(value = "id") String id)
-            throws ServletException {
+    public ResponseEntity<User> findUserById(@PathVariable(value = "id") String id) {
         User user = userRepository.findOne(id);
         if (user == null) {
             throw new NotFoundEntityException("Пользователь с id [" + id + "] не найден");
@@ -105,10 +97,9 @@ public class UserController {
      *
      * @param user the user
      * @return the response entity included saved user
-     * @throws ServletException the servlet exception
      */
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> saveUser(@RequestBody User user) throws ServletException {
+    public ResponseEntity<User> saveUser(@RequestBody User user) {
         if (userRepository.findByLogin(user.getLogin()) != null) {
             throw new DuplicateRecordException("Пользователь с данным логином уже заведен");
         } else {
@@ -126,11 +117,9 @@ public class UserController {
      * @param id   the user's id
      * @param user the user
      * @return the response entity included updated user
-     * @throws ServletException the servlet exception
      */
     @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> updateUser(@PathVariable("id") String id, @RequestBody User user)
-            throws ServletException {
+    public ResponseEntity<User> updateUser(@PathVariable("id") String id, @RequestBody User user) {
         User currentUser = userRepository.findOne(id);
         if (currentUser == null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -160,11 +149,9 @@ public class UserController {
      *
      * @param id the user's id
      * @return the response entity with status of operation
-     * @throws ServletException the servlet exception
      */
     @DeleteMapping(value = "/users/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable(value = "id") String id)
-            throws ServletException {
+    public ResponseEntity<User> deleteUser(@PathVariable(value = "id") String id) {
         User user = userRepository.findOne(id);
         if (user == null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
