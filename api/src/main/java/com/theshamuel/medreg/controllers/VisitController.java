@@ -22,9 +22,7 @@ import com.theshamuel.medreg.model.visit.service.VisitService;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
-import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -79,20 +77,18 @@ public class VisitController {
      * @param pgCount the count response records
      * @param pgStart the start cursor position
      * @return the visit order by label
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/visits")
     public ResponseEntity<List<VisitDto>> getVisitOrderByLabel(
             @RequestParam(value = "count", defaultValue = "15") int pgCount,
             @RequestParam(value = "start", defaultValue = "0") int pgStart,
-            @RequestParam(value = "filter", defaultValue = "") String filter)
-            throws ServletException {
+            @RequestParam(value = "filter", defaultValue = "") String filter) {
         Sort.Direction sortDirection = Sort.Direction.ASC;
         int page = 0;
         if (pgStart > 0) {
             page = pgStart / 15;
         }
-        List<VisitDto> result = Collections.emptyList();
+        List<VisitDto> result;
         ResponsePage grid = new ResponsePage();
 
         if (filter != null && filter.trim().length() > 0) {
@@ -119,14 +115,13 @@ public class VisitController {
      * @param doctorId  the doctor's id
      * @param dateEvent the date of event
      * @return the list of visit by doctor's id and date event
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/visits/{doctorId}/{dateEvent}")
     public ResponseEntity<List<VisitDto>> getVisitByDoctorAndDateEvent(
             @PathVariable(value = "doctorId") String doctorId,
-            @PathVariable(value = "dateEvent") String dateEvent) throws ServletException {
+            @PathVariable(value = "dateEvent") String dateEvent) {
 
-        List<VisitDto> result = Collections.emptyList();
+        List<VisitDto> result;
         if (!doctorId.equals("-1")) {
             result = visitService
                     .getVisitsByDoctorAndDateEvent(doctorId, LocalDate.parse(dateEvent));
@@ -141,10 +136,9 @@ public class VisitController {
      *
      * @param visit the visit
      * @return the response entity included saved visit
-     * @throws ServletException the servlet exception
      */
     @PostMapping(value = "/visits", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<VisitDto> saveVisit(@RequestBody VisitDto visit) throws ServletException {
+    public ResponseEntity<VisitDto> saveVisit(@RequestBody VisitDto visit) {
         if (!visitService.isUniqueVisit(visit.getDoctorId(), visit.getAppointmentId())) {
             throw new DuplicateRecordException(
                     "Визит пациента на данную дату и время к доктору уже создан");
@@ -163,11 +157,10 @@ public class VisitController {
      * @param id    the visit's id
      * @param visit the visit
      * @return the response entity
-     * @throws ServletException the servlet exception
      */
     @PutMapping(value = "/visits/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<VisitDto> updateVisit(@PathVariable("id") String id,
-            @RequestBody VisitDto visit) throws ServletException {
+            @RequestBody VisitDto visit) {
         VisitDto currentVisit = visitService.findOne(id);
         if (visit == null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -195,11 +188,9 @@ public class VisitController {
      *
      * @param id the visit's id
      * @return the list of services from visit
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/visits/{id}/services", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<ServiceDto>> getServicesOfVisit(@PathVariable("id") String id)
-            throws ServletException {
+    public ResponseEntity<List<ServiceDto>> getServicesOfVisit(@PathVariable("id") String id) {
 
         return new ResponseEntity(visitService.getServices(id), HttpStatus.OK);
     }
@@ -211,13 +202,11 @@ public class VisitController {
      * @param serviceId the service's id
      * @param discount  the discount
      * @return the response entity with status of operation
-     * @throws ServletException the servlet exception
      */
     @PostMapping(value = "/visits/{id}/services/{serviceId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity addServiceOfVisit(@PathVariable("id") String id,
             @PathVariable("serviceId") String serviceId,
-            @RequestParam(value = "discount", defaultValue = "0") BigInteger discount)
-            throws ServletException {
+            @RequestParam(value = "discount", defaultValue = "0") BigInteger discount) {
         visitService.addService(id, serviceId, discount);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -228,11 +217,10 @@ public class VisitController {
      * @param id        the visit's id
      * @param serviceId the service's id
      * @return the response entity with status of operation
-     * @throws ServletException the servlet exception
      */
     @DeleteMapping(value = "/visits/{id}/services/{serviceId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity deleteServiceOfVisit(@PathVariable("id") String id,
-            @PathVariable("serviceId") String serviceId) throws ServletException {
+            @PathVariable("serviceId") String serviceId) {
         visitService.deleteService(id, serviceId);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -242,11 +230,9 @@ public class VisitController {
      *
      * @param id the visit's id
      * @return the response entity with status of operation
-     * @throws ServletException the servlet exception
      */
     @DeleteMapping(value = "/visits/{id}")
-    public ResponseEntity deleteVisit(@PathVariable(value = "id") String id)
-            throws ServletException {
+    public ResponseEntity deleteVisit(@PathVariable(value = "id") String id) {
         VisitDto visit = visitService.findOne(id);
         if (visit == null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
