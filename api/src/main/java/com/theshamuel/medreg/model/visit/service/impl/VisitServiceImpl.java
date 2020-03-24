@@ -188,6 +188,18 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
         return result;
     }
 
+    @Override
+    public List<VisitDto> getVisitsBetweenDateEvent(LocalDate startDateEvent,
+            LocalDate endDateEvent) {
+
+        List<VisitDto> result = new ArrayList<>();
+        List<Visit> list = visitRepository.findBetweenDateEvent(startDateEvent, endDateEvent);
+
+        result.addAll(list.stream().map(i -> obj2dto(i)).collect(Collectors.toList()));
+        calculateTotalSumByServices(result);
+        return result;
+    }
+
 
     /**
      * {@inheritDoc}

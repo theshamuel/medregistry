@@ -73,6 +73,15 @@ public interface VisitService extends BaseService<VisitDto, Visit> {
     List<VisitDto> getVisitsByDateEvent(LocalDate dateEvent);
 
     /**
+     * Gets visits by date event.
+     *
+     * @param startDateEvent the date event
+     * @param endDateEvent the date event
+     * @return the visits by date event
+     */
+    List<VisitDto> getVisitsBetweenDateEvent(LocalDate startDateEvent, LocalDate endDateEvent);
+
+    /**
      * Add service.
      *
      * @param visitId   the visit id

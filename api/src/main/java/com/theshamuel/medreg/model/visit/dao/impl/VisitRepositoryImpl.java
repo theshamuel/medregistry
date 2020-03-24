@@ -119,6 +119,16 @@ public class VisitRepositoryImpl implements VisitOperations {
      * {@inheritDoc}
      */
     @Override
+    public List<Visit> findBetweenDateEvent(LocalDate startDateEvent, LocalDate endDateEvent) {
+        Criteria where = Criteria.where("dateEvent").gte(startDateEvent).lte(endDateEvent);
+        Query query = Query.query(where);
+        return mongo.find(query, Visit.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public List<Visit> findAllClientVisits(String clientId, String category) {
         Criteria where = Criteria.where("client._id").is(new ObjectId(clientId))
                 .and("services.category").is(category);

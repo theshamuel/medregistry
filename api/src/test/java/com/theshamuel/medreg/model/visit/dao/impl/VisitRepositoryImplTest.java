@@ -83,6 +83,16 @@ public class VisitRepositoryImplTest extends BaseRepositoryImplTest {
     }
 
     @Test
+    public void testFindBetweenDateEvent() {
+        List<Visit> actual = visitRepositoryImpl
+                .findBetweenDateEvent(LocalDate.now().minusDays(1), LocalDate.now());
+        assertThat(actual.size(), is(4));
+        actual = visitRepositoryImpl
+                .findBetweenDateEvent(LocalDate.now().plusDays(1), LocalDate.now().plusDays(2));
+        assertThat(actual.size(), is(0));
+    }
+
+    @Test
     public void testFindAllClientVisits() {
         List<Visit> actual = visitRepositoryImpl
                 .findAllClientVisits(client1.getId(), CategoryOfService.CONSUTLATION);

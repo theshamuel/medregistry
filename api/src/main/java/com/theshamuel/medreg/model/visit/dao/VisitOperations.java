@@ -83,6 +83,15 @@ public interface VisitOperations {
     List<Visit> findByDateEvent(LocalDate dateEvent);
 
     /**
+     * Find between date event.
+     *
+     * @param startDateEvent the start date of period (>=)
+     * @param endDateEvent the end date of period (<=)
+     * @return the list
+     */
+    List<Visit> findBetweenDateEvent(LocalDate startDateEvent, LocalDate endDateEvent);
+
+    /**
      * Sets mongo.
      *
      * @param mongo the mongo
