@@ -84,7 +84,7 @@ public class ReportController {
      */
     @GetMapping(value = "/reports")
     public ResponseEntity<List<ReportDto>> getReportOrderByLabel(@RequestParam(value = "sort",
-            defaultValue = "ASC") String sort) throws ServletException {
+            defaultValue = "ASC") String sort) {
         Sort.Direction sortDirection = Sort.Direction.ASC;
         if (sort.toUpperCase().equals("DESC")) {
             sortDirection = Sort.Direction.DESC;
@@ -103,7 +103,7 @@ public class ReportController {
      */
     @GetMapping(value = "/reports/{visitId}")
     public ResponseEntity<List<ReportDto>> getReportsToVisit(
-            @PathVariable("visitId") String visitId) throws ServletException {
+            @PathVariable("visitId") String visitId) {
         List<ReportDto> result = reportService.getReportsToVisit(visitId);
         return new ResponseEntity(result, HttpStatus.OK);
     }
@@ -119,7 +119,7 @@ public class ReportController {
     @GetMapping(value = "/reports/file/reportOfWorkDay/{dateEvent}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody
     byte[] getReportOfWorkDay(@ModelAttribute("claims") Claims claims,
-            @PathVariable(value = "dateEvent") String dateEvent) throws ServletException {
+            @PathVariable(value = "dateEvent") String dateEvent) {
 
         byte[] file = reportService
                 .getReportOfWorkDay(LocalDate.parse(dateEvent), claims.getSubject());
@@ -138,7 +138,7 @@ public class ReportController {
     @GetMapping(value = "/reports/file/reportOfWorkDayByDoctor/{dateEvent}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody
     ResponseEntity<byte[]> getReportOfWorkDayByDoctor(@ModelAttribute("claims") Claims claims,
-            @PathVariable(value = "dateEvent") String dateEvent) throws ServletException {
+            @PathVariable(value = "dateEvent") String dateEvent) {
 
         byte[] file = reportService
                 .getReportOfWorkDayByDoctor(LocalDate.parse(dateEvent), claims.getSubject());
@@ -162,8 +162,8 @@ public class ReportController {
     ResponseEntity<byte[]> getReportTemplate(
             @PathVariable("clientId") String clientId, @PathVariable("doctorId") String doctorId,
             @PathVariable("reportId") String reportId, @PathVariable("visitId") String visitId,
-            @PathVariable("dateEvent") String dateEvent) throws ServletException {
-        byte[] file = new byte[0];
+            @PathVariable("dateEvent") String dateEvent) {
+        byte[] file;
         if (reportId != null) {
             ReportDto report = reportService.findOne(reportId);
             if (report.getTemplate() != null) {
@@ -194,8 +194,8 @@ public class ReportController {
     @GetMapping(value = "/reports/file/listAppointments/{doctorId}/{dateEvent}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody
     ResponseEntity<byte[]> getReportListOfAppointments(
-            @PathVariable("doctorId") String doctorId, @PathVariable("dateEvent") String dateEvent)
-            throws ServletException {
+            @PathVariable("doctorId") String doctorId,
+            @PathVariable("dateEvent") String dateEvent) {
         byte[] file = reportService
                 .getReportListOfAppointments(doctorId, LocalDate.parse(dateEvent));
 
@@ -215,7 +215,7 @@ public class ReportController {
     public @ResponseBody
     ResponseEntity<byte[]> getWorkTemplate(
             @PathVariable("clientId") String clientId, @PathVariable("doctorId") String doctorId,
-            @PathVariable("dateEvent") String dateEvent) throws ServletException {
+            @PathVariable("dateEvent") String dateEvent) {
 
         byte[] file = reportService
                 .getReportClientCard(clientId, doctorId, LocalDate.parse(dateEvent));
@@ -231,8 +231,7 @@ public class ReportController {
      * @throws ServletException the servlet exception
      */
     @PostMapping(value = "/reports", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<ReportDto> saveReport(@RequestBody ReportDto report)
-            throws ServletException {
+    public ResponseEntity<ReportDto> saveReport(@RequestBody ReportDto report) {
         if (!reportService.isUniqueReport(report.getServiceId(), report.getTemplate())) {
             throw new DuplicateRecordException(
                     "Отчет с данным шаблоном уже привязан к указанной услуге");
@@ -254,7 +253,7 @@ public class ReportController {
      */
     @PutMapping(value = "/reports/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ReportDto> updateReport(@PathVariable("id") String id,
-            @RequestBody ReportDto report) throws ServletException {
+            @RequestBody ReportDto report) {
         ReportDto currentReport = reportService.findOne(id);
         if (report == null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -288,8 +287,7 @@ public class ReportController {
      * @throws ServletException the servlet exception
      */
     @DeleteMapping(value = "/reports/{id}")
-    public ResponseEntity<ReportDto> deleteReport(@PathVariable(value = "id") String id)
-            throws ServletException {
+    public ResponseEntity<ReportDto> deleteReport(@PathVariable(value = "id") String id) {
         ReportDto report = reportService.findOne(id);
         if (report == null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
