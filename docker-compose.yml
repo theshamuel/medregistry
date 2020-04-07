@@ -34,21 +34,21 @@ services:
               - INVITRO_DB_USER=postgres
               - INVITRO_DB_USER_PASSWORD=postgres
 
-      medregapi:
-        build: api
-        hostname: medregapi
-        restart: always
-        container_name: medregapi
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
-        volumes:
-          - ./log/medregistry:/var/log/medregistry
-        ports:
-            - "9001:9000"
-        environment:
+      medregapi-v1:
+          build: api
+          hostname: medregapi-v1
+          restart: always
+          container_name: medregapi-v1
+          logging:
+              driver: json-file
+              options:
+                  max-size: "10m"
+                  max-file: "2"
+          volumes:
+              - ./log/medregistry:/var/log/medregistry
+          ports:
+              - "9001:9000"
+          environment:
               - TZ=Europe/Moscow
               - VERSION=1.1.0
               - REPORT_PATH=/reports
