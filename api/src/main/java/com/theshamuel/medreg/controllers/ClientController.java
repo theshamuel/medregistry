@@ -78,14 +78,12 @@ public class ClientController {
      * @param pgCount the count response records
      * @param pgStart the start cursor position
      * @return the client order by label
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/clients")
     public ResponseEntity<ResponsePage> getClientsOrderByLabel(
             @RequestParam(value = "count", defaultValue = "-1") int pgCount,
             @RequestParam(value = "start", defaultValue = "0") int pgStart,
-            @RequestParam(value = "filter", defaultValue = "") String filter)
-            throws ServletException {
+            @RequestParam(value = "filter", defaultValue = "") String filter) {
         Sort.Direction sortDirection = Sort.Direction.ASC;
         int page = 0;
         if (pgStart > 0) {
@@ -119,11 +117,9 @@ public class ClientController {
      *
      * @param id the client id
      * @return the client
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/clients/{id}")
-    public ResponseEntity<Client> getClientInfo(@PathVariable("id") String id)
-            throws ServletException {
+    public ResponseEntity<Client> getClientInfo(@PathVariable("id") String id) {
         return new ResponseEntity(clientRepository.findOne(id), HttpStatus.OK);
     }
 
@@ -148,10 +144,9 @@ public class ClientController {
      *
      * @param client the client
      * @return the response entity included saved client
-     * @throws ServletException the servlet exception
      */
     @PostMapping(value = "/clients", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Client> saveClient(@RequestBody Client client) throws ServletException {
+    public ResponseEntity<Client> saveClient(@RequestBody Client client) {
         client.setCreatedDate(LocalDateTime.now());
         client.setModifyDate(LocalDateTime.now());
         client.setName(client.getName().trim());
@@ -171,11 +166,10 @@ public class ClientController {
      * @param id     the id
      * @param client the client
      * @return the response entity included updated client
-     * @throws ServletException the servlet exception
      */
     @PutMapping(value = "/clients/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Client> updateClient(@PathVariable("id") String id,
-            @RequestBody Client client) throws ServletException {
+            @RequestBody Client client) {
         Client currentClient = clientRepository.findOne(id);
         if (client == null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -221,11 +215,9 @@ public class ClientController {
      *
      * @param id the client id
      * @return the response entity included status of operation
-     * @throws ServletException the servlet exception
      */
     @DeleteMapping(value = "/clients/{id}")
-    public ResponseEntity deleteClient(@PathVariable(value = "id") String id)
-            throws ServletException {
+    public ResponseEntity deleteClient(@PathVariable(value = "id") String id) {
         Client client = clientRepository.findOne(id);
         if (client == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);

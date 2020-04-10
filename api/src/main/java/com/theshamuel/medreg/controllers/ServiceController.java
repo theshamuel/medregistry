@@ -73,11 +73,10 @@ public class ServiceController {
      *
      * @param sort the kind of sort
      * @return the service order by label
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/services")
     public ResponseEntity<List<Service>> getServiceOrderByLabel(@RequestParam(value = "sort",
-            defaultValue = "ASC") String sort) throws ServletException {
+            defaultValue = "ASC") String sort) {
         Sort.Direction sortDirection = Sort.Direction.ASC;
         if (sort.toUpperCase().equals("DESC")) {
             sortDirection = Sort.Direction.DESC;
@@ -92,11 +91,9 @@ public class ServiceController {
      *
      * @param service the service
      * @return the response entity included saved service
-     * @throws ServletException the servlet exception
      */
     @PostMapping(value = "/services", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Service> saveService(@RequestBody Service service)
-            throws ServletException {
+    public ResponseEntity<Service> saveService(@RequestBody Service service) {
         if (!serviceRepository.isUniqueService(service.getLabel().trim(), service.getPrice())) {
             throw new DuplicateRecordException(
                     "Услуга с данным наименованием и ценой уже существует");
@@ -113,12 +110,10 @@ public class ServiceController {
      *
      * @param id the id
      * @return the list of personal rates of service
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/services/{id}/service", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<PersonalRate>> getPersonalRatesOfService(
-            @PathVariable("id") String id) throws ServletException {
-
+            @PathVariable("id") String id) {
         return new ResponseEntity(serviceService.getPersonalRatesByServiceId(id), HttpStatus.OK);
     }
 
@@ -132,7 +127,6 @@ public class ServiceController {
     @GetMapping(value = "/services/{id}/doctor", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<PersonalRate>> getPersonalRatesOfDoctor(
             @PathVariable("id") String id) throws ServletException {
-
         return new ResponseEntity(serviceService.getPersonalRatesByDoctorId(id), HttpStatus.OK);
     }
 
@@ -142,11 +136,10 @@ public class ServiceController {
      * @param id           the id
      * @param personalRate the personal rate
      * @return the response entity
-     * @throws ServletException the servlet exception
      */
     @PostMapping(value = "/services/{id}/personalRate", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity addServiceOfVisit(@PathVariable("id") String id,
-            @RequestBody PersonalRate personalRate) throws ServletException {
+            @RequestBody PersonalRate personalRate) {
         serviceService.addPersonalRate(id, personalRate);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -157,11 +150,10 @@ public class ServiceController {
      * @param id           the id
      * @param personalRate the personal rate
      * @return the response entity
-     * @throws ServletException the servlet exception
      */
     @DeleteMapping(value = "/services/{id}/personalRate", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity deleteServiceOfVisit(@PathVariable("id") String id,
-            @RequestBody PersonalRate personalRate) throws ServletException {
+            @RequestBody PersonalRate personalRate) {
         serviceService.deletePersonalRate(id, personalRate);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -172,11 +164,10 @@ public class ServiceController {
      * @param id      the service's id
      * @param service the service
      * @return the response entity  included updated service
-     * @throws ServletException the servlet exception
      */
     @PutMapping(value = "/services/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Service> updateService(@PathVariable("id") String id,
-            @RequestBody Service service) throws ServletException {
+            @RequestBody Service service) {
 
         Service currentService = serviceRepository.findOne(id);
         if (!currentService.getLabel().toLowerCase().trim()
@@ -204,11 +195,9 @@ public class ServiceController {
      *
      * @param id the service's id
      * @return the response entity with status of operation
-     * @throws ServletException the servlet exception
      */
     @DeleteMapping(value = "/services/{id}")
-    public ResponseEntity deleteService(@PathVariable(value = "id") String id)
-            throws ServletException {
+    public ResponseEntity deleteService(@PathVariable(value = "id") String id) {
         Service service = serviceRepository.findOne(id);
         if (service == null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);

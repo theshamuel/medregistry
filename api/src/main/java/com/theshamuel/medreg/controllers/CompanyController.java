@@ -77,11 +77,9 @@ public class CompanyController {
      *
      * @param company the company
      * @return the response entity included saved company
-     * @throws ServletException the servlet exception
      */
     @PostMapping(value = "/company", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Company> updateCompany(@RequestBody Company company)
-            throws ServletException {
+    public ResponseEntity<Company> updateCompany(@RequestBody Company company) {
         if (company != null) {
             company = companyRepository.save(company);
             return new ResponseEntity(company, HttpStatus.OK);
@@ -97,11 +95,10 @@ public class CompanyController {
      * @param id      the company id
      * @param company the company
      * @return the response entity included updated company
-     * @throws ServletException the servlet exception
      */
     @PutMapping(value = "/company/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Company> updateCompany(@PathVariable("id") String id,
-            @RequestBody Company company) throws ServletException {
+            @RequestBody Company company) {
         Company currentCompany = companyRepository.findOne(id);
         if (currentCompany != null) {
             currentCompany.setOkpo(company.getOkpo());

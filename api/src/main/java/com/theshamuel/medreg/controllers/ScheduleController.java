@@ -19,9 +19,7 @@ import com.theshamuel.medreg.model.schedule.dto.ScheduleDto;
 import com.theshamuel.medreg.model.schedule.entity.Schedule;
 import com.theshamuel.medreg.model.schedule.service.ScheduleService;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
-import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -67,20 +65,18 @@ public class ScheduleController {
      * Gets schedule order by label.
      *
      * @return the schedule order by label
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/schedule")
     public ResponseEntity<List<ScheduleDto>> getScheduleOrderByLabel(
             @RequestParam(value = "count", defaultValue = "15") int pgCount,
             @RequestParam(value = "start", defaultValue = "0") int pgStart,
-            @RequestParam(value = "filter", defaultValue = "") String filter)
-            throws ServletException {
+            @RequestParam(value = "filter", defaultValue = "") String filter) {
         Sort.Direction sortDirection = Sort.Direction.ASC;
         int page = 0;
         if (pgStart > 0) {
             page = pgStart / 15;
         }
-        List<ScheduleDto> result = Collections.emptyList();
+        List<ScheduleDto> result;
         ResponsePage grid = new ResponsePage();
 
         if (filter != null && filter.trim().length() > 0) {
@@ -105,11 +101,10 @@ public class ScheduleController {
      *
      * @param id the schedule's id
      * @return the schedule order by label
-     * @throws ServletException the servlet exception
      */
     @PostMapping(value = "/schedule/{id}")
     public ResponseEntity<ScheduleDto> copyScheduleByDoctor(@PathVariable(value = "id") String id
-    ) throws ServletException {
+    ) {
 
         ScheduleDto result = scheduleService.copyPaste(id);
         return new ResponseEntity(result, HttpStatus.OK);
@@ -120,11 +115,9 @@ public class ScheduleController {
      *
      * @param schedule the schedule
      * @return the response entity included saved schedule
-     * @throws ServletException the servlet exception
      */
     @PostMapping(value = "/schedule", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<ScheduleDto> saveSchedule(@RequestBody ScheduleDto schedule)
-            throws ServletException {
+    public ResponseEntity<ScheduleDto> saveSchedule(@RequestBody ScheduleDto schedule) {
         if (scheduleService.findByDateWorkAndDoctor(schedule.getDoctor(), schedule.getDateWork())) {
             throw new DuplicateRecordException(
                     "На заданную дату уже существует расписание для указанного доктора");
@@ -142,11 +135,10 @@ public class ScheduleController {
      * @param id       the schedule's id
      * @param schedule the schedule
      * @return the response entity included updated schedule
-     * @throws ServletException the servlet exception
      */
     @PutMapping(value = "/schedule/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Schedule> updateSchedule(@PathVariable("id") String id,
-            @RequestBody ScheduleDto schedule) throws ServletException {
+            @RequestBody ScheduleDto schedule) {
         ScheduleDto currentSchedule = scheduleService.findOne(id);
         if (schedule == null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -182,11 +174,9 @@ public class ScheduleController {
      *
      * @param id the schedule's id
      * @return the response entity with status of operation
-     * @throws ServletException the servlet exception
      */
     @DeleteMapping(value = "/schedule/{id}")
-    public ResponseEntity deleteSchedule(@PathVariable(value = "id") String id)
-            throws ServletException {
+    public ResponseEntity deleteSchedule(@PathVariable(value = "id") String id) {
         ScheduleDto schedule = scheduleService.findOne(id);
         if (schedule == null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);

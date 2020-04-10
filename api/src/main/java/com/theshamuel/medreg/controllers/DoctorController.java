@@ -20,7 +20,6 @@ import com.theshamuel.medreg.model.doctor.entity.Position;
 import com.theshamuel.medreg.model.doctor.service.DoctorService;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -73,11 +72,10 @@ public class DoctorController {
      *
      * @param sort the sort
      * @return the doctor order by surname
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/doctors")
     public ResponseEntity<List> getDoctorsOrderBySurname(@RequestParam(value = "sort",
-            defaultValue = "ASC") String sort) throws ServletException {
+            defaultValue = "ASC") String sort) {
         Sort.Direction sortDirection = Sort.Direction.ASC;
         if (sort.toUpperCase().equals("DESC")) {
             sortDirection = Sort.Direction.DESC;
@@ -92,11 +90,9 @@ public class DoctorController {
      *
      * @param doctor the doctor
      * @return the response entity included doctor
-     * @throws ServletException the servlet exception
      */
     @PostMapping(value = "/doctors", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<DoctorDto> saveDoctor(@RequestBody DoctorDto doctor)
-            throws ServletException {
+    public ResponseEntity<DoctorDto> saveDoctor(@RequestBody DoctorDto doctor) {
         if (!doctorRepository
                 .isUniqueService(doctor.getName(), doctor.getSurname(), doctor.getMiddlename())) {
             throw new DuplicateRecordException("Доктор с таким ФИО уже заведен");
@@ -115,10 +111,9 @@ public class DoctorController {
      * Gets doctor positions.
      *
      * @return the doctor positions
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/doctors/positions")
-    public ResponseEntity<List<Position>> getDoctorPositions() throws ServletException {
+    public ResponseEntity<List<Position>> getDoctorPositions() {
         return new ResponseEntity(doctorService.getAllPositions(), HttpStatus.OK);
     }
 
@@ -128,11 +123,10 @@ public class DoctorController {
      * @param id     the id
      * @param doctor the doctor
      * @return the response entity
-     * @throws ServletException the servlet exception
      */
     @PutMapping(value = "/doctors/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<DoctorDto> updateDoctor(@PathVariable("id") String id,
-            @RequestBody DoctorDto doctor) throws ServletException {
+            @RequestBody DoctorDto doctor) {
         DoctorDto currentDoctor = doctorService.findOne(id);
         if (!doctor.getName().toLowerCase().trim()
                 .equals(currentDoctor.getName().toLowerCase().trim()) ||
@@ -167,11 +161,9 @@ public class DoctorController {
      *
      * @param id the doctor id
      * @return the response entity with status of operation
-     * @throws ServletException the servlet exception
      */
     @DeleteMapping(value = "/doctors/{id}")
-    public ResponseEntity deleteDoctor(@PathVariable(value = "id") String id)
-            throws ServletException {
+    public ResponseEntity deleteDoctor(@PathVariable(value = "id") String id) {
         DoctorDto doctor = doctorService.findOne(id);
         if (doctor == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
