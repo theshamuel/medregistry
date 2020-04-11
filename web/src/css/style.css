@@ -1,3 +1,12 @@
+:root {
+    --white: #f7f7f7;
+    --purplish-grey: #6b6165;
+    --dark-rose: #cb3440;
+    --purplish-brown: #473e41;
+    --beige: #e3cca4;
+    --purplish-grey-light: rgba(107, 97, 101, 0.66);
+}
+
 .login_page {
     text-align: center;
     height: 100%;
@@ -17,10 +26,13 @@
 
 .exit_btn {
     margin-top: 7px;
-    background-color: #D32F2F !important;
-    border-color: #B71A1A !important;
+    background-color: var(--purplish-grey) !important;
+    border-color: var(--purplish-brown) !important;
 }
 
+.exit_btn:hover {
+    color: var(--beige) !important;
+}
 
 /* ---- end buttons ---- */
 
@@ -342,7 +354,7 @@
 }
 
 .menu_bgr {
-    background-color: #E53935!important;
+    background-color: var(--purplish-grey) !important;
     border-color: #e7e7e7;
     border-radius: 4px;
     position: relative;
@@ -407,7 +419,7 @@
 }
 
 .header_line_login {
-    background-color: #D32F2F;
+    background-color: var(--purplish-grey);
     border-color: #e7e7e7;
     border-radius: 4px;
     position: relative;
@@ -448,13 +460,14 @@
 /* Override */
 
 .navbar-default .navbar-nav>li>a {
-    background-color: #E53935!important;
+    background-color: var(--purplish-grey) !important;
     color: #fdfdfd !important;
 }
 
 .navbar-default .navbar-nav>li>a:hover {
     color: #fdfdfd !important;
-    background-color: #b12323 !important;
+    background-color: var(--purplish-brown) !important;
+    color: var(--beige) !important;
 }
 
 h2 {
