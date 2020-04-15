@@ -61,6 +61,15 @@ public class Visit extends BaseEntity {
     @Field("terminalSum")
     private BigInteger terminalSum;
 
+    @Field("diagnosis")
+    private String diagnosis;
+
+    @Field("additionalExamination")
+    private String additionalExamination;
+
+    @Field("therapy")
+    private String therapy;
+
     @Transient
     private String dateTimeLabel;
 
@@ -76,23 +85,27 @@ public class Visit extends BaseEntity {
     /**
      * Instantiates a new Visit.
      *
-     * @param id          the id
-     * @param createdDate the created date
-     * @param modifyDate  the modify date
-     * @param author      the author
-     * @param contractNum the contract num
-     * @param doctor      the doctor
-     * @param client      the client
-     * @param dateEvent   the date event
-     * @param timeEvent   the time event
-     * @param appointment the appointment
-     * @param services    the services
-     * @param terminalSum the terminal sum
+     * @param id                    the id
+     * @param createdDate           the created date
+     * @param modifyDate            the modify date
+     * @param author                the author
+     * @param contractNum           the contract num
+     * @param doctor                the doctor
+     * @param client                the client
+     * @param dateEvent             the date event
+     * @param timeEvent             the time event
+     * @param appointment           the appointment
+     * @param services              the services
+     * @param terminalSum           the terminal sum
+     * @param diagnosis             the diagnosis
+     * @param additionalExamination the additionalExamination
+     * @param therapy               the therapy
      */
     public Visit(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author,
             String contractNum, Doctor doctor, Client client, LocalDate dateEvent,
             LocalTime timeEvent, Appointment appointment, List<Service> services,
-            BigInteger terminalSum) {
+            BigInteger terminalSum, String diagnosis, String additionalExamination,
+            String therapy) {
         setId(id);
         setCreatedDate(createdDate);
         setModifyDate(modifyDate);
@@ -106,6 +119,9 @@ public class Visit extends BaseEntity {
         this.appointment = appointment;
         this.services = services;
         this.terminalSum = terminalSum;
+        this.diagnosis = diagnosis;
+        this.additionalExamination = additionalExamination;
+        this.therapy = therapy;
     }
 
     /**
@@ -215,6 +231,66 @@ public class Visit extends BaseEntity {
      */
     public void setTerminalSum(BigInteger terminalSum) {
         this.terminalSum = terminalSum;
+    }
+
+    /**
+     * Gets diagnosis.
+     *
+     * @return the diagnosis
+     */
+    public String getDiagnosis() {
+        return diagnosis;
+    }
+
+    /**
+     * Sets diagnosis.
+     *
+     * @param diagnosis the diagnosis
+     * @return the diagnosis
+     */
+    public Visit setDiagnosis(String diagnosis) {
+        this.diagnosis = diagnosis;
+        return this;
+    }
+
+    /**
+     * Gets additional examination.
+     *
+     * @return the additional examination
+     */
+    public String getAdditionalExamination() {
+        return additionalExamination;
+    }
+
+    /**
+     * Sets additional examination.
+     *
+     * @param additionalExamination the additional examination
+     * @return the additional examination
+     */
+    public Visit setAdditionalExamination(String additionalExamination) {
+        this.additionalExamination = additionalExamination;
+        return this;
+    }
+
+    /**
+     * Gets therapy.
+     *
+     * @return the therapy
+     */
+    public String getTherapy() {
+        return therapy;
+    }
+
+    /**
+     * Sets therapy.
+     *
+     * @param therapy the therapy
+     * @return the therapy
+     */
+    public Visit setTherapy(String therapy) {
+        this.therapy = therapy;
+        return this;
     }
 
     /**

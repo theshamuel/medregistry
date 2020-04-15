@@ -204,6 +204,9 @@ public class VisitController {
             currentVisit.setAuthor(visit.getAuthor());
             currentVisit.setModifyDate(LocalDateTime.now());
             currentVisit.setTerminalSum(visit.getTerminalSum());
+            currentVisit.setDiagnosis(visit.getDiagnosis());
+            currentVisit.setTherapy(visit.getTherapy());
+            currentVisit.setAdditionalExamination(visit.getAdditionalExamination());
             currentVisit = visitService.save(currentVisit);
             return new ResponseEntity(currentVisit, HttpStatus.OK);
         }

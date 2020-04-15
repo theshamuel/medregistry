@@ -146,8 +146,9 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
     public List<VisitDto> getVisitsByDoctorAndDateEvent(String doctorId, LocalDate dateEvent) {
 
         Doctor doctor = doctorRepository.findOne(doctorId);
-        if (doctor == null)
+        if (doctor == null) {
             return Collections.emptyList();
+        }
 
         List<VisitDto> result = new ArrayList<>();
         List<Visit> visitList = visitRepository.findByDoctorAndDateEvent(doctor, dateEvent);
@@ -162,10 +163,12 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
     public List<VisitDto> getVisitsByDoctorAndBetweenDateEvent(String doctorId,
             LocalDate startDateEvent, LocalDate endDateEvent) {
         Doctor doctor = doctorRepository.findOne(doctorId);
-        if (doctor == null)
+        if (doctor == null) {
             return Collections.emptyList();
+        }
         List<VisitDto> result = new ArrayList<>();
-        List<Visit> visitList = visitRepository.findByDoctorAndBetweenDateEvent(doctor, startDateEvent, endDateEvent);
+        List<Visit> visitList = visitRepository
+                .findByDoctorAndBetweenDateEvent(doctor, startDateEvent, endDateEvent);
 
         result.addAll(visitList.stream().map(i -> obj2dto(i)).collect(Collectors.toList()));
         calculateTotalSumByServices(result);
@@ -370,11 +373,16 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
         String appointmentId =
                 visit.getAppointment() != null ? visit.getAppointment().getId() : null;
 
+        Boolean doctorExcludedFromReport =
+                visit.getDoctor() == null || (visit.getDoctor().getExcludeFromReport() != null
+                        && visit.getDoctor().getExcludeFromReport() == 1);
+
         return new VisitDto(visit.getId(), visit.getCreatedDate(), visit.getModifyDate(),
                 visit.getAuthor(), visit.getContractNum(), doctorId, doctorLabel, clientId,
                 visit.getServices(), visit.getTerminalSum(), BigInteger.valueOf(0),
                 visit.getDateEvent(), visit.getTimeEvent(), clientLabel, appointmentId,
-                visit.getDateTimeLabel(), visit.getTimeLabel(), phoneLabel, passportLabel);
+                visit.getDateTimeLabel(), visit.getTimeLabel(), phoneLabel, passportLabel,
+                doctorExcludedFromReport, visit.getDiagnosis(), visit.getAdditionalExamination(), visit.getTherapy());
     }
 
 
@@ -400,11 +408,11 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
         return new Visit(dto.getId(), dto.getCreatedDate(), dto.getModifyDate(),
                 dto.getAuthor(), dto.getContractNum(), doctor,
                 client, dto.getDateEvent(), dto.getTimeEvent(), appointment, dto.getServices(),
-                dto.getTerminalSum());
+                dto.getTerminalSum(), dto.getDiagnosis(), dto.getAdditionalExamination(), dto.getTherapy());
     }
 
     //Calculation sum of visit
-    public void calculateTotalSumByServices (List<VisitDto> visits) {
+    public void calculateTotalSumByServices(List<VisitDto> visits) {
         visits.forEach(item -> {
             if (item.getServices() != null) {
                 BigInteger totalSum = item.getServices().stream()

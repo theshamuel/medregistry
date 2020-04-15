@@ -60,6 +60,14 @@ public class VisitDto extends BaseEntity {
 
     private BigInteger terminalSum;
 
+    private Boolean doctorExcludedFromReports;
+
+    private String diagnosis;
+
+    private String additionalExamination;
+
+    private String therapy;
+
     /**
      * Instantiates a new Visit dto.
      */
@@ -69,31 +77,33 @@ public class VisitDto extends BaseEntity {
     /**
      * Instantiates a new Visit dto.
      *
-     * @param id            the id
-     * @param createdDate   the created date
-     * @param modifyDate    the modify date
-     * @param author        the author
-     * @param contractNum   the contract num
-     * @param doctorId      the doctor id
-     * @param doctorLabel   the doctor label
-     * @param clientId      the client id
-     * @param services      the services
-     * @param terminalSum   the terminal sum
-     * @param totalSum      the total sum
-     * @param dateEvent     the date event
-     * @param timeEvent     the time event
-     * @param clientLabel   the client label
-     * @param appointmentId the appointment id
-     * @param dateTimeLabel the date time label
-     * @param timeLabel     the time label
-     * @param phoneLabel    the phone label
-     * @param passportLabel the passport label
+     * @param id                        the id
+     * @param createdDate               the created date
+     * @param modifyDate                the modify date
+     * @param author                    the author
+     * @param contractNum               the contract num
+     * @param doctorId                  the doctor id
+     * @param doctorLabel               the doctor label
+     * @param clientId                  the client id
+     * @param services                  the services
+     * @param terminalSum               the terminal sum
+     * @param totalSum                  the total sum
+     * @param dateEvent                 the date event
+     * @param timeEvent                 the time event
+     * @param clientLabel               the client label
+     * @param appointmentId             the appointment id
+     * @param dateTimeLabel             the date time label
+     * @param timeLabel                 the time label
+     * @param phoneLabel                the phone label
+     * @param passportLabel             the passport label
+     * @param doctorExcludedFromReports the doctor excluded from reports
      */
     public VisitDto(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author,
             String contractNum, String doctorId, String doctorLabel, String clientId,
             List<Service> services, BigInteger terminalSum, BigInteger totalSum,
             LocalDate dateEvent, LocalTime timeEvent, String clientLabel, String appointmentId,
-            String dateTimeLabel, String timeLabel, String phoneLabel, String passportLabel) {
+            String dateTimeLabel, String timeLabel, String phoneLabel, String passportLabel, Boolean doctorExcludedFromReports,
+            String diagnosis, String additionalExamination, String therapy) {
         setId(id);
         setCreatedDate(createdDate);
         setModifyDate(modifyDate);
@@ -113,6 +123,10 @@ public class VisitDto extends BaseEntity {
         this.timeLabel = timeLabel;
         this.phoneLabel = phoneLabel;
         this.passportLabel = passportLabel;
+        this.doctorExcludedFromReports = doctorExcludedFromReports;
+        this.diagnosis = diagnosis;
+        this.additionalExamination = additionalExamination;
+        this.therapy = therapy;
     }
 
     /**
@@ -278,6 +292,66 @@ public class VisitDto extends BaseEntity {
     }
 
     /**
+     * Gets diagnosis.
+     *
+     * @return the diagnosis
+     */
+    public String getDiagnosis() {
+        return diagnosis;
+    }
+
+    /**
+     * Sets diagnosis.
+     *
+     * @param diagnosis the diagnosis
+     * @return the diagnosis
+     */
+    public VisitDto setDiagnosis(String diagnosis) {
+        this.diagnosis = diagnosis;
+        return this;
+    }
+
+    /**
+     * Gets additional examination.
+     *
+     * @return the additional examination
+     */
+    public String getAdditionalExamination() {
+        return additionalExamination;
+    }
+
+    /**
+     * Sets additional examination.
+     *
+     * @param additionalExamination the additional examination
+     * @return the additional examination
+     */
+    public VisitDto setAdditionalExamination(String additionalExamination) {
+        this.additionalExamination = additionalExamination;
+        return this;
+    }
+
+    /**
+     * Gets therapy.
+     *
+     * @return the therapy
+     */
+    public String getTherapy() {
+        return therapy;
+    }
+
+    /**
+     * Sets therapy.
+     *
+     * @param therapy the therapy
+     * @return the therapy
+     */
+    public VisitDto setTherapy(String therapy) {
+        this.therapy = therapy;
+        return this;
+    }
+
+    /**
      * Gets client label.
      *
      * @return the client label
@@ -375,6 +449,25 @@ public class VisitDto extends BaseEntity {
      */
     public String getPassportLabel() {
         return passportLabel;
+    }
+
+    /**
+     * Gets doctor excluded from reports.
+     *
+     * @return the doctor excluded from reports
+     */
+    public Boolean getDoctorExcludedFromReports() {
+        return doctorExcludedFromReports;
+    }
+
+    /**
+     * Sets doctor excluded from reports.
+     *
+     * @param doctorExcludedFromReports the doctor excluded from reports
+     * @return the doctor excluded from reports
+     */
+    public Boolean setDoctorExcludedFromReports(Boolean doctorExcludedFromReports) {
+        return doctorExcludedFromReports;
     }
 
     @Override
