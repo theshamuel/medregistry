@@ -13,7 +13,6 @@
  */
 package com.theshamuel.medreg.model.visit.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
 import com.theshamuel.medreg.model.service.entity.Service;
 import java.math.BigInteger;
@@ -47,7 +46,6 @@ public class VisitDto extends BaseEntity {
 
     private String passportLabel;
 
-    @JsonIgnore
     private List<Service> services;
 
     private String clientLabel;
