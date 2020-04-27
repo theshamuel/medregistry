@@ -7,6 +7,27 @@
     --purplish-grey-light: rgba(107, 97, 101, 0.66);
 }
 
+html {
+    margin: 0 auto !important;
+    padding: 0 !important;
+    font-size: 100% !important;
+    vertical-align: baseline !important;
+    min-width: 1280px !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+body {
+    margin: 0 auto !important;
+    padding: 0 !important;
+    font-size: 100% !important;
+    vertical-align: baseline !important;
+    min-width: 1280px !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow-x: hidden !important;
+}
+
 .login_page {
     text-align: center;
     height: 100%;
@@ -230,6 +251,9 @@
 .wrap_list {
     margin-top: 1%;
     margin-left: 1% !important;
+    width: 1535px !important;
+    overflow-y: auto !important;
+    overflow-x: scroll !important;
 }
 
 .lists_appointments {
@@ -349,19 +373,18 @@
 }
 
 /*----------*/
-.font_menu {
-    font-size: 18px;
-}
 
-.menu_bgr {
+.menu {
     background-color: var(--purplish-grey) !important;
-    border-color: #e7e7e7;
     border-radius: 4px;
     position: relative;
-    min-height: 60px;
-    border: 1px solid transparent;
+    height: 55px;
+    font-size: 18px;
+    display: none;
 }
+.wrapper_navbar {
 
+}
 .table_history_visits {
     border: 0px !important;
 }
@@ -420,11 +443,9 @@
 
 .header_line_login {
     background-color: var(--purplish-grey);
-    border-color: #e7e7e7;
-    border-radius: 4px;
     position: relative;
     min-height: 60px;
-    border: 1px solid transparent;
+    display: block;
 }
 
 .login_page:before {
@@ -470,6 +491,17 @@
     color: var(--beige) !important;
 }
 
+.navbar-default .container {
+    width: 1280px;
+    height: 60px;
+
+}
+.navbar-default .container .ul {
+    overflow: auto;
+}
+.navbar-default .container .li{
+    white-space: nowrap;
+}
 h2 {
     color: white;
 }

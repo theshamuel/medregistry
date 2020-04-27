@@ -94,6 +94,16 @@ function run($rootScope, $http, $location, $localStorage) {
     var restrictedPage = publicPages.indexOf($location.path()) === -1;
     if (restrictedPage && !$localStorage.currentUser) {
       $location.path('/login');
+    $rootScope.$on('$routeChangeSuccess', function (event, next, current) {
+        let e = document.getElementById("id_menu")
+        if (e != null) {
+            if (window.location.pathname.includes("login")) {
+                e.style.display = "none"
+            } else {
+                e.style.display = "block"
+            }
+        }
+    });
     }
   });
 
