@@ -17,6 +17,8 @@ import com.theshamuel.medreg.ResponsePage;
 import com.theshamuel.medreg.exception.DuplicateRecordException;
 import com.theshamuel.medreg.model.appointment.dto.AppointmentDto;
 import com.theshamuel.medreg.model.appointment.service.AppointmentService;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -24,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.servlet.ServletException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,6 +53,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class AppointmentController {
+    private static Logger logger = LoggerFactory.getLogger(AppointmentController.class);
 
     /**
      * The com.theshamuel.medreg.model.appointment.entity.Appointment repository.
@@ -294,10 +299,12 @@ public class AppointmentController {
             @RequestParam(value = "dateEvent") String dateEvent,
             @RequestParam(value = "hasVisit") String hasVisit,
             @RequestParam(value = "visitId") String visitId) throws ServletException {
-
-        List result = appointmentService.getReservedAppointmentsByDoctorDateEventHasVisit(doctorId,
+            @RequestParam(value = "visitId") String visitId) {
+        Instant start = Instant.now();
+        List<AppointmentDto> result = appointmentService.getReservedAppointmentsByDoctorDateEventHasVisit(doctorId,
                 !dateEvent.equals("") ? LocalDate.parse(dateEvent) : null,
                 Boolean.valueOf(hasVisit), visitId);
+        logger.debug("Elapsed time getReservedAppointmentsByDoctorHasVisit: {}", Duration.between(start, Instant.now()).toMillis());
         return new ResponseEntity(result, HttpStatus.OK);
     }
 }
