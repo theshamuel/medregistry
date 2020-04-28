@@ -5,12 +5,11 @@ services:
           hostname: medregdb
           restart: always
           container_name: medregdb
-
           logging:
-            driver: json-file
-            options:
-                max-size: "10m"
-                max-file: "5"
+              driver: json-file
+              options:
+                  max-size: "10m"
+                  max-file: "2"
           volumes:
               - ./db/data:/data/db
               - ./backup:/backup
@@ -79,32 +78,6 @@ services:
             - PROXY_PORT=9000
         depends_on:
             - medregapi
-
-      # monit:
-      #   image: umputun/monit-docker
-      #   hostname: monit
-      #   restart: always
-      #   container_name: monit
-      #   logging:
-      #     driver: json-file
-      #     options:
-      #         max-size: "10m"
-      #         max-file: "5"
-      #   ports:
-      #     - "9009:9009"
-      #   volumes:
-      #     - ./monit.conf.d:/etc/monit/conf.d
-      #     - /var/run/docker.sock:/var/run/docker.sock
-      #     - /srv:/hostsrv:ro
-      #     # - /data:/data:ro
-      #     # - /cache:/cache:ro
-      #     - /root:/hostroot:ro
-      #     # - /reports:/reports:ro
-      #     # - /backup:/backup:ro
-
-      #   environment:
-      #     - MHOST=
-      #     - MAIL_SERVER=smtp.yandex.ru port 465 username <> password <> using sslauto
-      #     - ALERT_EMAIL=
-      #     - MONIT_USER=
-      #     - MONIT_PASS=
+# networks:
+#     network1:
+#         name: medreg-network
