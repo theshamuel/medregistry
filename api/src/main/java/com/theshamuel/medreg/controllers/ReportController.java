@@ -21,7 +21,6 @@ import io.jsonwebtoken.Claims;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -80,7 +79,6 @@ public class ReportController {
      *
      * @param sort the kind of sort
      * @return the report order by label
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/reports")
     public ResponseEntity<List<ReportDto>> getReportOrderByLabel(@RequestParam(value = "sort",
@@ -99,7 +97,6 @@ public class ReportController {
      *
      * @param visitId the visit id
      * @return the report order by label
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/reports/{visitId}")
     public ResponseEntity<List<ReportDto>> getReportsToVisit(
@@ -114,7 +111,6 @@ public class ReportController {
      * @param claims    the claims
      * @param dateEvent the date of event
      * @return the response entity included  file of report
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/reports/file/reportOfWorkDay/{dateEvent}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody
@@ -133,7 +129,6 @@ public class ReportController {
      * @param claims    the claims
      * @param dateEvent the date of event
      * @return the response entity included file of report
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/reports/file/reportOfWorkDayByDoctor/{dateEvent}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody
@@ -155,7 +150,6 @@ public class ReportController {
      * @param visitId   the visit id
      * @param dateEvent the date of event
      * @return the response entity included file of report
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/reports/file/reportTemplate/{clientId}/{doctorId}/{reportId}/{visitId}/{dateEvent}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody
@@ -189,7 +183,6 @@ public class ReportController {
      * @param doctorId  the doctor id
      * @param dateEvent the date of event
      * @return the response entity included file of report
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/reports/file/listAppointments/{doctorId}/{dateEvent}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody
@@ -209,7 +202,6 @@ public class ReportController {
      * @param doctorId  the doctor id
      * @param dateEvent the date event
      * @return the report order by label
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/reports/file/clientCard/{clientId}/{doctorId}/{dateEvent}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody
@@ -228,7 +220,6 @@ public class ReportController {
      *
      * @param report the report
      * @return the response entity included saved report template
-     * @throws ServletException the servlet exception
      */
     @PostMapping(value = "/reports", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ReportDto> saveReport(@RequestBody ReportDto report) {
@@ -249,7 +240,6 @@ public class ReportController {
      * @param id     the report id
      * @param report the report
      * @return the response entity with updated report template
-     * @throws ServletException the servlet exception
      */
     @PutMapping(value = "/reports/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ReportDto> updateReport(@PathVariable("id") String id,
@@ -284,7 +274,6 @@ public class ReportController {
      *
      * @param id the report id
      * @return the response entity with status of operation
-     * @throws ServletException the servlet exception
      */
     @DeleteMapping(value = "/reports/{id}")
     public ResponseEntity<ReportDto> deleteReport(@PathVariable(value = "id") String id) {
