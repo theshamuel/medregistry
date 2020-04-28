@@ -759,6 +759,47 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
         logger.debug("Elapsed time getReservedAppointmentsByDoctor: {}", Duration
                 .between(start, Instant.now()).toMillis());
         return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<AppointmentDto> getReservedAppointmentsByDoctorDateEventHasVisit(String doctorId,
+            LocalDate dateEvent, boolean hasVisit) {
+        Instant start = Instant.now();
+        List<AppointmentDto> result = new ArrayList<>();
+        Optional<Doctor> doctor = Optional.ofNullable(doctorRepository.findOne(doctorId));
+        doctor.ifPresent(e -> {
+            List<Appointment> reservedAppointments = appointmentRepository
+                    .findReservedAppointmentsByDoctorAndDateAndHasVisit(e, dateEvent, hasVisit);
+            reservedAppointments.stream().forEachOrdered(item -> {
+                result.add(obj2dto(item));
+            });
+        });
+        logger.debug("Elapsed time getReservedAppointmentsByDoctor: {}", Duration
+                .between(start, Instant.now()).toMillis());
+        return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<AppointmentDto> getReservedAppointmentsByDoctorHasVisit(String doctorId,
+            boolean hasVisit) {
+        Instant start = Instant.now();
+        List<AppointmentDto> result = new ArrayList<>();
+        Optional<Doctor> doctor = Optional.ofNullable(doctorRepository.findOne(doctorId));
+        doctor.ifPresent(e -> {
+            List<Appointment> reservedAppointments = appointmentRepository
+                    .findReservedAppointmentsByDoctorAndHasVisit(e, hasVisit);
+            reservedAppointments.stream().forEachOrdered(item -> {
+                result.add(obj2dto(item));
+            });
+        });
+        logger.debug("Elapsed time getReservedAppointmentsByDoctor: {}", Duration
+                .between(start, Instant.now()).toMillis());
         return result;
     }
 
@@ -775,17 +816,13 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
         visit.ifPresent(i -> {
             apppointment[0] = Optional.ofNullable(i.getAppointment());
         });
-
         Stream<AppointmentDto> stream = null;
         if (dateEvent != null) {
-            stream = getReservedAppointmentsByDoctorDateEvent(doctorId, dateEvent).stream();
+            stream = getReservedAppointmentsByDoctorDateEventHasVisit(doctorId, dateEvent, hasVisit).stream();
         } else {
-            stream = getReservedAppointmentsByDoctor(doctorId).stream();
+            stream = getReservedAppointmentsByDoctorHasVisit(doctorId, hasVisit).stream();
         }
-
-        List<AppointmentDto> result = stream
-                .filter(item -> ((item.getHasVisit() == null) || (item.getHasVisit() != null && item
-                        .getHasVisit().equals(hasVisit)))).collect(Collectors.toList());
+        List<AppointmentDto> result = stream.collect(Collectors.toList());
         apppointment[0].ifPresent(e -> {
             result.add(obj2dto(e));
         });

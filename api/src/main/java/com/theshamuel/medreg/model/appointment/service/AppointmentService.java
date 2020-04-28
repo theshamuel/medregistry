@@ -94,7 +94,7 @@ public interface AppointmentService extends BaseService<AppointmentDto, Appointm
      * @param dateEvent the date event
      * @return the reserved appointments by doctor date event
      */
-    List getReservedAppointmentsByDoctorDateEvent(String doctorId, LocalDate dateEvent);
+    List<AppointmentDto> getReservedAppointmentsByDoctorDateEvent(String doctorId, LocalDate dateEvent);
 
     /**
      * Gets reserved appointments by doctor.
@@ -102,7 +102,26 @@ public interface AppointmentService extends BaseService<AppointmentDto, Appointm
      * @param doctorId the doctor id
      * @return the reserved appointments by doctor
      */
-    List getReservedAppointmentsByDoctor(String doctorId);
+    List<AppointmentDto> getReservedAppointmentsByDoctor(String doctorId);
+
+    /**
+     * Gets reserved appointments by doctor date event.
+     *
+     * @param doctorId  the doctor id
+     * @param dateEvent the date event
+     * @param hasVisit flag og tiding appointment and visit
+     * @return the reserved appointments by doctor date event
+     */
+    List<AppointmentDto> getReservedAppointmentsByDoctorDateEventHasVisit(String doctorId, LocalDate dateEvent, boolean hasVisit);
+
+    /**
+     * Gets reserved appointments by doctor.
+     *
+     * @param doctorId the doctor id
+     * @param hasVisit flag og tiding appointment and visit
+     * @return the reserved appointments by doctor
+     */
+    List<AppointmentDto> getReservedAppointmentsByDoctorHasVisit(String doctorId, boolean hasVisit);
 
     /**
      * Gets reserved appointments by doctor date event which has visit.
@@ -113,7 +132,7 @@ public interface AppointmentService extends BaseService<AppointmentDto, Appointm
      * @param visitId   the visit id
      * @return the reserved appointments by doctor date event which has visit
      */
-    List getReservedAppointmentsByDoctorDateEventHasVisit(
+    List<AppointmentDto> getReservedAppointmentsByDoctorDateEventHasVisit(
             String doctorId, LocalDate dateEvent, Boolean hasVisit, String visitId);
 
     /**

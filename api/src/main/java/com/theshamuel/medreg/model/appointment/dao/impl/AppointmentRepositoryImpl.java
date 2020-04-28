@@ -123,6 +123,39 @@ public class AppointmentRepositoryImpl implements AppointmentOperations {
                 .with(new Sort(new Sort.Order(Sort.Direction.ASC, "dateEvent")))
                 .with(new Sort(new Sort.Order(Sort.Direction.ASC, "timeEvent")));
         List result = mongo.find(query, Appointment.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Appointment> findReservedAppointmentsByDoctorAndDateAndHasVisit(Doctor doctor,
+            LocalDate dateEvent, boolean hasVisit) {
+        Instant start = Instant.now();
+        Criteria where = Criteria.where("doctor").is(doctor).and("dateEvent").is(dateEvent)
+                .and("hasVisit").is(hasVisit);
+        Query query = Query.query(where)
+                .with(new Sort(new Sort.Order(Sort.Direction.ASC, "dateEvent")))
+                .with(new Sort(new Sort.Order(Sort.Direction.ASC, "timeEvent")));
+        List result = mongo.find(query, Appointment.class);
+        logger.debug("Elapsed time findReservedAppointmentsByDoctorAndDate: {}", Duration
+                .between(start, Instant.now()).toMillis());
+        return result != null ? result : Collections.emptyList();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Appointment> findReservedAppointmentsByDoctorAndHasVisit(Doctor doctor,
+            boolean hasVisit) {
+        Instant start = Instant.now();
+        Criteria where = Criteria.where("doctor").is(doctor).and("hasVisit").is(hasVisit);
+        Query query = Query.query(where)
+                .with(new Sort(new Sort.Order(Sort.Direction.ASC, "dateEvent")))
+                .with(new Sort(new Sort.Order(Sort.Direction.ASC, "timeEvent")));
+        List result = mongo.find(query, Appointment.class);
+        logger.debug("Elapsed time findReservedAppointmentsByDoctor: {}", Duration
+                .between(start, Instant.now()).toMillis());
         return result != null ? result : Collections.emptyList();
     }
 

@@ -84,7 +84,7 @@ public class AppointmentServiceImplTest {
                                 .dateEvent(LocalDate.now()).timeEvent(LocalTime.of(8, 30))
                                 .hasVisit(false).build());
         when(appointmentRepository
-                .findReservedAppointmentsByDoctorAndDate(docIvanov, LocalDate.now()))
+                .findReservedAppointmentsByDoctorAndDateAndHasVisit(docIvanov, LocalDate.now(), true))
                 .thenReturn(appointmentList);
         when(doctorRepository.findOne("d0001")).thenReturn(docIvanov);
         when(scheduleRepository.findByDateWorkAndDoctor(docIvanov, LocalDate.now()))
@@ -96,15 +96,20 @@ public class AppointmentServiceImplTest {
         List<AppointmentDto> actualDto = appointmentService
                 .getReservedAppointmentsByDoctorDateEventHasVisit(docIvanov.getId(),
                         LocalDate.now(), true, visitToIvanov.getId());
-        assertThat(actualDto.size(), is(2));
+        assertThat(actualDto.size(), is(3));
 
+        when(appointmentRepository
+                .findReservedAppointmentsByDoctorAndDateAndHasVisit(docIvanov, LocalDate.now(), false))
+                .thenReturn(Collections.emptyList());
         actualDto = appointmentService
                 .getReservedAppointmentsByDoctorDateEventHasVisit(docIvanov.getId(),
                         LocalDate.now(), false, visitToIvanov.getId());
-        assertThat(actualDto.size(), is(1));
+        assertThat(actualDto.size(), is(0));
 
-        verify(appointmentRepository, times(2))
-                .findReservedAppointmentsByDoctorAndDate(docIvanov, LocalDate.now());
+        verify(appointmentRepository, times(1))
+                .findReservedAppointmentsByDoctorAndDateAndHasVisit(docIvanov, LocalDate.now(), true);
+        verify(appointmentRepository, times(1))
+                .findReservedAppointmentsByDoctorAndDateAndHasVisit(docIvanov, LocalDate.now(), false);
 
     }
 

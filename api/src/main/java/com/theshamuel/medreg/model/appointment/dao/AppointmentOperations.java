@@ -61,6 +61,25 @@ public interface AppointmentOperations {
     List<Appointment> findReservedAppointmentsByDoctor(Doctor doctor);
 
     /**
+     * Find reserved appointments by doctor and date list.
+     *
+     * @param doctor    the doctor
+     * @param dateEvent the date event
+     * @return the list of appointments
+     */
+    List<Appointment> findReservedAppointmentsByDoctorAndDateAndHasVisit(Doctor doctor,
+            LocalDate dateEvent, boolean hasVisit);
+
+    /**
+     * Find reserved appointments by doctor list that has no related visits.
+     *
+     * @param doctor the doctor
+     * @param hasVisit the hasVisit
+     * @return the list of appointments
+     */
+    List<Appointment> findReservedAppointmentsByDoctorAndHasVisit(Doctor doctor, boolean hasVisit);
+
+    /**
      * Find by date time event and doctor appointment.
      *
      * @param doctor    the doctor
