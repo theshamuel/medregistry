@@ -20,13 +20,18 @@ import com.theshamuel.medreg.model.service.dto.ServiceDto;
 import com.theshamuel.medreg.model.visit.dto.VisitDto;
 import com.theshamuel.medreg.model.visit.service.VisitService;
 import java.math.BigInteger;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +53,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class VisitController {
+
+    private static Logger logger = LoggerFactory.getLogger(VisitController.class);
 
     /**
      * The Visit service.
@@ -83,14 +90,14 @@ public class VisitController {
             @RequestParam(value = "count", defaultValue = "15") int pgCount,
             @RequestParam(value = "start", defaultValue = "0") int pgStart,
             @RequestParam(value = "filter", defaultValue = "") String filter) {
-        Sort.Direction sortDirection = Sort.Direction.ASC;
+        Sort.Direction sortDirection = Direction.DESC;
         int page = 0;
         if (pgStart > 0) {
             page = pgStart / 15;
         }
         List<VisitDto> result;
         ResponsePage grid = new ResponsePage();
-
+        Instant start = Instant.now();
         if (filter != null && filter.trim().length() > 0) {
             Page p = visitService.findByFilter(new PageRequest(page, pgCount,
                     new Sort(new Sort.Order(sortDirection, "dateEvent"),
@@ -105,6 +112,8 @@ public class VisitController {
         }
         grid.setData(result);
         grid.setPos(pgStart);
+        Instant finish = Instant.now();
+        logger.debug("Elapsed time getVisitOrderByLabel: {}", Duration.between(start, finish).toMillis());
         return new ResponseEntity(grid, HttpStatus.OK);
     }
 
