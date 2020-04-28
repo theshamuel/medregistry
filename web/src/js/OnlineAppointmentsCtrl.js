@@ -192,13 +192,4 @@ function OnlineAppointmentsCtrl($http, $location, $localStorage, $scope, uiGridC
             $scope.logout();
         }
     }
-
-    $scope.logout = function () {
-        $localStorage.currentUser = null;
-        $scope.userLogin = '';
-        $scope.userPassword = '';
-        $http.defaults.headers.common.Authorization = '';
-        // $location.path('/');
-        $window.location.href = '/login';
-    };
 }

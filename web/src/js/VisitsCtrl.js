@@ -4,18 +4,18 @@ angular
     .controller('VisitsCtrl', VisitsCtrl)
 
 function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridConstants, i18nService, $uibModal, dialogs, $route) {
-    var version_api = "v1";
-    
+    let version_api = "v1";
+
     i18nService.setCurrentLang('ru');
     $scope.lang = 'ru-RU';
     $scope.language = 'Russian';
     $scope.visitId = "";
 
     $scope.colums = [{
-            id: "dateTimeLabel",
-            header: 'Дата и время приема',
-            width: 225
-        },
+        id: "dateTimeLabel",
+        header: 'Дата и время приема',
+        width: 225
+    },
         {
             id: "doctorLabel",
             header: 'ФИО доктора',
@@ -39,51 +39,55 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
     ];
 
 
-    var dateEvent = new Date();
-    var formatDate = webix.Date.dateToStr("%d.%m.%Y");
+    let formatDate = webix.Date.dateToStr("%d.%m.%Y");
 
     // +
     $scope.reloadComboClients = function () {
-        var dataClient = [];
-        var url = "/api/"+version_api+"/clients";
+        console.time("call reloadComboClients")
+        let dataClient = [];
+        let url = "/api/"+version_api+"/clients";
         webix.ajax().headers($localStorage.headers.value).sync().get(url, {
             success: function (text, data, XmlHttpRequest) {
                 dataClient = JSON.parse(text);
             },
             error: function (text, data, XmlHttpRequest) {
-                //Сделать стандартные проверки
                 $scope.checkAuth(XmlHttpRequest);
             }
         });
         $$('cmbClient').define("options", dataClient);
         $$('cmbClient').refresh();
+        console.timeEnd("call reloadComboClients")
     };
     // +
     $scope.getAllInfoClientById = function () {
-        var dataClient = [];
+        console.time("call getAllInfoClientById")
+        let dataClient = [];
         if ($$("cmbClient").getValue() != null && $$("cmbClient").getValue() != undefined && $$("cmbClient").getValue() != "") {
-            var url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
+            let url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataClient = JSON.parse(text);
                 },
                 error: function (text, data, XmlHttpRequest) {
-                    //Сделать стандартные проверки
                     $scope.checkAuth(XmlHttpRequest);
                 }
             });
 
         }
+        let elapsed = (new Date() - startElapsed ) / 1000;
+        console.timeEnd("call getAllInfoClientById")
         return dataClient;
     };
     // +
     $scope.getReservedAppoinmentsHasVisit = function () {
-        var dataAppointments = [];
+        console.time("call getReservedAppoinmentsHasVisit")
+        let dataAppointments = [];
         if ($$("cmbDoctorOnForm").getValue() != null && $$("cmbDoctorOnForm").getValue() != undefined && $$("cmbDoctorOnForm").getValue() != "") {
-            var id = $scope.visitId;
-            var url = "/api/"+version_api+"/appointments/reserved/hasvisit?doctorId=" + $$("cmbDoctorOnForm").getValue() + "&dateEvent=" + "&hasVisit=false&visitId";
+            let id = $scope.visitId;
+            let url = "/api/"+version_api+"/appointments/reserved/hasvisit?doctorId=" + $$("cmbDoctorOnForm").getValue() + "&dateEvent=" + "&hasVisit=false&visitId";
             if (id != undefined)
                 url = url + "=" + id;
+            console.log("getReservedAppoinmentsHasVisit url=", url)
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataAppointments = JSON.parse(text);
@@ -95,15 +99,18 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             $$('cmbAppointments').define("options", dataAppointments);
             $$('cmbAppointments').refresh();
         }
+        console.timeEnd("call getReservedAppoinmentsHasVisit")
     };
     // +
     $scope.getInfoClient = function () {
-        var passportLabelClient = "";
-        var birthdayClient = "";
-        var phoneClient = "";
-        var addressClient = "";
+        console.time("call getInfoClient")
+        let start = new Date();
+        let passportLabelClient = "";
+        let birthdayClient = "";
+        let phoneClient = "";
+        let addressClient = "";
         if ($$("cmbClient").getValue() != null && $$("cmbClient").getValue() != undefined && $$("cmbClient").getValue() != "") {
-            var url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
+            let url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     passportLabelClient = JSON.parse(text).passportLabel;
@@ -112,7 +119,6 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     addressClient = JSON.parse(text).address;
                 },
                 error: function (text, data, XmlHttpRequest) {
-                    //Сделать стандартные проверки
                     $scope.checkAuth(XmlHttpRequest);
                 }
             });
@@ -121,14 +127,17 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         $$("birthday").setValue(birthdayClient);
         $$("phone").setValue(phoneClient);
         $$("address").setValue(addressClient);
+        let elapsed = (new Date() - start ) / 1000;
+        console.timeEnd("call getInfoClient")
     };
-    // +   
+    // +
     $scope.getHistoryVisits = function () {
-        var dataOfHistiryVisits = [];
-        var dataOfHistiryUltra = [];
-        var dataOfHistiryAnalyzes = [];
-        var url = "";
-        var id = $scope.clientId;
+        console.time("call getHistoryVisits")
+        let dataOfHistiryVisits = [];
+        let dataOfHistiryUltra = [];
+        let dataOfHistiryAnalyzes = [];
+        let url = "";
+        let id = $scope.clientId;
         if (id != null && id != "") {
             url = "/api/"+version_api+"/clients/" + id + "/consult";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
@@ -167,20 +176,20 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         $$("gridHistoryUltra").parse(dataOfHistiryUltra);
         $$("gridHistoryAnalyzes").clearAll();
         $$("gridHistoryAnalyzes").parse(dataOfHistiryAnalyzes);
+        console.timeEnd("call getHistoryVisits")
     };
     // +
     $scope.getServicesOfVisit = function () {
-        var dataOfServices = [];
-        var url = "";
-        var id = $scope.visitId;
-        var error = false;
+        console.time("call getServicesOfVisit")
+        let dataOfServices = [];
+        let url = "";
+        let id = $scope.visitId;
+        let error = false;
         if (id != null && id != "" && id != undefined) {
             url = "/api/"+version_api+"/visits/" + id + "/services";
-            console.log("url=" + url);
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataOfServices = text;
-                    console.log("services=" + text);
                 },
                 error: function (text, data, XmlHttpRequest) {
                     $scope.checkAuth(XmlHttpRequest);
@@ -195,12 +204,14 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         } else {
             error = false;
         }
+        console.timeEnd("call getServicesOfVisit")
     };
     // +
     $scope.getReportsOfVisit = function () {
-        var dataOfReports = [];
-        var url = "";
-        var id = $scope.visitId;
+        console.time("call getReportsOfVisit")
+        let dataOfReports = [];
+        let url = "";
+        let id = $scope.visitId;
         if (id != null && id != "") {
             url = "/api/"+version_api+"/reports/" + id;
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
@@ -215,29 +226,35 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         }
         $$("gridReports").clearAll();
         $$("gridReports").parse(dataOfReports);
+        console.timeEnd("call getReportsOfVisit")
     };
 
     // +
     $scope.printCardClient = function () {
-        var dateReport = new Date();
-        var clientId = $$("cmbClient").getValue();
-        var doctorId = $$("cmbDoctorOnForm").getValue();
-        var url = "/api/"+version_api+"/reports/file/clientCard/" + clientId + "/" + doctorId + "/" + dateReport.toJSON();
+        console.time("call printCardClient")
+        let dateReport = new Date();
+        let clientId = $$("cmbClient").getValue();
+        let doctorId = $$("cmbDoctorOnForm").getValue();
+        let url = "/api/"+version_api+"/reports/file/clientCard/" + clientId + "/" + doctorId + "/" + dateReport.toJSON();
         webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
             $rootScope.saveByteArray([data], 'Карта_пациента-' + dateReport.toJSON() + '.xls');
         });
+        console.timeEnd("call printCardClient")
     }
     $scope.reloadGridVisit = function () {
+        console.time("call reloadGridVisit")
         $$('visitsGrid').clearAll();
-        var url = $scope.getTableURI(15,0);
+        let url = $scope.getTableURI(15,0);
         $$('visitsGrid').load("addHeaders->"+url);
         $$('visitsGrid').refresh();
+        console.timeEnd("call reloadGridVisit")
     };
 
     $scope.addServicesOfVisit = function () {
-        var url = "";
-        var id = $scope.visitId;
-        var serverValid = true;
+        console.time("call addServicesOfVisit")
+        let url = "";
+        let id = $scope.visitId;
+        let serverValid = true;
         if ((id === null || id === "" || id === undefined) && $$("editform").validate()) {
             $scope.saveRow();
             id = $scope.visitId;
@@ -258,35 +275,49 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
 
             });
         }
-
+        console.timeEnd("call addServicesOfVisit")
     };
 
     $scope.saveReportAsFile = function () {
-        var reportId = $$("gridReports").getSelectedId();
-        var reportItem = $$("gridReports").getSelectedItem();
-        var clientId = $$("cmbClient").getValue();
-        var visitId = $scope.visitId;
-        var doctorId = $$("cmbDoctorOnForm").getValue();
-        var dateReport = new Date();
+        console.time("call saveReportAsFile")
+        let reportId = $$("gridReports").getSelectedId();
+        let reportItem = $$("gridReports").getSelectedItem();
+        let clientId = $$("cmbClient").getValue();
+        let visitId = $scope.visitId;
+        let doctorId = $$("cmbDoctorOnForm").getValue();
+        let dateReport = new Date();
         if (reportId === null || reportId === "" || reportId === undefined) {
             webix.alert(" Не выбран отчет для сохранения ");
         } else {
-            var url = "/api/"+version_api+"/reports/file/reportTemplate/" + clientId + "/" + doctorId + "/" + reportId + "/" + visitId + "/" + dateReport.toJSON();
+            let url = "/api/"+version_api+"/reports/file/reportTemplate/" + clientId + "/" + doctorId + "/" + reportId + "/" + visitId + "/" + dateReport.toJSON();
+            console.log(reportItem.template)
+            console.log(reportItem)
+            if (reportItem != null && reportItem.template == "templateVisitResult") {
+                version_api = 'v2'
+                url = "/api/"+version_api+"/reports/file/reportVisitResult/" + visitId + "/report.xlsx"
+            } else {
+                version_api = 'v1'
+            }
+            console.log(url)
             webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
-                if (reportItem != null && reportItem.template === "Contract")
+                if (reportItem != null && reportItem.template === "templateVisitResult") {
+                    $rootScope.saveByteArray([data], 'Заключение_' + dateReport.toJSON() + '_' + visitId + '.xlsx')
+                }else if (reportItem != null && reportItem.template === "Contract")
                     $rootScope.saveByteArray([data], 'Договор_' + dateReport.toJSON() + '.xls');
                 else
                     $rootScope.saveByteArray([data], 'Бланк_' + reportItem.label + "-" + dateReport.toJSON() + '.doc');
             });
         }
+        console.timeEnd("call saveReportAsFile")
     };
 
     // +
     $scope.deleteServicesOfVisit = function () {
-        var dataOfServices = [];
-        var url = "";
-        var id = $scope.visitId;
-        var servicesId = $$("gridServices").getSelectedId();
+        console.time("call deleteServicesOfVisit")
+        let dataOfServices = [];
+        let url = "";
+        let id = $scope.visitId;
+        let servicesId = $$("gridServices").getSelectedId();
         if (servicesId === null || servicesId === "" || servicesId === undefined) {
             webix.alert(" Не выбрана услуга для удаления ");
         } else if (id != null && id != "" && id != undefined) {
@@ -301,6 +332,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                 }
             });
         }
+        console.timeEnd("call deleteServicesOfVisit")
     };
 
 
@@ -308,7 +340,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         webix.proxy.addHeaders = {
             $proxy:true,
             load:function(view, callback, params){
-                webix.ajax().bind(view).headers($localStorage.headers.value).get(this.source, params, callback); 
+                webix.ajax().bind(view).headers($localStorage.headers.value).get(this.source, params, callback);
             }
         };
         // filter
@@ -321,14 +353,14 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             width: 1200,
             rows: [{
                 cols: [{
-                        gravity: 0.92,
-                        cols: [{
-                            view: "datepicker",
-                            editable: true,
-                            id: "filterDateEvent",
-                            inputWidth: 220,
-                        }]
-                    },
+                    gravity: 0.92,
+                    cols: [{
+                        view: "datepicker",
+                        editable: true,
+                        id: "filterDateEvent",
+                        inputWidth: 220,
+                    }]
+                },
                     {
                         gravity: 1.21,
                         cols: [{
@@ -358,18 +390,18 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     {
                         gravity: 0.3,
                         cols: [{
-                                view: "button",
-                                type: "image",
-                                image: "../img/funnel_add_24.png",
-                                value: "Apply",
-                                click: function () {
-                                    $$('visitsGrid').clearAll();
-                                    var url = $scope.getTableURI(15,0);
-                                    $$('visitsGrid').load("addHeaders->"+url);
-                                    $$('visitsGrid').refresh();
-                                    $$('visitsGrid').setPage(0);
-                                }
-                            },
+                            view: "button",
+                            type: "image",
+                            image: "../img/funnel_add_24.png",
+                            value: "Apply",
+                            click: function () {
+                                $$('visitsGrid').clearAll();
+                                let url = $scope.getTableURI(15,0);
+                                $$('visitsGrid').load("addHeaders->"+url);
+                                $$('visitsGrid').refresh();
+                                $$('visitsGrid').setPage(0);
+                            }
+                        },
                             {
                                 view: "button",
                                 type: "image",
@@ -381,7 +413,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                     $$('filterClient').setValue("");
                                     $$('filterPassport').setValue("");
                                     $$('visitsGrid').clearAll();
-                                    var url = $scope.getTableURI(15,0);
+                                    let url = $scope.getTableURI(15,0);
                                     $$('visitsGrid').load("addHeaders->"+url);
                                     $$('visitsGrid').refresh();
                                     $$('visitsGrid').setPage(0);
@@ -413,19 +445,19 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                 id: "editformClient",
                 complexData: true,
                 elements: [{
-                        view: "text",
-                        label: "Фамилия",
-                        name: "surname",
-                        labelWidth: 90,
-                        invalidMessage: "Обязательное поле"
-                    },
+                    view: "text",
+                    label: "Фамилия",
+                    name: "surname",
+                    labelWidth: 90,
+                    invalidMessage: "Обязательное поле"
+                },
                     {
                         cols: [{
-                                view: "text",
-                                label: "Имя",
-                                name: "name",
-                                labelWidth: 90
-                            },
+                            view: "text",
+                            label: "Имя",
+                            name: "name",
+                            labelWidth: 90
+                        },
                             {
                                 view: "text",
                                 label: "Отчество",
@@ -469,151 +501,151 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                             {
                                 css: "bottom_border_tab_header",
                                 cells: [{
-                                        id: "generalInfo",
+                                    id: "generalInfo",
+                                    view: "layout",
+                                    margin: 8,
+                                    padding: 10,
+                                    rows: [{
                                         view: "layout",
-                                        margin: 8,
-                                        padding: 10,
+                                        label: "Инфо",
+                                        borderless: true,
                                         rows: [{
-                                                view: "layout",
-                                                label: "Инфо",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "datepicker",
-                                                            editable: true,
-                                                            label: "Дата рождения",
-                                                            name: "birthday",
-                                                            labelWidth: 135
-                                                        },
-                                                        {
-                                                            view: "button",
-                                                            type: "form",
-                                                            value: "printClient",
-                                                            label: "Карта пациента",
-                                                            css: "margin_client_col_sex",
-                                                            inputWidth: 187,
-                                                            click: function () {
-                                                                $scope.printCardClient();
-                                                            }
-                                                        }
-                                                    ]
-                                                }]
+                                            cols: [{
+                                                view: "datepicker",
+                                                editable: true,
+                                                label: "Дата рождения",
+                                                name: "birthday",
+                                                labelWidth: 135
                                             },
-                                            {
-                                                view: "layout",
-                                                label: "ФИО",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "text",
-                                                            label: "Телефон",
-                                                            name: "phone",
-                                                            labelWidth: 135
-                                                        },
-                                                        {
-                                                            view: "radio",
-                                                            name: "gender",
-                                                            css: "margin_client_col_sex",
-                                                            options: [{
-                                                                    id: "man",
-                                                                    value: "Муж."
-                                                                },
-                                                                {
-                                                                    id: "woman",
-                                                                    value: "Жен."
-                                                                }
-                                                            ]
-                                                        },
-                                                    ]
-                                                }]
-                                            },
-                                            {
-                                                view: "layout",
-                                                label: "ФИО",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "text",
-                                                            label: "Место работы",
-                                                            name: "workPlace",
-                                                            labelWidth: 135,
-                                                            // inputWidth: 349
-                                                        },
-                                                        {
-                                                            gravity: 0.7,
-                                                            view: "text",
-                                                            label: "Должность",
-                                                            name: "workPosition",
-                                                            labelWidth: 100,
-                                                            // inputWidth: 349
-                                                        }
-                                                    ]
-                                                }]
-                                            },
-                                            {
-                                                view: "template",
-                                                type: "section",
-                                                template: "<span class='lb_template'>Паспортные данные</span>"
-                                            },
-                                            {
-                                                view: "layout",
-                                                label: "Паспорт",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "text",
-                                                            label: "Серия",
-                                                            name: "passportSerial",
-                                                            labelWidth: 130
-                                                        },
-                                                        {
-                                                            view: "text",
-                                                            label: "Номер",
-                                                            name: "passportNumber",
-                                                            css: "margin_client_col",
-                                                            inputWidth: 327,
-                                                            labelWidth: 140
-                                                        }
-                                                    ]
-                                                }]
-                                            },
-                                            {
-                                                view: "layout",
-                                                label: "Паспорт2",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "datepicker",
-                                                            editable: true,
-                                                            label: "Дата выдачи",
-                                                            name: "passportDate",
-                                                            labelWidth: 130
-                                                        },
-                                                        {
-                                                            view: "text",
-                                                            label: "Код подразд.",
-                                                            name: "passportCodePlace",
-                                                            labelWidth: 140,
-                                                            inputWidth: 327,
-                                                            css: "margin_client_col"
-                                                        }
-                                                    ]
-                                                }]
-                                            },
-                                            {
-                                                view: "text",
-                                                label: "Кем выдан",
-                                                name: "passportPlace",
-                                                labelWidth: 130,
-                                            },
-                                            {
-                                                view: "text",
-                                                label: "Адрес",
-                                                name: "address",
-                                                labelWidth: 130,
-                                            }
-                                        ]
+                                                {
+                                                    view: "button",
+                                                    type: "form",
+                                                    value: "printClient",
+                                                    label: "Карта пациента",
+                                                    css: "margin_client_col_sex",
+                                                    inputWidth: 187,
+                                                    click: function () {
+                                                        $scope.printCardClient();
+                                                    }
+                                                }
+                                            ]
+                                        }]
                                     },
+                                        {
+                                            view: "layout",
+                                            label: "ФИО",
+                                            borderless: true,
+                                            rows: [{
+                                                cols: [{
+                                                    view: "text",
+                                                    label: "Телефон",
+                                                    name: "phone",
+                                                    labelWidth: 135
+                                                },
+                                                    {
+                                                        view: "radio",
+                                                        name: "gender",
+                                                        css: "margin_client_col_sex",
+                                                        options: [{
+                                                            id: "man",
+                                                            value: "Муж."
+                                                        },
+                                                            {
+                                                                id: "woman",
+                                                                value: "Жен."
+                                                            }
+                                                        ]
+                                                    },
+                                                ]
+                                            }]
+                                        },
+                                        {
+                                            view: "layout",
+                                            label: "ФИО",
+                                            borderless: true,
+                                            rows: [{
+                                                cols: [{
+                                                    view: "text",
+                                                    label: "Место работы",
+                                                    name: "workPlace",
+                                                    labelWidth: 135,
+                                                    // inputWidth: 349
+                                                },
+                                                    {
+                                                        gravity: 0.7,
+                                                        view: "text",
+                                                        label: "Должность",
+                                                        name: "workPosition",
+                                                        labelWidth: 100,
+                                                        // inputWidth: 349
+                                                    }
+                                                ]
+                                            }]
+                                        },
+                                        {
+                                            view: "template",
+                                            type: "section",
+                                            template: "<span class='lb_template'>Паспортные данные</span>"
+                                        },
+                                        {
+                                            view: "layout",
+                                            label: "Паспорт",
+                                            borderless: true,
+                                            rows: [{
+                                                cols: [{
+                                                    view: "text",
+                                                    label: "Серия",
+                                                    name: "passportSerial",
+                                                    labelWidth: 130
+                                                },
+                                                    {
+                                                        view: "text",
+                                                        label: "Номер",
+                                                        name: "passportNumber",
+                                                        css: "margin_client_col",
+                                                        inputWidth: 327,
+                                                        labelWidth: 140
+                                                    }
+                                                ]
+                                            }]
+                                        },
+                                        {
+                                            view: "layout",
+                                            label: "Паспорт2",
+                                            borderless: true,
+                                            rows: [{
+                                                cols: [{
+                                                    view: "datepicker",
+                                                    editable: true,
+                                                    label: "Дата выдачи",
+                                                    name: "passportDate",
+                                                    labelWidth: 130
+                                                },
+                                                    {
+                                                        view: "text",
+                                                        label: "Код подразд.",
+                                                        name: "passportCodePlace",
+                                                        labelWidth: 140,
+                                                        inputWidth: 327,
+                                                        css: "margin_client_col"
+                                                    }
+                                                ]
+                                            }]
+                                        },
+                                        {
+                                            view: "text",
+                                            label: "Кем выдан",
+                                            name: "passportPlace",
+                                            labelWidth: 130,
+                                        },
+                                        {
+                                            view: "text",
+                                            label: "Адрес",
+                                            name: "address",
+                                            labelWidth: 130,
+                                        }
+                                    ]
+                                },
                                     {
                                         id: "historyVisits",
                                         view: "layout",
@@ -628,10 +660,10 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                             select: true,
                                             scroll: "y",
                                             columns: [{
-                                                    id: "dateEvent",
-                                                    header: "Дата приема",
-                                                    width: 200
-                                                },
+                                                id: "dateEvent",
+                                                header: "Дата приема",
+                                                width: 200
+                                            },
                                                 {
                                                     id: "label",
                                                     header: "Услуга",
@@ -666,10 +698,10 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                             select: true,
                                             scroll: "y",
                                             columns: [{
-                                                    id: "dateEvent",
-                                                    header: "Дата приема",
-                                                    width: 200
-                                                },
+                                                id: "dateEvent",
+                                                header: "Дата приема",
+                                                width: 200
+                                            },
                                                 {
                                                     id: "label",
                                                     header: "Услуга",
@@ -704,10 +736,10 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                             select: true,
                                             scroll: "y",
                                             columns: [{
-                                                    id: "dateEvent",
-                                                    header: "Дата приема",
-                                                    width: 200
-                                                },
+                                                id: "dateEvent",
+                                                header: "Дата приема",
+                                                width: 200
+                                            },
                                                 {
                                                     id: "label",
                                                     header: "Услуга",
@@ -734,19 +766,19 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     },
                     {
                         cols: [{
-                                view: "button",
-                                type: "form",
-                                value: "Save",
-                                label: "Сохранить",
-                                click: function () {
-                                    if ($$("editformClient").validate()) {
-                                        $scope.saveClient();
-                                        if ($scope.serverValidation) {
-                                            this.getTopParentView().hide();
-                                        }
+                            view: "button",
+                            type: "form",
+                            value: "Save",
+                            label: "Сохранить",
+                            click: function () {
+                                if ($$("editformClient").validate()) {
+                                    $scope.saveClient();
+                                    if ($scope.serverValidation) {
+                                        this.getTopParentView().hide();
                                     }
                                 }
-                            },
+                            }
+                        },
                             {
                                 view: "button",
                                 value: "Cancel",
@@ -766,7 +798,6 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             }
         });
 
-        // forma visits
         webix.ui({
             view: "window",
             id: "editwin",
@@ -780,17 +811,17 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                 id: "editform",
                 complexData: true,
                 elements: [{
-                        view: "combo",
-                        label: "ФИО доктора",
-                        name: "doctorId",
-                        id: "cmbDoctorOnForm",
-                        labelWidth: 145,
-                        options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/doctors").response),
-                        on: {
-                            onChange: $scope.getReservedAppoinmentsHasVisit
-                        },
-                        invalidMessage: ""
+                    view: "combo",
+                    label: "ФИО доктора",
+                    name: "doctorId",
+                    id: "cmbDoctorOnForm",
+                    labelWidth: 145,
+                    options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/doctors").response),
+                    on: {
+                        onChange: $scope.getReservedAppoinmentsHasVisit
                     },
+                    invalidMessage: ""
+                },
                     {
                         view: "combo",
                         label: "Запись на прием",
@@ -800,28 +831,28 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     },
                     {
                         cols: [{
-                                view: "combo",
-                                label: "ФИО пациента",
-                                id: "cmbClient",
-                                name: "clientId",
-                                labelWidth: 145,
-                                options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/clients").response),
-                                on: {
-                                    onChange: $scope.getInfoClient
-                                },
-                                invalidMessage: ""
+                            view: "combo",
+                            label: "ФИО пациента",
+                            id: "cmbClient",
+                            name: "clientId",
+                            labelWidth: 145,
+                            options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/clients").response),
+                            on: {
+                                onChange: $scope.getInfoClient
                             },
+                            invalidMessage: ""
+                        },
                             {
                                 gravity: 0.55,
                                 cols: [{
-                                        view: "button",
-                                        type: "form",
-                                        value: "AddClient",
-                                        label: "Добавить",
-                                        click: function () {
-                                            $scope.insertClient();
-                                        }
-                                    },
+                                    view: "button",
+                                    type: "form",
+                                    value: "AddClient",
+                                    label: "Добавить",
+                                    click: function () {
+                                        $scope.insertClient();
+                                    }
+                                },
                                     {
                                         view: "button",
                                         value: "UpdateClient",
@@ -836,26 +867,23 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     },
                     {
                         cols: [{
-                                cols: [{
-                                        view: "text",
-                                        // label: "Паспорт",
-                                        id: "passportLabel",
-                                        name: "passportLabel",
-                                        disabled: true
-                                    },
-                                    {
-                                        view: "text",
-                                        // label: "Дата рождения",
-                                        id: "birthday",
-                                        name: "birthday",
-                                        disabled: true
-                                    }
-                                ]
+                            cols: [{
+                                view: "text",
+                                id: "passportLabel",
+                                name: "passportLabel",
+                                disabled: true
                             },
+                                {
+                                    view: "text",
+                                    id: "birthday",
+                                    name: "birthday",
+                                    disabled: true
+                                }
+                            ]
+                        },
                             {
                                 gravity: 0.55,
                                 view: "text",
-                                // label: "Телефон",
                                 id: "phone",
                                 name: "phone",
                                 disabled: true
@@ -864,12 +892,11 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     },
                     {
                         cols: [{
-                                view: "text",
-                                // label: "Место жительства",
-                                id: "address",
-                                name: "address",
-                                disabled: true
-                            },
+                            view: "text",
+                            id: "address",
+                            name: "address",
+                            disabled: true
+                        },
                             {
                                 gravity: 0.55,
                                 view: "button",
@@ -884,29 +911,110 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     },
                     {
                         rows: [{
-                                view: "tabbar",
-                                id: "infoVisit",
-                                height: 35,
-                                multiview: true,
-                                on: {
-                                    onBeforeTabClick: $scope.getReportsOfVisit
-                                },
-                                options: [{
-                                        id: "service",
-                                        css: "common_tab",
-                                        value: "Услуги"
-                                    },
-                                    {
-                                        id: "report",
-                                        css: "common_tab",
-                                        value: "Отчеты",
-                                    }
-                                ],
+                            view: "tabbar",
+                            id: "infoVisit",
+                            height: 35,
+                            multiview: true,
+                            on: {
+                                onBeforeTabClick: $scope.getReportsOfVisit
                             },
                             {
                                 css: "bottom_border_tab_header",
                                 cells: [{
-                                        id: "service",
+                                    id: "service",
+                                    view: "layout",
+                                    margin: 8,
+                                    padding: 10,
+                                    rows: [{
+                                        view: "combo",
+                                        label: "Услуга",
+                                        id: "cmbService",
+                                        labelWidth: 70,
+                                        options: {
+                                            filter: function (item, value) {
+                                                return item.label.toString().toLowerCase().indexOf(value.toLowerCase()) > -1;
+                                            },
+                                            body: {
+                                                data: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/services").response)
+                                            }
+                                        }
+                                    },
+                                        {
+                                            cols: [{
+                                                view: "text",
+                                                label: "Скидка",
+                                                id: "discount",
+                                                name: "discount",
+                                                labelWidth: 70
+                                            },
+                                                {
+                                                    cols: [{
+                                                        view: "button",
+                                                        type: "form",
+                                                        value: "AddService",
+                                                        label: "Добавить",
+                                                        click: function () {
+                                                            $scope.addServicesOfVisit();
+                                                        }
+                                                    },
+                                                        {
+                                                            view: "button",
+                                                            value: "deleteService",
+                                                            label: "Удалить",
+                                                            click: function () {
+                                                                $scope.deleteServicesOfVisit();
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    view: "text",
+                                                    label: "Терминал",
+                                                    id: "terminalSum",
+                                                    name: "terminalSum",
+                                                    labelWidth: 90
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            view: "datatable",
+                                            css: "table_without_border",
+                                            height: 200,
+                                            header: false,
+                                            scroll: "y",
+                                            select: true,
+                                            id: "gridServices",
+                                            columns: [{
+                                                id: "label",
+                                                header: "Наименование услуги",
+                                                fillspace: true
+                                            },
+                                                {
+                                                    id: "price",
+                                                    header: "Прайс",
+                                                    width: 100
+                                                },
+                                                {
+                                                    id: "discount",
+                                                    header: "Скидка",
+                                                    width: 100
+                                                }
+                                            ],
+                                            on: {
+                                                onBeforeLoad: function () {
+                                                    this.showOverlay("Загрузка...");
+                                                },
+                                                onAfterLoad: function () {
+                                                    if (!this.count())
+                                                        this.showOverlay("Нет добавленных услуг");
+                                                    else
+                                                        this.hideOverlay();
+                                                }
+                                            },
+                                            data: []
+                                        }
+                                    ]
+                                },
                                         view: "layout",
                                         margin: 8,
                                         padding: 10,
@@ -1006,22 +1114,22 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                         margin: 8,
                                         padding: 10,
                                         rows: [{
-                                                cols: [{
-                                                        view: "button",
-                                                        type: "form",
-                                                        value: "saveReport",
-                                                        label: "Распечатать",
-                                                        inputWidth: 115,
-                                                        click: function () {
-                                                            $scope.saveReportAsFile();
-                                                        }
-                                                    },
-                                                    {
-                                                        view: "layout",
-                                                        rows: [{}]
-                                                    }
-                                                ]
+                                            cols: [{
+                                                view: "button",
+                                                type: "form",
+                                                value: "saveReport",
+                                                label: "Распечатать",
+                                                inputWidth: 115,
+                                                click: function () {
+                                                    $scope.saveReportAsFile();
+                                                }
                                             },
+                                                {
+                                                    view: "layout",
+                                                    rows: [{}]
+                                                }
+                                            ]
+                                        },
                                             {
                                                 view: "datatable",
                                                 css: "table_without_border",
@@ -1056,20 +1164,20 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     },
                     {
                         cols: [{
-                                view: "button",
-                                type: "form",
-                                value: "Save",
-                                label: "Сохранить",
-                                click: function () {
-                                    if ($$("editform").validate()) {
-                                        $scope.saveRow();
-                                        if ($scope.serverValidation) {
-                                            $scope.reloadGridVisit();
-                                            this.getTopParentView().hide();
-                                        }
+                            view: "button",
+                            type: "form",
+                            value: "Save",
+                            label: "Сохранить",
+                            click: function () {
+                                if ($$("editform").validate()) {
+                                    $scope.saveRow();
+                                    if ($scope.serverValidation) {
+                                        $scope.reloadGridVisit();
+                                        this.getTopParentView().hide();
                                     }
                                 }
-                            },
+                            }
+                        },
                             {
                                 view: "button",
                                 value: "Cancel",
@@ -1084,7 +1192,6 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                 ],
                 rules: {
                     doctorId: webix.rules.isNotEmpty,
-                    // appointmentId: webix.rules.isNotEmpty,
                     clientId: webix.rules.isNotEmpty
                 }
             }
@@ -1116,14 +1223,16 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             },
             on: {
                 onItemDblClick: function () {
+                    console.time("call onItemDblClick")
                     $scope.visitId = $$("visitsGrid").getSelectedId();
                     $$("editform").clearValidation();
                     $$("gridServices").clearAll();
                     $$("cmbService").setValue(null);
                     $$("infoVisit").setValue("service");
-                    $$("editwin").show();
-                    $scope.getInfoClient();
+                    //$scope.getInfoClient();
                     $scope.getServicesOfVisit();
+                    $$("editwin").show();
+                    console.timeEnd("call onItemDblClick")
                 },
                 onBeforeLoad: function () {
                     this.showOverlay("Загрузка...");
@@ -1135,8 +1244,8 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                         this.hideOverlay();
                 },
                 onDataRequest: function (start, count) {
-                    var url = $scope.getTableURI(count,start);
-                    var dataGrid = webix.ajax().headers($localStorage.headers.value).get(url);
+                    let url = $scope.getTableURI(count,start);
+                    let dataGrid = webix.ajax().headers($localStorage.headers.value).get(url);
                     this.parse(dataGrid);
                     return false;
                 }
@@ -1144,8 +1253,10 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         });
         $$("editform").bind($$("visitsGrid"));
     });
-    $scope.getTableURI = function(count,start){
-        var url = "/api/"+version_api+"/visits?count=" + count + "&start=" + start+"&filter=";
+    $scope.getTableURI = function(count, start){
+        console.time("call getTableURI")
+        let startElapsed = new Date()
+        let url = "/api/"+version_api+"/visits?count=" + count + "&start=" + start+"&filter=";
         if ($$("filterDateEvent").getValue()!=null && $$("filterDateEvent").getValue().toJSON()!="")
             url = url + "dateEvent="+$$("filterDateEvent").getValue().toJSON()+";";
         if ($$("filterDoctor").getValue()!=null && $$("filterDoctor").getValue()!="")
@@ -1153,15 +1264,18 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         if ($$("filterClient").getValue()!=null && $$("filterClient").getValue()!="")
             url = url + "client.surname="+$$("filterClient").getValue()+";";
         if ($$("filterPassport").getValue()!=null && $$("filterPassport").getValue()!="")
-            url = url + "passport="+$$("filterPassport").getValue()+";";            
+            url = url + "passport="+$$("filterPassport").getValue()+";";
+        let elapsed = (new Date() - startElapsed ) / 1000;
+        console.timeEnd("call getTableURI")
         return url;
     }
     $scope.saveRow = function () {
-        var id = $scope.visitId;
-        var data = $$("editform").getValues();
+        console.time("call saveRow")
+        let id = $scope.visitId;
+        let data = $$("editform").getValues();
         data.author = $localStorage.currentUser.login;
         if (!id) {
-            var url = "/api/"+version_api+"/visits/";
+            let url = "/api/"+version_api+"/visits/";
             webix.ajax().headers($localStorage.headers.value).sync()
                 .post(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1180,7 +1294,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                 });
             $$("editform").bind($$("visitsGrid"));
         } else {
-            var url = "/api/"+version_api+"/visits/" + id;
+            let url = "/api/"+version_api+"/visits/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1196,17 +1310,19 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     }
                 });
         }
+        console.timeEnd("call saveRow")
     };
 
     $scope.deleteRow = function () {
-        var id = $$("visitsGrid").getSelectedId();
+        console.time("call deleteRow")
+        let id = $$("visitsGrid").getSelectedId();
         if (!id) return;
         webix.confirm({
             title: "Удаление приема",
             text: "Вы уверены, что хотите удалить прием?",
             callback: function (result) {
                 if (result) {
-                    var url = "/api/"+version_api+"/visits/" + id;
+                    let url = "/api/"+version_api+"/visits/" + id;
                     webix.ajax().headers($localStorage.headers.value)
                         .del(url, JSON.stringify($$('editform').getValues()), {
                             success: function (text, data, XmlHttpRequest) {
@@ -1220,9 +1336,11 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                 }
             }
         });
+        console.time("call endRow")
     };
 
     $scope.addRow = function () {
+        console.time("call addRow")
         $$("visitsGrid").clearSelection();
         $$("editform").clear();
         $$("editform").clearValidation();
@@ -1231,33 +1349,39 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         $scope.visitId = null;
         $$("infoVisit").setValue("service");
         $$("editwin").show();
+        console.timeEnd("call addRow")
     };
 
     // insert сlient
     $scope.insertClient = function () {
+        console.time("call insertClient")
         $$("editformClient").clear();
         $$("editformClient").clearValidation();
         $scope.clientId = null;
         $$("editwinClient").show();
+        console.timeEnd("call insertClient")
     };
 
     // update сlient
     $scope.updateClient = function () {
+        console.time("call updateClient")
         $$("editformClient").clear();
         $$("editformClient").clearValidation();
         $scope.clientId = $$("cmbClient").getValue();
         $scope.getHistoryVisits();
         $$("editwinClient").show();
         $$("editformClient").setValues($scope.getAllInfoClientById());
+        console.timeEnd("call updateClient")
     };
 
     // save row client
     $scope.saveClient = function () {
-        var data = $$("editformClient").getValues();
-        var id = data.id;
+        console.time("call saveClient")
+        let data = $$("editformClient").getValues();
+        let id = data.id;
         data.author = $localStorage.currentUser.login;
         if (!id) {
-            var url = "/api/"+version_api+"/clients/";
+            let url = "/api/"+version_api+"/clients/";
             webix.ajax().headers($localStorage.headers.value).sync()
                 .post(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1277,7 +1401,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     }
                 });
         } else {
-            var url = "/api/"+version_api+"/clients/" + id;
+            let url = "/api/"+version_api+"/clients/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1295,21 +1419,15 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     }
                 });
         }
+        console.timeEnd("call saveClient")
     }
 
     $scope.checkAuth = function (XmlHttpRequest) {
+        console.time("call checkAuth")
         if (XmlHttpRequest.status === 401) {
             $localStorage.tookenExpired = true;
             $scope.logout();
         }
-    };
-
-    $scope.logout = function () {
-        $localStorage.currentUser = null;
-        $scope.userLogin = '';
-        $scope.userPassword = '';
-        $http.defaults.headers.common.Authorization = '';
-        // $location.path('/');
-        $window.location.href = '/login';
+        console.timeEnd("call checkAuth")
     };
 }

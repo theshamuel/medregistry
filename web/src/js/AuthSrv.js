@@ -4,7 +4,7 @@ angular
     .module('app').factory('AuthSrv', Service);
 
 function Service($http, $localStorage) {
-    var service = {};
+    let service = {};
 
     service.Login = Login;
     service.Logout = Logout;
@@ -15,7 +15,6 @@ function Service($http, $localStorage) {
         console.log("Service Login STARTING....");
         $http.post('/auth', { login: login, password: md5(password)}).then(function (response) {
             $localStorage.errorMessage = null;
-            console.log("Service Login STARTING");
             if (response.data.token) {
                 $localStorage.currentUser = { login: login, token: response.data.token, name:response.data.name };
                 $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;

@@ -300,13 +300,4 @@ function UsersCtrl($http, $location, $localStorage, $scope, uiGridConstants, i18
             $scope.logout();
         }
     }
-
-    $scope.logout = function () {
-        delete $localStorage.currentUser;
-        $scope.userLogin = '';
-        $scope.userPassword = '';
-        $http.defaults.headers.common.Authorization = '';
-        // $location.path('/');
-        $window.location.href = '/login';
-    };
 }

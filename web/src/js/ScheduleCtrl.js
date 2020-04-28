@@ -527,13 +527,4 @@ function ScheduleCtrl($http, $location, $localStorage, $scope, uiGridConstants, 
             $scope.logout();
         }
     }
-
-    $scope.logout = function () {
-        $localStorage.currentUser = null;
-        $scope.userLogin = '';
-        $scope.userPassword = '';
-        $http.defaults.headers.common.Authorization = '';
-        // $location.path('/');
-        $window.location.href = '/login';
-    };
 }

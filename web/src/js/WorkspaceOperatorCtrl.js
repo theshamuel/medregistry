@@ -1516,7 +1516,6 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                 });
         }
     }
-
     // save row client
     $scope.saveClient = function () {
         var data = $$("editformClient").getValues();
@@ -1599,14 +1598,6 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         $$("cmbService").setValue(null);
         $$("infoVisit").setValue("service");
         $$("editwinvisit").show();
-    }
-
-    $scope.logout = function () {
-        $localStorage.currentUser = null;
-        $scope.userLogin = '';
-        $scope.userPassword = '';
-        $http.defaults.headers.common.Authorization = '';
-        $window.location.href = '/login';
     }
 
     $scope.checkAuth = function (XmlHttpRequest) {

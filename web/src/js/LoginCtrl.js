@@ -1,10 +1,9 @@
 'use strict';
 angular
-  .module('app').controller('LoginCtrl', Controller);
+  .module('app').controller('LoginCtrl', LoginController);
 
-function Controller($location, $localStorage, $scope, $rootScope, AuthSrv) {
+function LoginController($location, $localStorage, $scope, $rootScope, AuthSrv) {
   initController();
-
   function initController() {
     console.log("INIT  LoginController....");
     if ($localStorage.tookenExpired) {
@@ -15,7 +14,6 @@ function Controller($location, $localStorage, $scope, $rootScope, AuthSrv) {
   };
 
   $scope.login = function () {
-
     $scope.error = null
     $scope.loading = true
     $rootScope.name = null

@@ -689,13 +689,4 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             $scope.logout();
         }
     }
-
-    $scope.logout = function () {
-        $localStorage.currentUser = null;
-        $scope.userLogin = '';
-        $scope.userPassword = '';
-        $http.defaults.headers.common.Authorization = '';
-        // $location.path('/');
-        $window.location.href = '/login';
-    };
 }

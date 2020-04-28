@@ -31,12 +31,12 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
         },
     ];
 
-    var dateEvent = new Date();
-    var formatDate = webix.Date.dateToStr("%d.%m.%Y");
-    var version_api = "v1";
+    let dateEvent = new Date();
+    let formatDate = webix.Date.dateToStr("%d.%m.%Y");
+    let version_api = "v1";
     $scope.reloadComboClients = function () {
-        var dataClient = [];
-        var url = "/api/"+version_api+"/clients";
+        let dataClient = [];
+        let url = "/api/"+version_api+"/clients";
         webix.ajax().headers($localStorage.headers.value).sync().get(url, {
             success: function (text, data, XmlHttpRequest) {
                 dataClient = JSON.parse(text);
@@ -51,15 +51,14 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
     };
 
     $scope.getAllInfoClientById = function () {
-        var dataClient = [];
+        let dataClient = [];
         if ($$("cmbClient").getValue() != null && $$("cmbClient").getValue() != undefined && $$("cmbClient").getValue() != "") {
-            var url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
+            let url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataClient = JSON.parse(text);
                 },
                 error: function (text, data, XmlHttpRequest) {
-                    //Сделать стандартные проверки
                     $scope.checkAuth(XmlHttpRequest);
                 }
             });
@@ -69,9 +68,9 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
     };
 
     $scope.reloadGridVisit = function () {
-        var dataVisits = [];
+        let dataVisits = [];
         if ($localStorage.visTdDoctorId != null && $localStorage.visTdDoctorId != undefined && $localStorage.visTdDoctorId != "") {
-            var url = "/api/"+version_api+"/visits/" + $localStorage.visTdDoctorId + "/" + dateEvent.toJSON();
+            let url = "/api/"+version_api+"/visits/" + $localStorage.visTdDoctorId + "/" + dateEvent.toJSON();
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataVisits = text;
@@ -87,12 +86,12 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
     };
 
     $scope.getInfoClient = function () {
-        var passportLabelClient = "";
-        var birthdayClient = "";
-        var phoneClient = "";
-        var addressClient = "";
+        let passportLabelClient = "";
+        let birthdayClient = "";
+        let phoneClient = "";
+        let addressClient = "";
         if ($$("cmbClient").getValue() != null && $$("cmbClient").getValue() != undefined && $$("cmbClient").getValue() != "") {
-            var url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
+            let url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     passportLabelClient = JSON.parse(text).passportLabel;
@@ -113,10 +112,10 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
     };
 
     $scope.getServicesOfVisit = function () {
-        var dataOfServices = [];
-        var url = "";
-        var id = $scope.visitId;
-        var error = false;
+        let dataOfServices = [];
+        let url = "";
+        let id = $scope.visitId;
+        let error = false;
         if (id != null && id != undefined && id != "") {
             url = "/api/"+version_api+"/visits/" + id + "/services";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
@@ -140,9 +139,9 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
     };
 
     $scope.getReportsOfVisit = function () {
-        var dataOfReports = [];
-        var url = "";
-        var id = $scope.visitId;
+        let dataOfReports = [];
+        let url = "";
+        let id = $scope.visitId;
         if (id != null && id != "") {
             url = "/api/"+version_api+"/reports/" + id;
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
@@ -160,16 +159,16 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
     };
 
     $scope.saveReportAsFile = function () {
-        var reportId = $$("gridReports").getSelectedId();
-        var reportItem = $$("gridReports").getSelectedItem();
-        var clientId = $$("cmbClient").getValue();
-        var visitId = $scope.visitId;
-        var doctorId = $$("cmbDoctorOnForm").getValue();
-        var dateReport = new Date();
+        let reportId = $$("gridReports").getSelectedId();
+        let reportItem = $$("gridReports").getSelectedItem();
+        let clientId = $$("cmbClient").getValue();
+        let visitId = $scope.visitId;
+        let doctorId = $$("cmbDoctorOnForm").getValue();
+        let dateReport = new Date();
         if (reportId === null || reportId === "" || reportId === undefined) {
             webix.alert(" Не выбран отчет для сохранения ");
         } else {
-            var url = "/api/"+version_api+"/reports/file/reportTemplate/" + clientId + "/" + doctorId + "/" + reportId + "/" + visitId + "/" + dateReport.toJSON();
+            let url = "/api/"+version_api+"/reports/file/reportTemplate/" + clientId + "/" + doctorId + "/" + reportId + "/" + visitId + "/" + dateReport.toJSON();
             webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
                 if (reportItem!=null && reportItem.template === "Contract")
                     $rootScope.saveByteArray([data], 'Договор_' + dateReport.toJSON() + '.xls');
@@ -180,20 +179,20 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
     };
 
     $scope.printCardClient = function () {
-        var dateReport = new Date();
-        var clientId = $$("cmbClient").getValue();
-        var doctorId = $$("cmbDoctorOnForm").getValue();
+        let dateReport = new Date();
+        let clientId = $$("cmbClient").getValue();
+        let doctorId = $$("cmbDoctorOnForm").getValue();
         console.log("doctor=" + doctorId);
-        var url = "/api/"+version_api+"/reports/file/clientCard/" + clientId + "/" + doctorId + "/" + dateReport.toJSON();
+        let url = "/api/"+version_api+"/reports/file/clientCard/" + clientId + "/" + doctorId + "/" + dateReport.toJSON();
         webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
             $rootScope.saveByteArray([data], 'Карта_пациента-' + dateReport.toJSON() + '.xls');
         });
     }
 
     $scope.addServicesOfVisit = function () {
-        var url = "";
-        var id = $scope.visitId;
-        var serverValid = true;
+        let url = "";
+        let id = $scope.visitId;
+        let serverValid = true;
         if ((id === null || id === "" || id === undefined) && $$("editform").validate() || ($scope.visitChange!=null && $scope.visitChange!=undefined && $scope.visitChange == true)) {
             $scope.saveRow();
             id = $scope.visitId;
@@ -228,10 +227,10 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
     };
 
     $scope.deleteServicesOfVisit = function () {
-        var dataOfServices = [];
-        var url = "";
-        var id = $scope.visitId;
-        var servicesId = $$("gridServices").getSelectedId();
+        let dataOfServices = [];
+        let url = "";
+        let id = $scope.visitId;
+        let servicesId = $$("gridServices").getSelectedId();
         if (servicesId === null || servicesId === "" || servicesId === undefined) {
             webix.alert(" Не выбрана услуга для удаления ");
         } else if (id != null && id != "" && id != undefined) {
@@ -250,7 +249,7 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
 
     $scope.getAppointmentsList = function () {
         if ($$("cmbDoctorInList") != null && $$("cmbDoctorInList").getValue() != null && $$("cmbDoctorInList").getValue() != undefined && $$("cmbDoctorInList").getValue() != "") {
-            var url = "/api/"+version_api+"/appointments/reserved/hasvisit?doctorId=" + $$("cmbDoctorInList").getValue() + "&dateEvent=" + dateEvent.toJSON() + "&hasVisit=false&visitId";
+            let url = "/api/"+version_api+"/appointments/reserved/hasvisit?doctorId=" + $$("cmbDoctorInList").getValue() + "&dateEvent=" + dateEvent.toJSON() + "&hasVisit=false&visitId";
             $localStorage.visTdDoctorId = $$("cmbDoctorInList").getValue();
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
@@ -271,11 +270,11 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
     };
 
     $scope.getHistoryVisits = function () {
-        var dataOfHistiryVisits = [];
-        var dataOfHistiryUltra = [];
-        var dataOfHistiryAnalyzes = [];
-        var url = "";
-        var id = $scope.clientId;
+        let dataOfHistiryVisits = [];
+        let dataOfHistiryUltra = [];
+        let dataOfHistiryAnalyzes = [];
+        let url = "";
+        let id = $scope.clientId;
         if (id != null && id != "") {
             url = "/api/"+version_api+"/clients/" + id + "/consult";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
@@ -317,10 +316,10 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
     };
 
     $scope.getReservedAppoinmentsHasVisit = function () {
-        var dataAppointments = [];
+        let dataAppointments = [];
         if ($$("cmbDoctorOnForm").getValue() != null && $$("cmbDoctorOnForm").getValue() != undefined && $$("cmbDoctorOnForm").getValue() != "") {
-            var id = $scope.visitId;
-            var url = "/api/"+version_api+"/appointments/reserved/hasvisit?doctorId=" + $$("cmbDoctorOnForm").getValue() + "&dateEvent=" + dateEvent.toJSON() + "&hasVisit=false&visitId";
+            let id = $scope.visitId;
+            let url = "/api/"+version_api+"/appointments/reserved/hasvisit?doctorId=" + $$("cmbDoctorOnForm").getValue() + "&dateEvent=" + dateEvent.toJSON() + "&hasVisit=false&visitId";
             if (id != undefined)
                 url = url + "=" + id;
             console.log("URL=" + url);
@@ -341,12 +340,12 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
     };
 
     $scope.saveListAppoinmentsAsFile = function () {
-        var visTdDoctor = $localStorage.visTdDoctorId;
-        var dateReport = new Date();
+        let visTdDoctor = $localStorage.visTdDoctorId;
+        let dateReport = new Date();
         if (visTdDoctor === null || visTdDoctor === "" || visTdDoctor === undefined) {
             webix.alert(" Не выбран доктор для приемов ");
         } else {
-            var url = "/api/"+version_api+"/reports/file/listAppointments/"+ visTdDoctor +  "/" + dateReport.toJSON();
+            let url = "/api/"+version_api+"/reports/file/listAppointments/"+ visTdDoctor +  "/" + dateReport.toJSON();
             webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
                 if (text!=null)
                     $rootScope.saveByteArray([data], 'Приемы_' + dateReport.toJSON() + '.docx');
@@ -430,14 +429,12 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                         cols: [{
                                 cols: [{
                                         view: "text",
-                                        // label: "Паспорт",
                                         id: "passportLabel",
                                         name: "passportLabel",
                                         disabled: true
                                     },
                                     {
                                         view: "text",
-                                        // label: "Дата рождения",
                                         id: "birthday",
                                         name: "birthday",
                                         disabled: true
@@ -447,7 +444,6 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                             {
                                 gravity: 0.55,
                                 view: "text",
-                                // label: "Телефон",
                                 id: "phone",
                                 name: "phone",
                                 disabled: true
@@ -457,7 +453,6 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                     {
                         cols: [{
                                 view: "text",
-                                // label: "Место жительства",
                                 id: "address",
                                 name: "address",
                                 disabled: true
@@ -1152,7 +1147,7 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
         });
 
         $$("editform").bind($$("visitsGrid"));
-        var visTdDoctor = $localStorage.visTdDoctorId;
+        let visTdDoctor = $localStorage.visTdDoctorId;
         if (visTdDoctor != null && visTdDoctor != undefined && visTdDoctor != "") {
             $$("cmbDoctorInList").setValue(visTdDoctor);
             $$("cmbDoctorInList").refresh();
@@ -1161,11 +1156,11 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
 
     // save row visit
     $scope.saveRow = function () {
-        var id = $scope.visitId;
-        var data = $$("editform").getValues();
+        let id = $scope.visitId;
+        let data = $$("editform").getValues();
         data.author = $localStorage.currentUser.login;
         if (id === null || id === undefined || id === "") {
-            var url = "/api/"+version_api+"/visits/";
+            let url = "/api/"+version_api+"/visits/";
             webix.ajax().headers($localStorage.headers.value).sync()
                 .post(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1184,7 +1179,7 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                 });
             $$("editform").bind($$("visitsGrid"));
         } else {
-            var url = "/api/"+version_api+"/visits/" + id;
+            let url = "/api/"+version_api+"/visits/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1205,14 +1200,14 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
 
     // delete row visit
     $scope.deleteRow = function () {
-        var id = $$("visitsGrid").getSelectedId();
+        let id = $$("visitsGrid").getSelectedId();
         if (!id) return;
         webix.confirm({
             title: "Удаление приема",
             text: "Вы уверены, что хотите удалить прием?",
             callback: function (result) {
                 if (result) {
-                    var url = "/api/"+version_api+"/visits/" + id;
+                    let url = "/api/"+version_api+"/visits/" + id;
                     webix.ajax().headers($localStorage.headers.value)
                         .del(url, JSON.stringify($$('editform').getValues()), {
                             success: function (text, data, XmlHttpRequest) {
@@ -1244,11 +1239,11 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
 
     // save row client
     $scope.saveClient = function () {
-        var data = $$("editformClient").getValues();
-        var id = data.id;
+        let data = $$("editformClient").getValues();
+        let id = data.id;
         data.author = $localStorage.currentUser.login;
         if (!id) {
-            var url = "/api/"+version_api+"/clients/";
+            let url = "/api/"+version_api+"/clients/";
             webix.ajax().headers($localStorage.headers.value).sync()
                 .post(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1267,7 +1262,7 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                     }
                 });
         } else {
-            var url = "/api/"+version_api+"/clients/" + id;
+            let url = "/api/"+version_api+"/clients/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1314,13 +1309,4 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
             $scope.logout();
         }
     }
-
-    $scope.logout = function () {
-        $localStorage.currentUser = null;
-        $scope.userLogin = '';
-        $scope.userPassword = '';
-        $http.defaults.headers.common.Authorization = '';
-        // $location.path('/');
-        $window.location.href = '/login';
-    };
 }

@@ -125,20 +125,10 @@ function ReportOfWorkDayCtrl($http, $location, $localStorage, $scope, $rootScope
             });
         }
     }
-
     $scope.checkAuth = function (XmlHttpRequest) {
         if (XmlHttpRequest.status === 401) {
             $localStorage.tookenExpired = true;
             $scope.logout();
         }
     }
-
-    $scope.logout = function () {
-        $localStorage.currentUser = null;
-        $scope.userLogin = '';
-        $scope.userPassword = '';
-        $http.defaults.headers.common.Authorization = '';
-        // $location.path('/');
-        $window.location.href = '/login';
-    };
 }
