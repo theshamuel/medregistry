@@ -9,3 +9,6 @@
 
 #binary
 *.jar
+
+#log
+*.log
