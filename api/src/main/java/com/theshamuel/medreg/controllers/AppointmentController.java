@@ -298,7 +298,6 @@ public class AppointmentController {
             @RequestParam(value = "doctorId") String doctorId,
             @RequestParam(value = "dateEvent") String dateEvent,
             @RequestParam(value = "hasVisit") String hasVisit,
-            @RequestParam(value = "visitId") String visitId) throws ServletException {
             @RequestParam(value = "visitId") String visitId) {
         Instant start = Instant.now();
         List<AppointmentDto> result = appointmentService.getReservedAppointmentsByDoctorDateEventHasVisit(doctorId,
