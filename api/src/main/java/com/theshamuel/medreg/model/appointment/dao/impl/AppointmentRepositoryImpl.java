@@ -16,6 +16,8 @@ package com.theshamuel.medreg.model.appointment.dao.impl;
 import com.theshamuel.medreg.model.appointment.dao.AppointmentOperations;
 import com.theshamuel.medreg.model.appointment.entity.Appointment;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
@@ -76,11 +78,14 @@ public class AppointmentRepositoryImpl implements AppointmentOperations {
     @Override
     public List<Appointment> findReservedAppointmentsByDoctorAndDate(Doctor doctor,
             LocalDate dateEvent) {
+        Instant start = Instant.now();
         Criteria where = Criteria.where("doctor").is(doctor).and("dateEvent").is(dateEvent);
         Query query = Query.query(where)
                 .with(new Sort(new Sort.Order(Sort.Direction.ASC, "dateEvent")))
                 .with(new Sort(new Sort.Order(Sort.Direction.ASC, "timeEvent")));
         List result = mongo.find(query, Appointment.class);
+        logger.debug("Elapsed time findReservedAppointmentsByDoctorAndDate: {}", Duration
+                .between(start, Instant.now()).toMillis());
         return result != null ? result : Collections.emptyList();
 
     }
@@ -118,11 +123,16 @@ public class AppointmentRepositoryImpl implements AppointmentOperations {
      */
     @Override
     public List<Appointment> findReservedAppointmentsByDoctor(Doctor doctor) {
+        Instant start = Instant.now();
         Criteria where = Criteria.where("doctor").is(doctor);
         Query query = Query.query(where)
                 .with(new Sort(new Sort.Order(Sort.Direction.ASC, "dateEvent")))
                 .with(new Sort(new Sort.Order(Sort.Direction.ASC, "timeEvent")));
         List result = mongo.find(query, Appointment.class);
+        logger.debug("Elapsed time findReservedAppointmentsByDoctor: {}", Duration
+                .between(start, Instant.now()).toMillis());
+        return result != null ? result : Collections.emptyList();
+    }
 
     /**
      * {@inheritDoc}
