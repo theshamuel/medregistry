@@ -1,19 +1,7 @@
 <configuration debug="true" scan="true" scanPeriod="300 seconds">
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
-    <property name="LOG_PATH" value="/var/log/medregistry/medregistry-log.json" />
-    <property name="LOG_FILE" value="/var/log/medregistry/medregistry.log" />
-    <appender name="jsonAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
-        <file>${LOG_PATH}</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <maxIndex>7</maxIndex>
-            <fileNamePattern>${LOG_PATH}.%i</fileNamePattern>
-        </rollingPolicy>
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <MaxFileSize>1MB</MaxFileSize>
-        </triggeringPolicy>
-    </appender>
+    <property name="LOG_FILE" value="./medregistry.log" />
     <appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
             <pattern>%d [%thread] %-5level %logger{36} - %msg%n</pattern>
@@ -27,14 +15,7 @@
             <MaxFileSize>1MB</MaxFileSize>
         </triggeringPolicy>
     </appender>
-    <logger name="jsonLogger" additivity="true" level="INFO">
-        <appender-ref ref="jsonAppender"/>
-    </logger>
     <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="jsonAppender"/>
-    </root>
-    <logger name="com.theshamuel.medreg" level="debug" additivity="true">
         <appender-ref ref="fileAppender"/>
-    </logger>
+    </root>
 </configuration>
