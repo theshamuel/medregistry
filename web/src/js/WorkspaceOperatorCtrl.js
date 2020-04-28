@@ -564,6 +564,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         webix.ui({
             view: "layout",
             container: "today",
+            id: "today",
             width: 300,
             height: 625,
             css: "form_app",
@@ -612,6 +613,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         webix.ui({
             view: "layout",
             container: "tomorrow",
+            id: "tomorrow",
             width: 300,
             height: 625,
             css: "form_app",
