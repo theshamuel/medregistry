@@ -103,9 +103,10 @@ public class AppointmentRepositoryImpl implements AppointmentOperations {
                 String[] tmp = params[i].split("=");
                 if (tmp[0].equals("dateEvent")) {
                     where = where.and("dateEvent").is(LocalDate.parse(tmp[1].trim()));
-                } else if (!tmp[0]
-                        .equals("doctor")) //Filter by doctor is implemented in AppointmentServiceImpl, due to complex relation. So that doctor parameter is excludes
-                {
+                } else if (!tmp[0].equals("doctor")) {
+                    //Filter by doctor was implemented in
+                    // AppointmentServiceImpl, due to complex relation.
+                    //So that doctor parameter is excludes
                     where = where.and(tmp[0]).regex("^.*".concat(tmp[1].trim()).concat(".*$"), "i");
                 }
             }
