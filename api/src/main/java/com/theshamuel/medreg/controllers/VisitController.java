@@ -185,6 +185,16 @@ public class VisitController {
             return new ResponseEntity(visitService.save(visit), HttpStatus.CREATED);
         }
     }
+    /**
+     * Get visit.
+     *
+     * @param id    the visit's id
+     * @return the response entity
+     */
+    @GetMapping(value = "/visits/{id}")
+    public ResponseEntity<VisitDto> getVisitById(@PathVariable("id") String id) {
+        return new ResponseEntity(visitService.findOne(id), HttpStatus.OK);
+    }
 
     /**
      * Update visit.
