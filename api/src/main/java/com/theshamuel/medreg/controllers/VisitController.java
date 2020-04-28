@@ -229,7 +229,6 @@ public class VisitController {
      */
     @GetMapping(value = "/visits/{id}/services", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<ServiceDto>> getServicesOfVisit(@PathVariable("id") String id) {
-
         return new ResponseEntity(visitService.getServices(id), HttpStatus.OK);
     }
 
