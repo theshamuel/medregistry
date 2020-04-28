@@ -118,6 +118,17 @@ public class DoctorController {
     }
 
     /**
+     * Get doctor response entity.
+     *
+     * @param id the doctor id
+     * @return the response entity with status of operation
+     */
+    @GetMapping(value = "/doctors/{id}")
+    public ResponseEntity<DoctorDto> getDoctorById(@PathVariable(value = "id") String id) {
+        return new ResponseEntity(doctorService.findOne(id), HttpStatus.OK);
+    }
+
+    /**
      * Update doctor.
      *
      * @param id     the id
