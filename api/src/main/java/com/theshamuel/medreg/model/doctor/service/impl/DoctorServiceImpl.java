@@ -78,6 +78,14 @@ public class DoctorServiceImpl extends BaseServiceImpl<DoctorDto, Doctor> implem
      * {@inheritDoc}
      */
     @Override
+    public Position getPositionById(String id) {
+        return positionRepository.findById(id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public List<DoctorDto> findAllExcludeContractors(Sort sort) {
         return doctorRepository.findAllExcludeContractors(sort).stream().map(item -> obj2dto(item))
                 .collect(Collectors.toList());
@@ -91,6 +99,9 @@ public class DoctorServiceImpl extends BaseServiceImpl<DoctorDto, Doctor> implem
         String positionLabel =
                 obj.getPosition() != null ? positionRepository.findValueById(obj.getPosition())
                         : "";
+        String positionLabelGenitive =
+                obj.getPosition() != null && positionRepository.findById(obj.getPosition()) != null ? positionRepository.findById(obj.getPosition()).getValueGenitive()
+                        : "";
         List personalRates =
                 obj.getId() != null ? serviceService.getPersonalRatesByDoctorId(obj.getId()) : null;
         String personalRateLabel = "Нет";
@@ -102,7 +113,7 @@ public class DoctorServiceImpl extends BaseServiceImpl<DoctorDto, Doctor> implem
                 obj.getAuthor(),
                 obj.getName(), obj.getSurname(), obj.getMiddlename(), obj.getPosition(),
                 obj.getPhone(), obj.getIsNotWork(), obj.getExcludeFromReport(), obj.getContractor(),
-                personalRateLabel, positionLabel, obj.getValue());
+                personalRateLabel, positionLabel, positionLabelGenitive, obj.getValue());
     }
 
     /**

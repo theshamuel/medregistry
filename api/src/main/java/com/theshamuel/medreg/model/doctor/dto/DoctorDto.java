@@ -49,6 +49,9 @@ public class DoctorDto extends BaseEntity {
     @Transient
     private String positionLabel;
 
+    @Transient
+    private String positionLabelGenitive;
+
     /**
      * Instantiates a new Doctor dto.
      */
@@ -77,7 +80,7 @@ public class DoctorDto extends BaseEntity {
     public DoctorDto(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author,
             String name, String surname, String middlename, String position, String phone,
             Integer isNotWork, Integer excludeFromReport, Integer contractor,
-            String personalRateLabel, String positionLabel, String value) {
+            String personalRateLabel, String positionLabel, String positionLabelGenitive, String value) {
         setId(id);
         setCreatedDate(createdDate);
         setModifyDate(modifyDate);
@@ -93,6 +96,7 @@ public class DoctorDto extends BaseEntity {
         this.contractor = contractor;
         this.personalRateLabel = personalRateLabel;
         this.positionLabel = positionLabel;
+        this.positionLabelGenitive = positionLabelGenitive;
         setValue(value);
     }
 
@@ -112,6 +116,24 @@ public class DoctorDto extends BaseEntity {
      */
     public void setPositionLabel(String positionLabel) {
         this.positionLabel = positionLabel;
+    }
+
+    /**
+     * Gets position label.
+     *
+     * @return the position label
+     */
+    public String getPositionLabelGenitive() {
+        return positionLabelGenitive;
+    }
+
+    /**
+     * Sets position label.
+     *
+     * @param positionLabelGenitive the position label
+     */
+    public void setPositionLabelGenitive(String positionLabelGenitive) {
+        this.positionLabelGenitive = positionLabelGenitive;
     }
 
     /**

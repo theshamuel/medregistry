@@ -37,6 +37,9 @@ public class Position {
     @Field
     private String value;
 
+    @Field
+    private String valueGenitive;
+
     /**
      * Instantiates a new Position.
      */
@@ -49,9 +52,10 @@ public class Position {
      * @param id    the id
      * @param value the value
      */
-    public Position(String id, String value) {
+    public Position(String id, String value, String valueGenitive) {
         this.id = id;
         this.value = value;
+        this.valueGenitive = valueGenitive;
     }
 
 
@@ -89,5 +93,13 @@ public class Position {
      */
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getValueGenitive() {
+        return valueGenitive;
+    }
+
+    public void setValueGenitive(String valueGenitive) {
+        this.valueGenitive = valueGenitive;
     }
 }

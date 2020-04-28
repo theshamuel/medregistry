@@ -35,6 +35,14 @@ public interface DoctorService extends BaseService<DoctorDto, Doctor> {
     List<Position> getAllPositions();
 
     /**
+     * Gets position by id.
+     *
+     * @param id the id of position
+     * @return the one position
+     */
+    Position getPositionById(String id);
+
+    /**
      * Find all doctors, who are not contractors.
      *
      * @param sort the kind of sort

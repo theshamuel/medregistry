@@ -52,4 +52,11 @@ public class PositionRepositoryImpl implements PositionOperations {
         return "";
     }
 
+    @Override
+    public Position findById(String id) {
+        Criteria where = Criteria.where("id").is(id);
+        Query query = Query.query(where);
+        return mongo.findOne(query, Position.class);
+    }
+
 }
