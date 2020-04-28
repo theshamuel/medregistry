@@ -75,7 +75,7 @@ public class AppointmentController {
      * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/appointments")
-    public ResponseEntity<List> getAppointmentOrderByLabel(
+    public ResponseEntity<List<AppointmentDto>> getAppointmentOrderByLabel(
             @RequestParam(value = "count", defaultValue = "15") int pgCount,
             @RequestParam(value = "start", defaultValue = "0") int pgStart,
             @RequestParam(value = "filter", defaultValue = "") String filter)
@@ -289,7 +289,7 @@ public class AppointmentController {
      * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/appointments/reserved/hasvisit")
-    public ResponseEntity<List> getReservedAppointmentsByDoctorHasVisit(
+    public ResponseEntity<List<AppointmentDto>> getReservedAppointmentsByDoctorHasVisit(
             @RequestParam(value = "doctorId") String doctorId,
             @RequestParam(value = "dateEvent") String dateEvent,
             @RequestParam(value = "hasVisit") String hasVisit,
