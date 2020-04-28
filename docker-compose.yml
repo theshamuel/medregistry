@@ -8,7 +8,7 @@ services:
         logging:
             driver: json-file
             options:
-                max-size: "10m"
+                max-size: "3m"
                 max-file: "2"
         volumes:
             - ./db/data:/data/db
@@ -43,7 +43,7 @@ services:
         logging:
             driver: json-file
             options:
-                max-size: "10m"
+                max-size: "3m"
                 max-file: "2"
         volumes:
             - ./log/medregistry:/var/log/medregistry
@@ -70,7 +70,7 @@ services:
         logging:
             driver: json-file
             options:
-                max-size: "10m"
+                max-size: "3m"
                 max-file: "2"
         ports:
             - "9002:9002"
@@ -87,7 +87,7 @@ services:
         logging:
             driver: json-file
             options:
-                max-size: "10m"
+                max-size: "3m"
                 max-file: "2"
         volumes:
             - ./web/src/:/usr/share/nginx/
