@@ -26,6 +26,8 @@ import com.theshamuel.medreg.model.schedule.dao.ScheduleRepository;
 import com.theshamuel.medreg.model.schedule.entity.Schedule;
 import com.theshamuel.medreg.model.visit.dao.VisitRepository;
 import com.theshamuel.medreg.model.visit.entity.Visit;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -36,6 +38,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -48,6 +52,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appointment> implements
         AppointmentService {
+
+    private static Logger logger = LoggerFactory.getLogger(AppointmentServiceImpl.class);
 
     private AppointmentRepository appointmentRepository;
 
@@ -719,6 +725,7 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
     @Override
     public List<AppointmentDto> getReservedAppointmentsByDoctorDateEvent(String doctorId,
             LocalDate dateEvent) {
+        Instant start = Instant.now();
         List<AppointmentDto> result = new ArrayList<>();
         Optional<Doctor> doctor = Optional.ofNullable(doctorRepository.findOne(doctorId));
         doctor.ifPresent(e -> {
@@ -728,6 +735,8 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
                 result.add(obj2dto(item));
             });
         });
+        logger.debug("Elapsed time getReservedAppointmentsByDoctorDateEvent: {}", Duration
+                .between(start, Instant.now()).toMillis());
         return result.stream().sorted().collect(Collectors.toList());
     }
 
@@ -737,6 +746,7 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
      */
     @Override
     public List<AppointmentDto> getReservedAppointmentsByDoctor(String doctorId) {
+        Instant start = Instant.now();
         List<AppointmentDto> result = new ArrayList<>();
         Optional<Doctor> doctor = Optional.ofNullable(doctorRepository.findOne(doctorId));
         doctor.ifPresent(e -> {
@@ -746,6 +756,9 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
                 result.add(obj2dto(item));
             });
         });
+        logger.debug("Elapsed time getReservedAppointmentsByDoctor: {}", Duration
+                .between(start, Instant.now()).toMillis());
+        return result;
         return result;
     }
 
@@ -756,6 +769,7 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
     @Override
     public List<AppointmentDto> getReservedAppointmentsByDoctorDateEventHasVisit(String doctorId,
             LocalDate dateEvent, Boolean hasVisit, String visitId) {
+        Instant start = Instant.now();
         Optional<Visit> visit = Optional.ofNullable(visitRepository.findOne(visitId));
         final Optional<Appointment>[] apppointment = new Optional[]{Optional.empty()};
         visit.ifPresent(i -> {
@@ -778,6 +792,8 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
         result.forEach(e -> e.setValue(
                 e.getDateEvent().format(BaseEntity.formatterDate) + "(" + e.getTimeEvent() + ") - ("
                         + e.getClient() + ")"));
+        logger.debug("Elapsed time getReservedAppointmentsByDoctorHasVisit: {}", Duration
+                .between(start, Instant.now()).toMillis());
         return result.stream().sorted().collect(Collectors.toList());
     }
 
