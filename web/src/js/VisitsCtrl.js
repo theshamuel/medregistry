@@ -468,36 +468,36 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     },
                     {
                         rows: [{
-                                view: "tabbar",
-                                height: 35,
-                                multiview: true,
-                                id: "infoTabs",
-                                value: "generalInfo",
-                                on: {
-                                    onBeforeTabClick: $scope.getHistoryVisits
-                                },
-                                options: [{
-                                        id: "generalInfo",
-                                        css: "common_tab",
-                                        value: "Основные сведения"
-                                    },
-                                    {
-                                        id: "historyVisits",
-                                        css: "common_tab",
-                                        value: "История приемов"
-                                    },
-                                    {
-                                        id: "historyUltra",
-                                        css: "common_tab",
-                                        value: "УЗИ"
-                                    },
-                                    {
-                                        id: "historyAnalyzes",
-                                        css: "common_tab",
-                                        value: "Анализы"
-                                    }
-                                ],
+                            view: "tabbar",
+                            height: 35,
+                            multiview: true,
+                            id: "infoTabs",
+                            value: "generalInfo",
+                            on: {
+                                onBeforeTabClick: $scope.getHistoryVisits
                             },
+                            options: [{
+                                id: "generalInfo",
+                                css: "common_tab",
+                                value: "Основные сведения"
+                            },
+                                {
+                                    id: "historyVisits",
+                                    css: "common_tab",
+                                    value: "История приемов"
+                                },
+                                {
+                                    id: "historyUltra",
+                                    css: "common_tab",
+                                    value: "УЗИ"
+                                },
+                                {
+                                    id: "historyAnalyzes",
+                                    css: "common_tab",
+                                    value: "Анализы"
+                                }
+                            ],
+                        },
                             {
                                 css: "bottom_border_tab_header",
                                 cells: [{
@@ -918,6 +918,23 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                             on: {
                                 onBeforeTabClick: $scope.getReportsOfVisit
                             },
+                            options: [{
+                                id: "service",
+                                css: "common_tab",
+                                value: "Услуги"
+                            },
+                                {
+                                    id: "result",
+                                    css: "common_tab",
+                                    value: "Заключение"
+                                },
+                                {
+                                    id: "report",
+                                    css: "common_tab",
+                                    value: "Отчеты",
+                                }
+                            ],
+                        },
                             {
                                 css: "bottom_border_tab_header",
                                 cells: [{
@@ -1015,96 +1032,37 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                         }
                                     ]
                                 },
+                                    {
+                                        id: "result",
                                         view: "layout",
                                         margin: 8,
                                         padding: 10,
                                         rows: [{
-                                                view: "combo",
-                                                label: "Услуга",
-                                                id: "cmbService",
-                                                labelWidth: 70,
-                                                options: {
-                                                    filter: function (item, value) {
-                                                        return item.label.toString().toLowerCase().indexOf(value.toLowerCase()) > -1;
-                                                    },
-                                                    body: {
-                                                        data: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/services").response)
-                                                    }
-                                                }
+                                            view: "textarea",
+                                            label: "Диагноз",
+                                            id: "diagnosis",
+                                            name: "diagnosis",
+                                            labelPosition:"top",
+                                            height:90,
+                                            value: ""
                                             },
                                             {
-                                                cols: [{
-                                                        view: "text",
-                                                        label: "Скидка",
-                                                        id: "discount",
-                                                        name: "discount",
-                                                        labelWidth: 70
-                                                    },
-                                                    {
-                                                        cols: [{
-                                                                view: "button",
-                                                                type: "form",
-                                                                value: "AddService",
-                                                                label: "Добавить",
-                                                                click: function () {
-                                                                    $scope.addServicesOfVisit();
-                                                                }
-                                                            },
-                                                            {
-                                                                view: "button",
-                                                                value: "deleteService",
-                                                                label: "Удалить",
-                                                                click: function () {
-                                                                    $scope.deleteServicesOfVisit();
-                                                                }
-                                                            }
-                                                        ]
-                                                    },
-                                                    {
-                                                        view: "text",
-                                                        label: "Терминал",
-                                                        id: "terminalSum",
-                                                        name: "terminalSum",
-                                                        labelWidth: 90
-                                                    }
-                                                ]
+                                                view: "textarea",
+                                                label: "Лечение",
+                                                id: "therapy",
+                                                name: "therapy",
+                                                labelPosition:"top",
+                                                height:110,
+                                                value: ""
                                             },
                                             {
-                                                view: "datatable",
-                                                css: "table_without_border",
-                                                height: 200,
-                                                header: false,
-                                                scroll: "y",
-                                                select: true,
-                                                id: "gridServices",
-                                                columns: [{
-                                                        id: "label",
-                                                        header: "Наименование услуги",
-                                                        fillspace: true
-                                                    },
-                                                    {
-                                                        id: "price",
-                                                        header: "Прайс",
-                                                        width: 100
-                                                    },
-                                                    {
-                                                        id: "discount",
-                                                        header: "Скидка",
-                                                        width: 100
-                                                    }
-                                                ],
-                                                on: {
-                                                    onBeforeLoad: function () {
-                                                        this.showOverlay("Загрузка...");
-                                                    },
-                                                    onAfterLoad: function () {
-                                                        if (!this.count())
-                                                            this.showOverlay("Нет добавленных услуг");
-                                                        else
-                                                            this.hideOverlay();
-                                                    }
-                                                },
-                                                data: []
+                                                view: "textarea",
+                                                label: "Дообследование",
+                                                id: "additionalExamination",
+                                                name: "additionalExamination",
+                                                labelPosition:"top",
+                                                height:78,
+                                                value: ""
                                             }
                                         ]
                                     },
