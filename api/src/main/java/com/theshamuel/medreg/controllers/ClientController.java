@@ -20,10 +20,14 @@ import com.theshamuel.medreg.model.client.dao.ClientRepository;
 import com.theshamuel.medreg.model.client.entity.Client;
 import com.theshamuel.medreg.model.client.service.ClientService;
 import com.theshamuel.medreg.utils.Utils;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import javax.servlet.ServletException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -48,6 +52,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ClientController {
+
+    private static Logger logger = LoggerFactory.getLogger(ClientController.class);
 
     /**
      * The Client repository.
@@ -85,6 +91,7 @@ public class ClientController {
             @RequestParam(value = "start", defaultValue = "0") int pgStart,
             @RequestParam(value = "filter", defaultValue = "") String filter) {
         Sort.Direction sortDirection = Sort.Direction.ASC;
+        Instant start = Instant.now();
         int page = 0;
         if (pgStart > 0) {
             page = pgStart / 15;
@@ -109,6 +116,8 @@ public class ClientController {
         }
         grid.setData(result);
         grid.setPos(pgStart);
+        Instant finish = Instant.now();
+        logger.warn("Elapsed time getClientsOrderByLabel: {}", Duration.between(start, finish).toMillis());
         return new ResponseEntity(grid, HttpStatus.OK);
     }
 
@@ -120,7 +129,11 @@ public class ClientController {
      */
     @GetMapping(value = "/clients/{id}")
     public ResponseEntity<Client> getClientInfo(@PathVariable("id") String id) {
-        return new ResponseEntity(clientRepository.findOne(id), HttpStatus.OK);
+        Instant start = Instant.now();
+        Client res = clientRepository.findOne(id);
+        Instant finish = Instant.now();
+        logger.debug("Elapsed time getClientInfo: {}", Duration.between(start, finish).toMillis());
+        return new ResponseEntity(res, HttpStatus.OK);
     }
 
     /**
