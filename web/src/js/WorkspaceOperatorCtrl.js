@@ -43,18 +43,18 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
     ];
 
     webix.Date.startOnMonday = true;
-    var formatDate = webix.Date.dateToStr("%d.%m.%y");
-    var formatDay = webix.Date.dateToStr("%D");
-    var today = new Date();
-    var tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
-    var version_api = "v1";
+    let formatDate = webix.Date.dateToStr("%d.%m.%y");
+    let formatDay = webix.Date.dateToStr("%D");
+    let today = new Date();
+    let tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+    let version_api = "v1";
     $scope.visitId = "";
 
-    var now = function () {
+    let now = function () {
 
-        var minutes = "";
-        var hours = "";
-        var ctoday = new Date();
+        let minutes = "";
+        let hours = "";
+        let ctoday = new Date();
         if (ctoday.getHours() < 10)
             hours = "0" + ctoday.getHours();
         else
@@ -66,10 +66,10 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         return hours + ":" + minutes;
     };
 
-    var getFreeAppointmets = function () {
+    let getFreeAppointmets = function () {
         if ($$("dateEvent").getValue() != null && $$("dateEvent") != undefined &&
             $$("cmdDoctor").getValue() != null && $$("cmdDoctor") != undefined && $$("cmdDoctor").getValue() != "") {
-            var url = "/api/"+version_api+"/appointments/freetime?doctorId=" + $$("cmdDoctor").getValue() + "&dateEvent=" + $$("dateEvent").getValue().toJSON() + "&id";
+            let url = "/api/"+version_api+"/appointments/freetime?doctorId=" + $$("cmdDoctor").getValue() + "&dateEvent=" + $$("dateEvent").getValue().toJSON() + "&id";
             $$("freeTimeEvent").define("options", JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data) {
                     console.log("success");
@@ -86,10 +86,10 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
     };
 
     $scope.getReservedAppoinmentsHasVisit = function () {
-        var dataAppointments = [];
+        let dataAppointments = [];
         if ($$("cmbDoctorOnForm").getValue() != null && $$("cmbDoctorOnForm").getValue() != undefined && $$("cmbDoctorOnForm").getValue() != "") {
-            var id = $scope.visitId;
-            var url = "/api/"+version_api+"/appointments/reserved/hasvisit?doctorId=" + $$("cmbDoctorOnForm").getValue() + "&dateEvent=" + "&hasVisit=false&visitId";
+            let id = $scope.visitId;
+            let url = "/api/"+version_api+"/appointments/reserved/hasvisit?doctorId=" + $$("cmbDoctorOnForm").getValue() + "&dateEvent=" + "&hasVisit=false&visitId";
             if (id != undefined)
                 url = url + "=" + id;
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
@@ -105,7 +105,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         }
     };
 
-    var getAppointmetsByDoctor = function () {
+    let getAppointmetsByDoctor = function () {
         today = $$("calendar").getSelectedDate();
         tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
 
@@ -115,12 +115,12 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         $$("labelTomorrow").refresh();
 
         if ($$("cmbDoctor").getValue() != null && $$("cmbDoctor") != undefined && $$("cmbDoctor").getValue() != "") {
-            var doctorId = $$("cmbDoctor").getValue();
+            let doctorId = $$("cmbDoctor").getValue();
             $localStorage.wspDoctor = doctorId;
-            var urlToday = "/api/"+version_api+"/appointments/schedule?doctorId=" + doctorId + "&dateEvent=" + today.toJSON();
-            var urlTomorrow = "/api/"+version_api+"/appointments/schedule?doctorId=" + doctorId + "&dateEvent=" + tomorrow.toJSON();
-            var dataListToday = [];
-            var dataListTomorrow = [];
+            let urlToday = "/api/"+version_api+"/appointments/schedule?doctorId=" + doctorId + "&dateEvent=" + today.toJSON();
+            let urlTomorrow = "/api/"+version_api+"/appointments/schedule?doctorId=" + doctorId + "&dateEvent=" + tomorrow.toJSON();
+            let dataListToday = [];
+            let dataListTomorrow = [];
 
             webix.ajax().headers($localStorage.headers.value).sync().get(urlToday, {
                 success: function (text, data, XmlHttpRequest) {
@@ -155,7 +155,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
 
     }
 
-    var refreshComingVisits = function () {
+    let refreshComingVisits = function () {
         $$('comingVisits').clearAll();
         $$('comingVisits').define("data", JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/appointments/all?dateEvent=" + new Date().toJSON() + "&timeEvent=" + now()).response));
         $$('comingVisits').refresh();
@@ -163,12 +163,12 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
     }
 
     $scope.getInfoClient = function () {
-        var passportLabelClient = "";
-        var birthdayClient = "";
-        var phoneClient = "";
-        var addressClient = "";
+        let passportLabelClient = "";
+        let birthdayClient = "";
+        let phoneClient = "";
+        let addressClient = "";
         if ($$("cmbClient").getValue() != null && $$("cmbClient").getValue() != undefined && $$("cmbClient").getValue() != "") {
-            var url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
+            let url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     passportLabelClient = JSON.parse(text).passportLabel;
@@ -189,10 +189,10 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
     };
 
     $scope.getServicesOfVisit = function () {
-        var dataOfServices = [];
-        var url = "";
-        var id = $scope.visitId;
-        var error = false;
+        let dataOfServices = [];
+        let url = "";
+        let id = $scope.visitId;
+        let error = false;
         if (id != null && id != undefined && id != "") {
             url = "/api/"+version_api+"/visits/" + id + "/services";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
@@ -216,8 +216,8 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
 
     // +
     $scope.reloadComboClients = function () {
-        var dataClient = [];
-        var url = "/api/"+version_api+"/clients";
+        let dataClient = [];
+        let url = "/api/"+version_api+"/clients";
         webix.ajax().headers($localStorage.headers.value).sync().get(url, {
             success: function (text, data, XmlHttpRequest) {
                 dataClient = JSON.parse(text);
@@ -232,9 +232,9 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
     };
     // +
     $scope.getAllInfoClientById = function () {
-        var dataClient = [];
+        let dataClient = [];
         if ($$("cmbClient").getValue() != null && $$("cmbClient").getValue() != undefined && $$("cmbClient").getValue() != "") {
-            var url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
+            let url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataClient = JSON.parse(text);
@@ -251,11 +251,11 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
 
     // +   
     $scope.getHistoryVisits = function () {
-        var dataOfHistiryVisits = [];
-        var dataOfHistiryUltra = [];
-        var dataOfHistiryAnalyzes = [];
-        var url = "";
-        var id = $scope.clientId;
+        let dataOfHistiryVisits = [];
+        let dataOfHistiryUltra = [];
+        let dataOfHistiryAnalyzes = [];
+        let url = "";
+        let id = $scope.clientId;
         if (id != null && id != "") {
             url = "/api/"+version_api+"/clients/" + id + "/consult";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
@@ -298,9 +298,9 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
 
     // +
     $scope.getReportsOfVisit = function () {
-        var dataOfReports = [];
-        var url = "";
-        var id = $scope.visitId;
+        let dataOfReports = [];
+        let url = "";
+        let id = $scope.visitId;
         if (id != null && id != "") {
             url = "/api/"+version_api+"/reports/" + id;
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
@@ -318,16 +318,16 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
     };
     // +
     $scope.saveReportAsFile = function () {
-        var reportId = $$("gridReports").getSelectedId();
-        var reportItem = $$("gridReports").getSelectedItem();
-        var clientId = $$("cmbClient").getValue();
-        var visitId = $scope.visitId;
-        var doctorId = $$("cmbDoctorOnForm").getValue();
-        var dateReport = new Date();
+        let reportId = $$("gridReports").getSelectedId();
+        let reportItem = $$("gridReports").getSelectedItem();
+        let clientId = $$("cmbClient").getValue();
+        let visitId = $scope.visitId;
+        let doctorId = $$("cmbDoctorOnForm").getValue();
+        let dateReport = new Date();
         if (reportId === null || reportId === "" || reportId === undefined) {
             webix.alert(" Не выбран отчет для сохранения ");
         } else {
-            var url = "/api/"+version_api+"/reports/file/reportTemplate/" + clientId + "/" + doctorId + "/" + reportId + "/" + visitId + "/" + dateReport.toJSON();
+            let url = "/api/"+version_api+"/reports/file/reportTemplate/" + clientId + "/" + doctorId + "/" + reportId + "/" + visitId + "/" + dateReport.toJSON();
             webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
                 if (reportItem != null && reportItem.template === "Contract")
                     $rootScope.saveByteArray([data], 'Договор_' + dateReport.toJSON() + '.xls');
@@ -338,21 +338,21 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
     };
     // +
     $scope.printCardClient = function () {
-        var dateReport = new Date();
-        var clientId = $$("cmbClient").getValue();
-        var doctorId = $$("cmbDoctorOnForm").getValue();
+        let dateReport = new Date();
+        let clientId = $$("cmbClient").getValue();
+        let doctorId = $$("cmbDoctorOnForm").getValue();
         console.log("doctor=" + doctorId);
-        var url = "/api/"+version_api+"/reports/file/clientCard/" + clientId + "/" + doctorId + "/" + dateReport.toJSON();
+        let url = "/api/"+version_api+"/reports/file/clientCard/" + clientId + "/" + doctorId + "/" + dateReport.toJSON();
         webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
             $rootScope.saveByteArray([data], 'Карта_пациента-' + dateReport.toJSON() + '.xls');
         });
     }
 
     $scope.reloadGridVisit = function () {
-        var dataVisits = [];
-        var visTdDoctorId = "-1";
+        let dataVisits = [];
+        let visTdDoctorId = "-1";
 
-        var url = "/api/"+version_api+"/visits/" + visTdDoctorId + "/" + today.toJSON();
+        let url = "/api/"+version_api+"/visits/" + visTdDoctorId + "/" + today.toJSON();
         webix.ajax().headers($localStorage.headers.value).sync().get(url, {
             success: function (text, data, XmlHttpRequest) {
                 dataVisits = text;
@@ -366,9 +366,9 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
     };
 
     $scope.addServicesOfVisit = function () {
-        var url = "";
-        var id = $scope.visitId;
-        var serverValid = true;
+        let url = "";
+        let id = $scope.visitId;
+        let serverValid = true;
         if ((id === null || id === "" || id === undefined) && $$("editformvisit").validate()) {
             $scope.saveRowVisit();
             id = $scope.visitId;
@@ -394,10 +394,10 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
     };
 
     $scope.deleteServicesOfVisit = function () {
-        var dataOfServices = [];
-        var url = "";
-        var id = $scope.visitId;
-        var servicesId = $$("gridServices").getSelectedId();
+        let dataOfServices = [];
+        let url = "";
+        let id = $scope.visitId;
+        let servicesId = $$("gridServices").getSelectedId();
         console.log("$$().servicesId()=" + servicesId);
         if (servicesId === null || servicesId === "" || servicesId === undefined) {
             webix.alert(" Не выбрана услуга для удаления ");
@@ -682,7 +682,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     css: "list_app_doctor",
                     on:{
 						onItemDblClick: function(id,e, node){
-                            var url = "/api/"+version_api+"/appointments/isHere/"+id;
+                            let url = "/api/"+version_api+"/appointments/isHere/"+id;
                             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                                 success: function (text, data, XmlHttpRequest) {
                                     console.log("success");
@@ -1448,7 +1448,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         });
 
         $$('calendar').selectDate(new Date());
-        var wspDoctor = $localStorage.wspDoctor;
+        let wspDoctor = $localStorage.wspDoctor;
         if (wspDoctor != null && wspDoctor != undefined && wspDoctor != "") {
             $$("cmbDoctor").setValue(wspDoctor);
             $$("cmbDoctor").refresh();
@@ -1458,9 +1458,9 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
     });
 
     $scope.saveRowApp = function () {
-        var data = $$("editformapp").getValues();
+        let data = $$("editformapp").getValues();
         data.author = $localStorage.currentUser.login;
-        var url = "/api/"+version_api+"/appointments/";
+        let url = "/api/"+version_api+"/appointments/";
         webix.ajax().headers($localStorage.headers.value).sync()
             .post(url, JSON.stringify(data), {
                 success: function (text, data, XmlHttpRequest) {
@@ -1479,11 +1479,11 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
 
     // save row visit
     $scope.saveRowVisit = function () {
-        var id = $scope.visitId;
-        var data = $$("editformvisit").getValues();
+        let id = $scope.visitId;
+        let data = $$("editformvisit").getValues();
         data.author = $localStorage.currentUser.login;
         if (id === null || id === undefined || id === "") {
-            var url = "/api/"+version_api+"/visits/";
+            let url = "/api/"+version_api+"/visits/";
             webix.ajax().headers($localStorage.headers.value).sync()
                 .post(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1501,7 +1501,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                 });
             $$("editformvisit").bind($$("visitsGrid"));
         } else {
-            var url = "/api/"+version_api+"/visits/" + id;
+            let url = "/api/"+version_api+"/visits/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1520,11 +1520,11 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
     }
     // save row client
     $scope.saveClient = function () {
-        var data = $$("editformClient").getValues();
-        var id = data.id;
+        let data = $$("editformClient").getValues();
+        let id = data.id;
         data.author = $localStorage.currentUser.login;
         if (!id) {
-            var url = "/api/"+version_api+"/clients/";
+            let url = "/api/"+version_api+"/clients/";
             webix.ajax().headers($localStorage.headers.value).sync()
                 .post(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1544,7 +1544,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     }
                 });
         } else {
-            var url = "/api/"+version_api+"/clients/" + id;
+            let url = "/api/"+version_api+"/clients/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
