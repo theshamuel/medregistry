@@ -84,7 +84,7 @@ function config($routeProvider, $locationProvider) {
 function run($rootScope, $http, $location, $localStorage) {
     console.log("APP IS STARTING.....")
     webix.i18n.setLocale('ru-RU');
-    $rootScope.$on('$routeChangeSuccess', function (event, next, current) {
+    $rootScope.$on('$viewContentLoaded', function (event, next, current) {
         let e = document.getElementById("id_menu")
         if (e != null) {
             if (window.location.pathname.includes("login")) {
