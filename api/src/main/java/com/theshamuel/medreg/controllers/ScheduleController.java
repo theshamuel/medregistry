@@ -71,7 +71,7 @@ public class ScheduleController {
             @RequestParam(value = "count", defaultValue = "15") int pgCount,
             @RequestParam(value = "start", defaultValue = "0") int pgStart,
             @RequestParam(value = "filter", defaultValue = "") String filter) {
-        Sort.Direction sortDirection = Sort.Direction.ASC;
+        Sort.Direction sortDirection = Sort.Direction.DESC;
         int page = 0;
         if (pgStart > 0) {
             page = pgStart / 15;
