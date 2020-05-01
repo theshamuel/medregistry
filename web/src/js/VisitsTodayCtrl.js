@@ -182,7 +182,6 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
         let dateReport = new Date();
         let clientId = $$("cmbClient").getValue();
         let doctorId = $$("cmbDoctorOnForm").getValue();
-        console.log("doctor=" + doctorId);
         let url = "/api/"+version_api+"/reports/file/clientCard/" + clientId + "/" + doctorId + "/" + dateReport.toJSON();
         webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
             $rootScope.saveByteArray([data], 'Карта_пациента-' + dateReport.toJSON() + '.xls');
