@@ -113,11 +113,6 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         today = $$("calendar").getSelectedDate();
         tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
 
-        $$("labelToday").define("label", formatDate(today) + " (" + formatDay(today) + ")")
-        $$("labelToday").refresh();
-        $$("labelTomorrow").define("label", formatDate(tomorrow) + " (" + formatDay(tomorrow) + ")")
-        $$("labelTomorrow").refresh();
-
         if ($$("cmbDoctor").getValue() != null && $$("cmbDoctor") != undefined && $$("cmbDoctor").getValue() != "") {
             let doctorId = $$("cmbDoctor").getValue();
             $localStorage.wspDoctor = doctorId;
@@ -159,6 +154,11 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         console.timeEnd("call getAppointmentsByDoctor")
     }
 
+    let setListTodayAndTomorrowLabel = function () {
+        $$("labelToday").define("label", formatDate(today) + " (" + formatDay(today) + ")")
+        $$("labelToday").refresh();
+        $$("labelTomorrow").define("label", formatDate(tomorrow) + " (" + formatDay(tomorrow) + ")")
+        $$("labelTomorrow").refresh();
     }
 
     let refreshComingVisits = function () {
@@ -226,7 +226,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         console.timeEnd("call getServicesOfVisit")
     };
 
-    // +
+    //Load combo box on EditVisitForm
     $scope.reloadComboClients = function () {
         console.time("call reloadComboClients")
         let dataClient = [];
@@ -244,12 +244,32 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         $$('cmbClient').refresh();
         console.timeEnd("call reloadComboClients")
     };
-    // +
+
+    //Load combo box on EditVisitForm
+    $scope.reloadComboServices = function () {
+        console.time("call reloadComboServices")
+        let dataServices = [];
+        let url = "/api/" + version_api + "/services";
+        webix.ajax().headers($localStorage.headers.value).sync().get(url, {
+            success: function (text, data, XmlHttpRequest) {
+                dataServices = JSON.parse(text);
+            },
+            error: function (text, data, XmlHttpRequest) {
+                //Сделать стандартные проверки
+                $scope.checkAuth(XmlHttpRequest);
+            }
+        });
+        $$('cmbService').define("options", dataServices);
+        $$('cmbService').refresh();
+        console.timeEnd("call reloadComboServices")
+    }
+
+    //Get client info for EditVisitForm
     $scope.getAllInfoClientById = function () {
         console.time("call getAllInfoClientById")
         let dataClient = [];
         if ($$("cmbClient").getValue() != null && $$("cmbClient").getValue() != undefined && $$("cmbClient").getValue() != "") {
-            let url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
+            let url = "/api/" + version_api + "/clients/" + $$("cmbClient").getValue();
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataClient = JSON.parse(text);
@@ -598,17 +618,19 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
             height: 625,
             css: "form_app",
             rows: [{
-                    view: "label",
-                    id: "labelToday",
-                    height: 30,
-                    align: "center",
-                    css: "lb_template_list"
-                },
+                view: "label",
+                id: "labelToday",
+                height: 30,
+                align: "center",
+                css: "lb_template_list",
+                label: formatDate(today) + " (" + formatDay(today) + ")",
+            },
                 {
                     view: "list",
                     container: "listToday",
                     id: "listToday",
                     css: "list_app",
+                    label: formatDate(today) + " (" + formatDay(today) + ")",
                     type: {
                         itemTemplateStart: function (obj) {
                             if (obj.stateLabel != null && obj.stateLabel != undefined && obj.stateLabel.indexOf("Свободно") > -1)
@@ -630,7 +652,6 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                             } else {
                                 webix.extend(this, webix.OverlayBox);
                                 this.showOverlay("<div class='lb_template'>На дату отсутствуют<br/> записи на прием<br/></div>");
-
                             }
                         }
                     }
@@ -647,12 +668,13 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
             height: 625,
             css: "form_app",
             rows: [{
-                    view: "label",
-                    id: "labelTomorrow",
-                    height: 30,
-                    align: "center",
-                    css: "lb_template_list"
-                },
+                view: "label",
+                id: "labelTomorrow",
+                height: 30,
+                align: "center",
+                css: "lb_template_list",
+                label: formatDate(tomorrow) + " (" + formatDay(tomorrow) + ")"
+            },
                 {
                     view: "list",
                     container: "listTomorrow",
@@ -694,24 +716,27 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
             height: 625,
             css: "without_border",
             rows: [{
-                    view: "calendar",
-                    id: "calendar",
-                    date: new Date(),
-                    css: "without_border",
-                    events: webix.Date.isHoliday,
-                    weekHeader: true,
-                    on: {
-                        onChange: getAppointmetsByDoctor
+                view: "calendar",
+                id: "calendar",
+                date: new Date(),
+                css: "without_border",
+                events: webix.Date.isHoliday,
+                weekHeader: true,
+                on: {
+                    onChange: function () {
+                        getAppointmentsByDoctor()
+                        setListTodayAndTomorrowLabel()
                     }
-                },
+                }
+            },
                 {
                     view: "list",
                     container: "comingVisits",
                     id: "comingVisits",
                     css: "list_app_doctor",
-                    on:{
-						onItemDblClick: function(id,e, node){
-                            let url = "/api/"+version_api+"/appointments/isHere/"+id;
+                    on: {
+                        onItemDblClick: function (id, e, node) {
+                            let url = "/api/" + version_api + "/appointments/isHere/" + id;
                             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                                 success: function (text, data, XmlHttpRequest) {
                                     console.log("success");
@@ -722,27 +747,26 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                                     console.log("fail");
                                 }
                             });
-                          
+
                         },
-					},
+                        onAfterLoad: function () {
+                            if (!this.count()) { //if no data is available
+                                webix.extend(this, webix.OverlayBox);
+                                this.showOverlay("<div class='lb_template'>На сегодня отсутствуют<br/> записи на прием<br/></div>&#9785;");
+                            }
+                        }
+                    },
                     type: {
                         itemTemplate: function (obj) {
                             if (obj.isHere === true)
-                                return "<div class='list_cell_free'><div><span class='lb_template'> "+obj.timeEvent+"</span> - "+obj.client+" </div><div style='text-align:right;'>"+obj.doctorLabel+"</div></div>"
+                                return "<div class='list_cell_free'><div><span class='lb_template'> " + obj.timeEvent + "</span> - " + obj.client + " </div><div style='text-align:right;'>" + obj.doctorLabel + "</div></div>"
                             else
-                                return "<div class='list_cell_coming_app'><div><span class='lb_template'> "+obj.timeEvent+"</span> - "+obj.client+" </div><div style='text-align:right;'>"+obj.doctorLabel+"</div></div>"
+                                return "<div class='list_cell_coming_app'><div><span class='lb_template'> " + obj.timeEvent + "</span> - " + obj.client + " </div><div style='text-align:right;'>" + obj.doctorLabel + "</div></div>"
                         },
                         height: 80,
                         template: "{common.itemTemplate()}",
                     },
-                    data: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/appointments/all?dateEvent=" + today.toJSON() + "&timeEvent=" + now()).response),
-                    ready: function () {
-                        if (!this.count()) { //if no data is available
-                            webix.extend(this, webix.OverlayBox);
-                            this.showOverlay("<div class='lb_template'>На сегодня отсутствуют<br/> записи на прием<br/></div>&#9785;");
-                        }
-                    }
-
+                    data: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/" + version_api + "/appointments/all?dateEvent=" + today.toJSON() + "&timeEvent=" + now()).response)
                 }
             ]
         });
@@ -759,6 +783,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
             select: "row",
             datatype: "json",
             columns: $scope.columns,
+            data: [],
             on: {
                 onItemDblClick: function () {
                     console.time("call webix.ui( visitsGrid ) onItemDblClick")
@@ -797,6 +822,12 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                 view: "form",
                 id: "editformvisit",
                 complexData: true,
+                on: {
+                    onValues: function() {
+                        $scope.reloadComboClients()
+                        $scope.reloadComboServices()
+                    }
+                },
                 elements: [{
                     view: "combo",
                     label: "ФИО доктора",
