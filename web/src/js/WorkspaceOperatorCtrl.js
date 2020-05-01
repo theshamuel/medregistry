@@ -9,14 +9,14 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
     $scope.language = 'Russian';
 
     $scope.columns = [{
-            id: "timeLabel",
-            header: 'Время приема',
-            width: 70
-        }, {
-            id: "contractNum",
-            header: '№ договора',
-            width: 110
-        },
+        id: "timeLabel",
+        header: 'Время приема',
+        width: 70
+    }, {
+        id: "contractNum",
+        header: '№ договора',
+        width: 110
+    },
         {
             id: "doctorLabel",
             header: ['ФИО доктора',
@@ -51,7 +51,6 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
     $scope.visitId = "";
 
     let now = function () {
-
         let minutes = "";
         let hours = "";
         let ctoday = new Date();
@@ -66,10 +65,11 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         return hours + ":" + minutes;
     };
 
-    let getFreeAppointmets = function () {
+    let getFreeAppointments = function () {
+        console.time("call getFreeAppointments")
         if ($$("dateEvent").getValue() != null && $$("dateEvent") != undefined &&
             $$("cmdDoctor").getValue() != null && $$("cmdDoctor") != undefined && $$("cmdDoctor").getValue() != "") {
-            let url = "/api/"+version_api+"/appointments/freetime?doctorId=" + $$("cmdDoctor").getValue() + "&dateEvent=" + $$("dateEvent").getValue().toJSON() + "&id";
+            let url = "/api/" + version_api + "/appointments/freetime?doctorId=" + $$("cmdDoctor").getValue() + "&dateEvent=" + $$("dateEvent").getValue().toJSON() + "&id";
             $$("freeTimeEvent").define("options", JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data) {
                     console.log("success");
@@ -83,13 +83,15 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         } else {
             $$("freeTimeEvent").define("options", []);
         }
+        console.timeEnd("call getFreeAppointments")
     };
 
-    $scope.getReservedAppoinmentsHasVisit = function () {
+    $scope.getReservedAppointmentsHasVisit = function () {
+        console.time("call getReservedAppointmentsHasVisit")
         let dataAppointments = [];
         if ($$("cmbDoctorOnForm").getValue() != null && $$("cmbDoctorOnForm").getValue() != undefined && $$("cmbDoctorOnForm").getValue() != "") {
             let id = $scope.visitId;
-            let url = "/api/"+version_api+"/appointments/reserved/hasvisit?doctorId=" + $$("cmbDoctorOnForm").getValue() + "&dateEvent=" + "&hasVisit=false&visitId";
+            let url = "/api/" + version_api + "/appointments/reserved/hasvisit?doctorId=" + $$("cmbDoctorOnForm").getValue() + "&dateEvent=" + "&hasVisit=false&visitId";
             if (id != undefined)
                 url = url + "=" + id;
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
@@ -103,9 +105,11 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
             $$('cmbAppointments').define("options", dataAppointments);
             $$('cmbAppointments').refresh();
         }
+        console.timeEnd("call getReservedAppointmentsHasVisit")
     };
 
-    let getAppointmetsByDoctor = function () {
+    let getAppointmentsByDoctor = function () {
+        console.time("call getAppointmentsByDoctor")
         today = $$("calendar").getSelectedDate();
         tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
 
@@ -117,8 +121,8 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         if ($$("cmbDoctor").getValue() != null && $$("cmbDoctor") != undefined && $$("cmbDoctor").getValue() != "") {
             let doctorId = $$("cmbDoctor").getValue();
             $localStorage.wspDoctor = doctorId;
-            let urlToday = "/api/"+version_api+"/appointments/schedule?doctorId=" + doctorId + "&dateEvent=" + today.toJSON();
-            let urlTomorrow = "/api/"+version_api+"/appointments/schedule?doctorId=" + doctorId + "&dateEvent=" + tomorrow.toJSON();
+            let urlToday = "/api/" + version_api + "/appointments/schedule?doctorId=" + doctorId + "&dateEvent=" + today.toJSON();
+            let urlTomorrow = "/api/" + version_api + "/appointments/schedule?doctorId=" + doctorId + "&dateEvent=" + tomorrow.toJSON();
             let dataListToday = [];
             let dataListTomorrow = [];
 
@@ -152,23 +156,28 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
             $$('listToday').refresh();
             $$('listTomorrow').refresh();
         }
+        console.timeEnd("call getAppointmentsByDoctor")
+    }
 
     }
 
     let refreshComingVisits = function () {
+        console.time("call refreshComingVisits")
         $$('comingVisits').clearAll();
-        $$('comingVisits').define("data", JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/appointments/all?dateEvent=" + new Date().toJSON() + "&timeEvent=" + now()).response));
+        $$('comingVisits').define("data", JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/" + version_api + "/appointments/all?dateEvent=" + new Date().toJSON() + "&timeEvent=" + now()).response));
         $$('comingVisits').refresh();
+        console.timeEnd("call refreshComingVisits")
 
     }
 
     $scope.getInfoClient = function () {
+        console.time("call getInfoClient")
         let passportLabelClient = "";
         let birthdayClient = "";
         let phoneClient = "";
         let addressClient = "";
         if ($$("cmbClient").getValue() != null && $$("cmbClient").getValue() != undefined && $$("cmbClient").getValue() != "") {
-            let url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
+            let url = "/api/" + version_api + "/clients/" + $$("cmbClient").getValue();
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     passportLabelClient = JSON.parse(text).passportLabel;
@@ -186,15 +195,17 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         $$("birthday").setValue(birthdayClient);
         $$("phone").setValue(phoneClient);
         $$("address").setValue(addressClient);
+        console.timeEnd("call getInfoClient")
     };
 
     $scope.getServicesOfVisit = function () {
+        console.time("call getServicesOfVisit")
         let dataOfServices = [];
         let url = "";
         let id = $scope.visitId;
         let error = false;
         if (id != null && id != undefined && id != "") {
-            url = "/api/"+version_api+"/visits/" + id + "/services";
+            url = "/api/" + version_api + "/visits/" + id + "/services";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataOfServices = text;
@@ -212,12 +223,14 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         } else {
             error = false;
         }
+        console.timeEnd("call getServicesOfVisit")
     };
 
     // +
     $scope.reloadComboClients = function () {
+        console.time("call reloadComboClients")
         let dataClient = [];
-        let url = "/api/"+version_api+"/clients";
+        let url = "/api/" + version_api + "/clients";
         webix.ajax().headers($localStorage.headers.value).sync().get(url, {
             success: function (text, data, XmlHttpRequest) {
                 dataClient = JSON.parse(text);
@@ -229,9 +242,11 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         });
         $$('cmbClient').define("options", dataClient);
         $$('cmbClient').refresh();
+        console.timeEnd("call reloadComboClients")
     };
     // +
     $scope.getAllInfoClientById = function () {
+        console.time("call getAllInfoClientById")
         let dataClient = [];
         if ($$("cmbClient").getValue() != null && $$("cmbClient").getValue() != undefined && $$("cmbClient").getValue() != "") {
             let url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
@@ -247,17 +262,19 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
 
         }
         return dataClient;
+        console.timeEnd("call getAllInfoClientById")
     };
 
     // +   
     $scope.getHistoryVisits = function () {
+        console.time("call getHistoryVisits")
         let dataOfHistiryVisits = [];
         let dataOfHistiryUltra = [];
         let dataOfHistiryAnalyzes = [];
         let url = "";
         let id = $scope.clientId;
         if (id != null && id != "") {
-            url = "/api/"+version_api+"/clients/" + id + "/consult";
+            url = "/api/" + version_api + "/clients/" + id + "/consult";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataOfHistiryVisits = text;
@@ -267,7 +284,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     console.log("FAIL=" + text)
                 }
             });
-            url = "/api/"+version_api+"/clients/" + id + "/ultra";
+            url = "/api/" + version_api + "/clients/" + id + "/ultra";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataOfHistiryUltra = text;
@@ -277,7 +294,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     console.log("FAIL=" + text)
                 }
             });
-            url = "/api/"+version_api+"/clients/" + id + "/analyzes";
+            url = "/api/" + version_api + "/clients/" + id + "/analyzes";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataOfHistiryAnalyzes = text;
@@ -294,15 +311,17 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         $$("gridHistoryUltra").parse(dataOfHistiryUltra);
         $$("gridHistoryAnalyzes").clearAll();
         $$("gridHistoryAnalyzes").parse(dataOfHistiryAnalyzes);
+        console.timeEnd("call getHistoryVisits")
     };
 
     // +
     $scope.getReportsOfVisit = function () {
+        console.time("call getReportsOfVisit")
         let dataOfReports = [];
         let url = "";
         let id = $scope.visitId;
         if (id != null && id != "") {
-            url = "/api/"+version_api+"/reports/" + id;
+            url = "/api/" + version_api + "/reports/" + id;
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataOfReports = text;
@@ -315,9 +334,11 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         }
         $$("gridReports").clearAll();
         $$("gridReports").parse(dataOfReports);
+        console.timeEnd("call getReportsOfVisit")
     };
     // +
     $scope.saveReportAsFile = function () {
+        console.time("call saveReportAsFile")
         let reportId = $$("gridReports").getSelectedId();
         let reportItem = $$("gridReports").getSelectedItem();
         let clientId = $$("cmbClient").getValue();
@@ -327,7 +348,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         if (reportId === null || reportId === "" || reportId === undefined) {
             webix.alert(" Не выбран отчет для сохранения ");
         } else {
-            let url = "/api/"+version_api+"/reports/file/reportTemplate/" + clientId + "/" + doctorId + "/" + reportId + "/" + visitId + "/" + dateReport.toJSON();
+            let url = "/api/" + version_api + "/reports/file/reportTemplate/" + clientId + "/" + doctorId + "/" + reportId + "/" + visitId + "/" + dateReport.toJSON();
             webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
                 if (reportItem != null && reportItem.template === "Contract")
                     $rootScope.saveByteArray([data], 'Договор_' + dateReport.toJSON() + '.xls');
@@ -335,24 +356,28 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     $rootScope.saveByteArray([data], 'Бланк_' + reportItem.label + "-" + dateReport.toJSON() + '.doc');
             });
         }
+        console.timeEnd("call saveReportAsFile")
     };
     // +
     $scope.printCardClient = function () {
+        console.time("call printCardClient")
         let dateReport = new Date();
         let clientId = $$("cmbClient").getValue();
         let doctorId = $$("cmbDoctorOnForm").getValue();
         console.log("doctor=" + doctorId);
-        let url = "/api/"+version_api+"/reports/file/clientCard/" + clientId + "/" + doctorId + "/" + dateReport.toJSON();
+        let url = "/api/" + version_api + "/reports/file/clientCard/" + clientId + "/" + doctorId + "/" + dateReport.toJSON();
         webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
             $rootScope.saveByteArray([data], 'Карта_пациента-' + dateReport.toJSON() + '.xls');
         });
+        console.timeEnd("call printCardClient")
     }
 
     $scope.reloadGridVisit = function () {
+        console.time("call reloadGridVisit")
         let dataVisits = [];
         let visTdDoctorId = "-1";
 
-        let url = "/api/"+version_api+"/visits/" + visTdDoctorId + "/" + today.toJSON();
+        let url = "/api/" + version_api + "/visits/" + visTdDoctorId + "/" + today.toJSON();
         webix.ajax().headers($localStorage.headers.value).sync().get(url, {
             success: function (text, data, XmlHttpRequest) {
                 dataVisits = text;
@@ -363,9 +388,11 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         });
         $$("visitsGrid").clearAll();
         $$("visitsGrid").parse(dataVisits);
+        console.timeEnd("call reloadGridVisit")
     };
 
     $scope.addServicesOfVisit = function () {
+        console.time("call addServicesOfVisit")
         let url = "";
         let id = $scope.visitId;
         let serverValid = true;
@@ -375,7 +402,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
             serverValid = $scope.serverValidation;
         }
         if ($$("editformvisit").validate() && serverValid && id != null && id != "" && id != undefined && $$("cmbService").getValue() != null && $$("cmbService").getValue() != undefined && $$("cmbService").getValue() != "") {
-            url = "/api/"+version_api+"/visits/" + id + "/services/" + $$("cmbService").getValue() + "?discount=";
+            url = "/api/" + version_api + "/visits/" + id + "/services/" + $$("cmbService").getValue() + "?discount=";
             if ($$("discount").getValue() != "" && $$("discount").getValue() != undefined && $$("discount").getValue() != null)
                 url = url + $$("discount").getValue();
             console.log("addServicesOfVisit url=" + url)
@@ -390,10 +417,11 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
 
             });
         }
-
+        console.timeEnd("call addServicesOfVisit")
     };
 
     $scope.deleteServicesOfVisit = function () {
+        console.time("call deleteServicesOfVisit")
         let dataOfServices = [];
         let url = "";
         let id = $scope.visitId;
@@ -402,7 +430,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         if (servicesId === null || servicesId === "" || servicesId === undefined) {
             webix.alert(" Не выбрана услуга для удаления ");
         } else if (id != null && id != "" && id != undefined) {
-            url = "/api/"+version_api+"/visits/" + id + "/services/" + servicesId;
+            url = "/api/" + version_api + "/visits/" + id + "/services/" + servicesId;
             console.log("URL=" + url);
             webix.ajax().headers($localStorage.headers.value).sync().del(url, {
                 success: function (text, data, XmlHttpRequest) {
@@ -414,6 +442,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                 }
             });
         }
+        console.timeEnd("call deleteServicesOfVisit")
     };
 
     webix.ready(function () {
@@ -447,7 +476,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                                 value: 0
                             }
                         ]
-                    }, 
+                    },
                     {
                         view: "combo",
                         label: "ФИО доктора",
@@ -455,9 +484,9 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                         name: "doctorId",
                         labelWidth: 130,
                         on: {
-                            onChange: getFreeAppointmets
+                            onChange: getFreeAppointments
                         },
-                        options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/doctors").response),
+                        options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/" + version_api + "/doctors").response),
                         invalidMessage: ""
                     },
                     {
@@ -472,7 +501,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                                 labelWidth: 130,
                                 invalidMessage: "",
                                 on: {
-                                    onChange: getFreeAppointmets
+                                    onChange: getFreeAppointments
                                 }
                             },
                             {
@@ -490,11 +519,11 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     },
                     {
                         cols: [{
-                                view: "text",
-                                label: "ФИО пациента",
-                                name: "client",
-                                labelWidth: 130,
-                            },
+                            view: "text",
+                            label: "ФИО пациента",
+                            name: "client",
+                            labelWidth: 130,
+                        },
                             {
                                 view: "text",
                                 label: "Телефон",
@@ -513,19 +542,19 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     },
                     {
                         cols: [{
-                                view: "button",
-                                type: "form",
-                                value: "Save",
-                                label: "Сохранить",
-                                click: function () {
-                                    if ($$("editformapp").validate()) {
-                                        $scope.saveRowApp();
-                                        if ($scope.serverValidation) {
-                                            this.getTopParentView().hide();
-                                        }
+                            view: "button",
+                            type: "form",
+                            value: "Save",
+                            label: "Сохранить",
+                            click: function () {
+                                if ($$("editformapp").validate()) {
+                                    $scope.saveRowApp();
+                                    if ($scope.serverValidation) {
+                                        this.getTopParentView().hide();
                                     }
                                 }
-                            },
+                            }
+                        },
                             {
                                 view: "button",
                                 value: "Cancel",
@@ -554,9 +583,9 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
             name: "doctor",
             labelWidth: 120,
             inputWidth: 400,
-            options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/doctors").response),
+            options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/" + version_api + "/doctors").response),
             on: {
-                onChange: getAppointmetsByDoctor
+                onChange: getAppointmentsByDoctor
             }
         });
 
@@ -732,6 +761,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
             columns: $scope.columns,
             on: {
                 onItemDblClick: function () {
+                    console.time("call webix.ui( visitsGrid ) onItemDblClick")
                     $scope.visitId = $$("visitsGrid").getSelectedId();
                     $$("editformvisit").clearValidation();
                     $$("gridServices").clearAll();
@@ -740,6 +770,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     $$("editwinvisit").show();
                     $scope.getInfoClient();
                     $scope.getServicesOfVisit();
+                    console.timeEnd("call webix.ui( visitsGrid ) onItemDblClick")
                 },
                 onBeforeLoad: function () {
                     this.showOverlay("Загрузка...");
@@ -767,17 +798,17 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                 id: "editformvisit",
                 complexData: true,
                 elements: [{
-                        view: "combo",
-                        label: "ФИО доктора",
-                        name: "doctorId",
-                        id: "cmbDoctorOnForm",
-                        labelWidth: 145,
-                        options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/doctors").response),
-                        on: {
-                            onChange: $scope.getReservedAppoinmentsHasVisit
-                        },
-                        invalidMessage: ""
+                    view: "combo",
+                    label: "ФИО доктора",
+                    name: "doctorId",
+                    id: "cmbDoctorOnForm",
+                    labelWidth: 145,
+                    options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/" + version_api + "/doctors").response),
+                    on: {
+                        onChange: $scope.getReservedAppointmentsHasVisit
                     },
+                    invalidMessage: ""
+                },
                     {
                         view: "combo",
                         label: "Запись на прием",
@@ -787,28 +818,28 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     },
                     {
                         cols: [{
-                                view: "combo",
-                                label: "ФИО пациента",
-                                id: "cmbClient",
-                                name: "clientId",
-                                labelWidth: 145,
-                                options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/clients").response),
-                                on: {
-                                    onChange: $scope.getInfoClient
-                                },
-                                invalidMessage: ""
+                            view: "combo",
+                            label: "ФИО пациента",
+                            id: "cmbClient",
+                            name: "clientId",
+                            labelWidth: 145,
+                            options: [],
+                            on: {
+                                onChange: $scope.getInfoClient
                             },
+                            invalidMessage: ""
+                        },
                             {
                                 gravity: 0.55,
                                 cols: [{
-                                        view: "button",
-                                        type: "form",
-                                        value: "AddClient",
-                                        label: "Добавить",
-                                        click: function () {
-                                            $scope.insertClient();
-                                        }
-                                    },
+                                    view: "button",
+                                    type: "form",
+                                    value: "AddClient",
+                                    label: "Добавить",
+                                    click: function () {
+                                        $scope.insertClient();
+                                    }
+                                },
                                     {
                                         view: "button",
                                         value: "UpdateClient",
@@ -823,26 +854,23 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     },
                     {
                         cols: [{
-                                cols: [{
-                                        view: "text",
-                                        // label: "Паспорт",
-                                        id: "passportLabel",
-                                        name: "passportLabel",
-                                        disabled: true
-                                    },
-                                    {
-                                        view: "text",
-                                        // label: "Дата рождения",
-                                        id: "birthday",
-                                        name: "birthday",
-                                        disabled: true
-                                    }
-                                ]
+                            cols: [{
+                                view: "text",
+                                id: "passportLabel",
+                                name: "passportLabel",
+                                disabled: true
                             },
+                                {
+                                    view: "text",
+                                    id: "birthday",
+                                    name: "birthday",
+                                    disabled: true
+                                }
+                            ]
+                        },
                             {
                                 gravity: 0.55,
                                 view: "text",
-                                // label: "Телефон",
                                 id: "phone",
                                 name: "phone",
                                 disabled: true
@@ -851,12 +879,11 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     },
                     {
                         cols: [{
-                                view: "text",
-                                // label: "Место жительства",
-                                id: "address",
-                                name: "address",
-                                disabled: true
-                            },
+                            view: "text",
+                            id: "address",
+                            name: "address",
+                            disabled: true
+                        },
                             {
                                 gravity: 0.55,
                                 view: "button",
@@ -871,147 +898,140 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     },
                     {
                         rows: [{
-                                view: "tabbar",
-                                id: "infoVisit",
-                                height: 35,
-                                multiview: true,
-                                on: {
-                                    onBeforeTabClick: $scope.getReportsOfVisit
-                                },
-                                options: [{
-                                        id: "service",
-                                        css: "common_tab",
-                                        value: "Услуги"
-                                    },
-                                    {
-                                        id: "report",
-                                        css: "common_tab",
-                                        value: "Отчеты",
-
-                                    }
-                                ],
+                            view: "tabbar",
+                            id: "infoVisit",
+                            height: 35,
+                            multiview: true,
+                            on: {
+                                onBeforeTabClick: $scope.getReportsOfVisit
                             },
+                            options: [{
+                                id: "service",
+                                css: "common_tab",
+                                value: "Услуги"
+                            },
+                                {
+                                    id: "report",
+                                    css: "common_tab",
+                                    value: "Отчеты",
+
+                                }
+                            ],
+                        },
                             {
                                 css: "bottom_border_tab_header",
                                 cells: [{
-                                        id: "service",
-                                        view: "layout",
-                                        margin: 8,
-                                        padding: 10,
-                                        rows: [{
-                                                view: "combo",
-                                                label: "Услуга",
-                                                id: "cmbService",
-                                                labelWidth: 70,
-                                                options: {
-                                                    filter: function (item, value) {
-                                                        return item.label.toString().toLowerCase().indexOf(value.toLowerCase()) > -1;
+                                    id: "service",
+                                    view: "layout",
+                                    margin: 8,
+                                    padding: 10,
+                                    rows: [{
+                                        view: "combo",
+                                        label: "Услуга",
+                                        id: "cmbService",
+                                        labelWidth: 70,
+                                        options: []
+                                    },
+                                        {
+                                            cols: [{
+                                                view: "text",
+                                                label: "Скидка",
+                                                id: "discount",
+                                                name: "discount",
+                                                labelWidth: 70
+                                            },
+                                                {
+                                                    cols: [{
+                                                        view: "button",
+                                                        type: "form",
+                                                        value: "AddService",
+                                                        label: "Добавить",
+                                                        click: function () {
+                                                            console.log("CALL ADD")
+                                                            $scope.addServicesOfVisit();
+                                                        }
                                                     },
-                                                    body: {
-                                                        data: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/services").response)
-                                                    }
+                                                        {
+                                                            view: "button",
+                                                            value: "deleteService",
+                                                            label: "Удалить",
+                                                            click: function () {
+                                                                $scope.deleteServicesOfVisit();
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    // gravity: 1.25,
+                                                    view: "text",
+                                                    label: "Терминал",
+                                                    id: "terminalSum",
+                                                    name: "terminalSum",
+                                                    labelWidth: 90
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            view: "datatable",
+                                            css: "table_without_border",
+                                            height: 200,
+                                            header: false,
+                                            scroll: "y",
+                                            select: true,
+                                            id: "gridServices",
+                                            columns: [{
+                                                id: "label",
+                                                header: "Наименование услуги",
+                                                fillspace: true
+                                            },
+                                                {
+                                                    id: "price",
+                                                    header: "Прайс",
+                                                    width: 100
+                                                },
+                                                {
+                                                    id: "discount",
+                                                    header: "Скидка",
+                                                    width: 100
+                                                }
+                                            ],
+                                            on: {
+                                                onBeforeLoad: function () {
+                                                    this.showOverlay("Загрузка...");
+                                                },
+                                                onAfterLoad: function () {
+                                                    if (!this.count())
+                                                        this.showOverlay("Нет добавленных услуг");
+                                                    else
+                                                        this.hideOverlay();
                                                 }
                                             },
-                                            {
-                                                cols: [{
-                                                        view: "text",
-                                                        label: "Скидка",
-                                                        id: "discount",
-                                                        name: "discount",
-                                                        labelWidth: 70
-                                                    },
-                                                    {
-                                                        cols: [{
-                                                                view: "button",
-                                                                type: "form",
-                                                                value: "AddService",
-                                                                label: "Добавить",
-                                                                click: function () {
-                                                                    console.log("CALL ADD")
-                                                                    $scope.addServicesOfVisit();
-                                                                }
-                                                            },
-                                                            {
-                                                                view: "button",
-                                                                value: "deleteService",
-                                                                label: "Удалить",
-                                                                click: function () {
-                                                                    $scope.deleteServicesOfVisit();
-                                                                }
-                                                            }
-                                                        ]
-                                                    },
-                                                    {
-                                                        // gravity: 1.25,
-                                                        view: "text",
-                                                        label: "Терминал",
-                                                        id: "terminalSum",
-                                                        name: "terminalSum",
-                                                        labelWidth: 90
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                view: "datatable",
-                                                css: "table_without_border",
-                                                height: 200,
-                                                header: false,
-                                                scroll: "y",
-                                                select: true,
-                                                id: "gridServices",
-                                                columns: [{
-                                                        id: "label",
-                                                        header: "Наименование услуги",
-                                                        fillspace: true
-                                                    },
-                                                    {
-                                                        id: "price",
-                                                        header: "Прайс",
-                                                        width: 100
-                                                    },
-                                                    {
-                                                        id: "discount",
-                                                        header: "Скидка",
-                                                        width: 100
-                                                    }
-                                                ],
-                                                on: {
-                                                    onBeforeLoad: function () {
-                                                        this.showOverlay("Загрузка...");
-                                                    },
-                                                    onAfterLoad: function () {
-                                                        if (!this.count())
-                                                            this.showOverlay("Нет добавленных услуг");
-                                                        else
-                                                            this.hideOverlay();
-                                                    }
-                                                },
-                                                data: []
-                                            }
-                                        ]
-                                    },
+                                            data: []
+                                        }
+                                    ]
+                                },
                                     {
                                         id: "report",
                                         view: "layout",
                                         margin: 8,
                                         padding: 10,
                                         rows: [{
-                                                cols: [{
-                                                        view: "button",
-                                                        type: "form",
-                                                        value: "saveReport",
-                                                        label: "Распечатать",
-                                                        inputWidth: 115,
-                                                        click: function () {
-                                                            $scope.saveReportAsFile();
-                                                        }
-                                                    },
-                                                    {
-                                                        view: "layout",
-                                                        rows: [{}]
-                                                    }
-                                                ]
+                                            cols: [{
+                                                view: "button",
+                                                type: "form",
+                                                value: "saveReport",
+                                                label: "Распечатать",
+                                                inputWidth: 115,
+                                                click: function () {
+                                                    $scope.saveReportAsFile();
+                                                }
                                             },
+                                                {
+                                                    view: "layout",
+                                                    rows: [{}]
+                                                }
+                                            ]
+                                        },
                                             {
                                                 view: "datatable",
                                                 css: "table_without_border",
@@ -1046,20 +1066,20 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     },
                     {
                         cols: [{
-                                view: "button",
-                                type: "form",
-                                value: "Save",
-                                label: "Сохранить",
-                                click: function () {
-                                    if ($$("editformvisit").validate()) {
-                                        $scope.saveRowVisit();
-                                        if ($scope.serverValidation) {
-                                            $scope.reloadGridVisit();
-                                            this.getTopParentView().hide();
-                                        }
+                            view: "button",
+                            type: "form",
+                            value: "Save",
+                            label: "Сохранить",
+                            click: function () {
+                                if ($$("editformvisit").validate()) {
+                                    $scope.saveRowVisit();
+                                    if ($scope.serverValidation) {
+                                        $scope.reloadGridVisit();
+                                        this.getTopParentView().hide();
                                     }
                                 }
-                            },
+                            }
+                        },
                             {
                                 view: "button",
                                 value: "Cancel",
@@ -1094,19 +1114,19 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                 id: "editformClient",
                 complexData: true,
                 elements: [{
-                        view: "text",
-                        label: "Фамилия",
-                        name: "surname",
-                        labelWidth: 90,
-                        invalidMessage: "Обязательное поле"
-                    },
+                    view: "text",
+                    label: "Фамилия",
+                    name: "surname",
+                    labelWidth: 90,
+                    invalidMessage: "Обязательное поле"
+                },
                     {
                         cols: [{
-                                view: "text",
-                                label: "Имя",
-                                name: "name",
-                                labelWidth: 90
-                            },
+                            view: "text",
+                            label: "Имя",
+                            name: "name",
+                            labelWidth: 90
+                        },
                             {
                                 view: "text",
                                 label: "Отчество",
@@ -1117,184 +1137,184 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     },
                     {
                         rows: [{
-                                view: "tabbar",
-                                height: 35,
-                                multiview: true,
-                                id: "infoTabs",
-                                value: "generalInfo",
-                                on: {
-                                    onBeforeTabClick: $scope.getHistoryVisits
-                                },
-                                options: [{
-                                        id: "generalInfo",
-                                        css: "common_tab",
-                                        value: "Основные сведения"
-                                    },
-                                    {
-                                        id: "historyVisits",
-                                        css: "common_tab",
-                                        value: "История приемов"
-                                    },
-                                    {
-                                        id: "historyUltra",
-                                        css: "common_tab",
-                                        value: "УЗИ"
-                                    },
-                                    {
-                                        id: "historyAnalyzes",
-                                        css: "common_tab",
-                                        value: "Анализы"
-                                    }
-                                ],
+                            view: "tabbar",
+                            height: 35,
+                            multiview: true,
+                            id: "infoTabs",
+                            value: "generalInfo",
+                            on: {
+                                onBeforeTabClick: $scope.getHistoryVisits
                             },
+                            options: [{
+                                id: "generalInfo",
+                                css: "common_tab",
+                                value: "Основные сведения"
+                            },
+                                {
+                                    id: "historyVisits",
+                                    css: "common_tab",
+                                    value: "История приемов"
+                                },
+                                {
+                                    id: "historyUltra",
+                                    css: "common_tab",
+                                    value: "УЗИ"
+                                },
+                                {
+                                    id: "historyAnalyzes",
+                                    css: "common_tab",
+                                    value: "Анализы"
+                                }
+                            ],
+                        },
                             {
                                 css: "bottom_border_tab_header",
                                 cells: [{
-                                        id: "generalInfo",
+                                    id: "generalInfo",
+                                    view: "layout",
+                                    margin: 8,
+                                    padding: 10,
+                                    rows: [{
                                         view: "layout",
-                                        margin: 8,
-                                        padding: 10,
+                                        label: "Инфо",
+                                        borderless: true,
                                         rows: [{
-                                                view: "layout",
-                                                label: "Инфо",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "datepicker",
-                                                            editable: true,
-                                                            label: "Дата рождения",
-                                                            name: "birthday",
-                                                            labelWidth: 135
-                                                        },
-                                                        {
-                                                            view: "button",
-                                                            type: "form",
-                                                            value: "printClient",
-                                                            label: "Карта пациента",
-                                                            css: "margin_client_col_sex",
-                                                            inputWidth: 187,
-                                                            click: function () {
-                                                                $scope.printCardClient();
-                                                            }
-                                                        }
-                                                    ]
-                                                }]
+                                            cols: [{
+                                                view: "datepicker",
+                                                editable: true,
+                                                label: "Дата рождения",
+                                                name: "birthday",
+                                                labelWidth: 135
                                             },
-                                            {
-                                                view: "layout",
-                                                label: "ФИО",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "text",
-                                                            label: "Телефон",
-                                                            name: "phone",
-                                                            labelWidth: 135
-                                                        },
-                                                        {
-                                                            view: "radio",
-                                                            name: "gender",
-                                                            css: "margin_client_col_sex",
-                                                            options: [{
-                                                                    id: "man",
-                                                                    value: "Муж."
-                                                                },
-                                                                {
-                                                                    id: "woman",
-                                                                    value: "Жен."
-                                                                }
-                                                            ]
-                                                        },
-                                                    ]
-                                                }]
-                                            },
-                                            {
-                                                view: "layout",
-                                                label: "ФИО",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "text",
-                                                            label: "Место работы",
-                                                            name: "workPlace",
-                                                            labelWidth: 135,
-                                                            // inputWidth: 349
-                                                        },
-                                                        {
-                                                            gravity: 0.7,
-                                                            view: "text",
-                                                            label: "Должность",
-                                                            name: "workPosition",
-                                                            labelWidth: 100,
-                                                            // inputWidth: 349
-                                                        }
-                                                    ]
-                                                }]
-                                            },
-                                            {
-                                                view: "template",
-                                                type: "section",
-                                                template: "<span class='lb_template'>Паспортные данные</span>"
-                                            },
-                                            {
-                                                view: "layout",
-                                                label: "Паспорт",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "text",
-                                                            label: "Серия",
-                                                            name: "passportSerial",
-                                                            labelWidth: 130
-                                                        },
-                                                        {
-                                                            view: "text",
-                                                            label: "Номер",
-                                                            name: "passportNumber",
-                                                            css: "margin_client_col",
-                                                            inputWidth: 327,
-                                                            labelWidth: 140
-                                                        }
-                                                    ]
-                                                }]
-                                            },
-                                            {
-                                                view: "layout",
-                                                label: "Паспорт2",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "datepicker",
-                                                            editable: true,
-                                                            label: "Дата выдачи",
-                                                            name: "passportDate",
-                                                            labelWidth: 130
-                                                        },
-                                                        {
-                                                            view: "text",
-                                                            label: "Код подразд.",
-                                                            name: "passportCodePlace",
-                                                            labelWidth: 140,
-                                                            inputWidth: 327,
-                                                            css: "margin_client_col"
-                                                        }
-                                                    ]
-                                                }]
-                                            },
-                                            {
-                                                view: "text",
-                                                label: "Кем выдан",
-                                                name: "passportPlace",
-                                                labelWidth: 130,
-                                            },
-                                            {
-                                                view: "text",
-                                                label: "Адрес",
-                                                name: "address",
-                                                labelWidth: 130,
-                                            }
-                                        ]
+                                                {
+                                                    view: "button",
+                                                    type: "form",
+                                                    value: "printClient",
+                                                    label: "Карта пациента",
+                                                    css: "margin_client_col_sex",
+                                                    inputWidth: 187,
+                                                    click: function () {
+                                                        $scope.printCardClient();
+                                                    }
+                                                }
+                                            ]
+                                        }]
                                     },
+                                        {
+                                            view: "layout",
+                                            label: "ФИО",
+                                            borderless: true,
+                                            rows: [{
+                                                cols: [{
+                                                    view: "text",
+                                                    label: "Телефон",
+                                                    name: "phone",
+                                                    labelWidth: 135
+                                                },
+                                                    {
+                                                        view: "radio",
+                                                        name: "gender",
+                                                        css: "margin_client_col_sex",
+                                                        options: [{
+                                                            id: "man",
+                                                            value: "Муж."
+                                                        },
+                                                            {
+                                                                id: "woman",
+                                                                value: "Жен."
+                                                            }
+                                                        ]
+                                                    },
+                                                ]
+                                            }]
+                                        },
+                                        {
+                                            view: "layout",
+                                            label: "ФИО",
+                                            borderless: true,
+                                            rows: [{
+                                                cols: [{
+                                                    view: "text",
+                                                    label: "Место работы",
+                                                    name: "workPlace",
+                                                    labelWidth: 135,
+                                                    // inputWidth: 349
+                                                },
+                                                    {
+                                                        gravity: 0.7,
+                                                        view: "text",
+                                                        label: "Должность",
+                                                        name: "workPosition",
+                                                        labelWidth: 100,
+                                                        // inputWidth: 349
+                                                    }
+                                                ]
+                                            }]
+                                        },
+                                        {
+                                            view: "template",
+                                            type: "section",
+                                            template: "<span class='lb_template'>Паспортные данные</span>"
+                                        },
+                                        {
+                                            view: "layout",
+                                            label: "Паспорт",
+                                            borderless: true,
+                                            rows: [{
+                                                cols: [{
+                                                    view: "text",
+                                                    label: "Серия",
+                                                    name: "passportSerial",
+                                                    labelWidth: 130
+                                                },
+                                                    {
+                                                        view: "text",
+                                                        label: "Номер",
+                                                        name: "passportNumber",
+                                                        css: "margin_client_col",
+                                                        inputWidth: 327,
+                                                        labelWidth: 140
+                                                    }
+                                                ]
+                                            }]
+                                        },
+                                        {
+                                            view: "layout",
+                                            label: "Паспорт2",
+                                            borderless: true,
+                                            rows: [{
+                                                cols: [{
+                                                    view: "datepicker",
+                                                    editable: true,
+                                                    label: "Дата выдачи",
+                                                    name: "passportDate",
+                                                    labelWidth: 130
+                                                },
+                                                    {
+                                                        view: "text",
+                                                        label: "Код подразд.",
+                                                        name: "passportCodePlace",
+                                                        labelWidth: 140,
+                                                        inputWidth: 327,
+                                                        css: "margin_client_col"
+                                                    }
+                                                ]
+                                            }]
+                                        },
+                                        {
+                                            view: "text",
+                                            label: "Кем выдан",
+                                            name: "passportPlace",
+                                            labelWidth: 130,
+                                        },
+                                        {
+                                            view: "text",
+                                            label: "Адрес",
+                                            name: "address",
+                                            labelWidth: 130,
+                                        }
+                                    ]
+                                },
                                     {
                                         id: "historyVisits",
                                         view: "layout",
@@ -1309,10 +1329,10 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                                             select: true,
                                             scroll: "y",
                                             columns: [{
-                                                    id: "dateEvent",
-                                                    header: "Дата приема",
-                                                    width: 200
-                                                },
+                                                id: "dateEvent",
+                                                header: "Дата приема",
+                                                width: 200
+                                            },
                                                 {
                                                     id: "label",
                                                     header: "Услуга",
@@ -1321,6 +1341,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                                             ],
                                             on: {
                                                 onBeforeLoad: function () {
+
                                                     this.showOverlay("Загрузка...");
                                                 },
                                                 onAfterLoad: function () {
@@ -1347,10 +1368,10 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                                             select: true,
                                             scroll: "y",
                                             columns: [{
-                                                    id: "dateEvent",
-                                                    header: "Дата приема",
-                                                    width: 200
-                                                },
+                                                id: "dateEvent",
+                                                header: "Дата приема",
+                                                width: 200
+                                            },
                                                 {
                                                     id: "label",
                                                     header: "Услуга",
@@ -1385,10 +1406,10 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                                             select: true,
                                             scroll: "y",
                                             columns: [{
-                                                    id: "dateEvent",
-                                                    header: "Дата приема",
-                                                    width: 200
-                                                },
+                                                id: "dateEvent",
+                                                header: "Дата приема",
+                                                width: 200
+                                            },
                                                 {
                                                     id: "label",
                                                     header: "Услуга",
@@ -1415,19 +1436,19 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     },
                     {
                         cols: [{
-                                view: "button",
-                                type: "form",
-                                value: "Save",
-                                label: "Сохранить",
-                                click: function () {
-                                    if ($$("editformClient").validate()) {
-                                        $scope.saveClient();
-                                        if ($scope.serverValidation) {
-                                            this.getTopParentView().hide();
-                                        }
+                            view: "button",
+                            type: "form",
+                            value: "Save",
+                            label: "Сохранить",
+                            click: function () {
+                                if ($$("editformClient").validate()) {
+                                    $scope.saveClient();
+                                    if ($scope.serverValidation) {
+                                        this.getTopParentView().hide();
                                     }
                                 }
-                            },
+                            }
+                        },
                             {
                                 view: "button",
                                 value: "Cancel",
@@ -1458,14 +1479,15 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
     });
 
     $scope.saveRowApp = function () {
+        console.time("call saveRowApp")
         let data = $$("editformapp").getValues();
         data.author = $localStorage.currentUser.login;
-        let url = "/api/"+version_api+"/appointments/";
+        let url = "/api/" + version_api + "/appointments/";
         webix.ajax().headers($localStorage.headers.value).sync()
             .post(url, JSON.stringify(data), {
                 success: function (text, data, XmlHttpRequest) {
                     $scope.serverValidation = true;
-                    getAppointmetsByDoctor();
+                    getAppointmentsByDoctor();
                     refreshComingVisits()
                     $$('listToday').refresh();
                     $$('listTomorrow').refresh();
@@ -1475,15 +1497,17 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     console.log("Fail. Add appointment - " + id)
                 }
             });
+        console.timeEnd("call saveRowApp")
     }
 
     // save row visit
     $scope.saveRowVisit = function () {
+        console.time("call saveRowVisit")
         let id = $scope.visitId;
         let data = $$("editformvisit").getValues();
         data.author = $localStorage.currentUser.login;
         if (id === null || id === undefined || id === "") {
-            let url = "/api/"+version_api+"/visits/";
+            let url = "/api/" + version_api + "/visits/";
             webix.ajax().headers($localStorage.headers.value).sync()
                 .post(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1501,7 +1525,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                 });
             $$("editformvisit").bind($$("visitsGrid"));
         } else {
-            let url = "/api/"+version_api+"/visits/" + id;
+            let url = "/api/" + version_api + "/visits/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1517,14 +1541,16 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     }
                 });
         }
+        console.timeEnd("call saveRowVisit")
     }
     // save row client
     $scope.saveClient = function () {
+        console.time("call saveClient")
         let data = $$("editformClient").getValues();
         let id = data.id;
         data.author = $localStorage.currentUser.login;
         if (!id) {
-            let url = "/api/"+version_api+"/clients/";
+            let url = "/api/" + version_api + "/clients/";
             webix.ajax().headers($localStorage.headers.value).sync()
                 .post(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1544,7 +1570,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     }
                 });
         } else {
-            let url = "/api/"+version_api+"/clients/" + id;
+            let url = "/api/" + version_api + "/clients/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1562,36 +1588,44 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                     }
                 });
         }
+        console.timeEnd("call saveClient")
     }
 
     // insert сlient
     $scope.insertClient = function () {
+        console.time("call insertClient")
         $$("editformClient").clear();
         $$("editformClient").clearValidation();
         $scope.clientId = null;
         $$("editwinClient").show();
+        console.timeEnd("call insertClient")
     };
 
     // update сlient
     $scope.updateClient = function () {
+        console.time("call updateClient")
         $$("editformClient").clear();
         $$("editformClient").clearValidation();
         $scope.clientId = $$("cmbClient").getValue();
         $scope.getHistoryVisits();
         $$("editwinClient").show();
         $$("editformClient").setValues($scope.getAllInfoClientById());
+        console.timeEnd("call updateClient")
     };
 
 
     $scope.addRowApp = function () {
+        console.time("call addRowApp")
         $$("editformapp").clear();
         $$("editformapp").clearValidation();
-        getFreeAppointmets();
+        getFreeAppointments();
         $$("editwinapp").show();
+        console.timeEnd("call addRowApp")
     }
 
     // add row visit
     $scope.addRowVisit = function () {
+        console.time("call addRowVisit")
         $$("visitsGrid").clearSelection();
         $$("editformvisit").clear();
         $$("editformvisit").clearValidation();
@@ -1600,6 +1634,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         $$("cmbService").setValue(null);
         $$("infoVisit").setValue("service");
         $$("editwinvisit").show();
+        console.timeEnd("call addRowVisit")
     }
 
     $scope.checkAuth = function (XmlHttpRequest) {
