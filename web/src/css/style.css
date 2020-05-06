@@ -25,7 +25,11 @@ body {
     min-width: 1280px !important;
     width: 100% !important;
     height: 100% !important;
-    overflow-x: hidden !important;
+}
+
+.horizontal-scroll-wrapper {
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .login_page {
