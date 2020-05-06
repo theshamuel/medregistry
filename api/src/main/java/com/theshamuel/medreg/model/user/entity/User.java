@@ -147,6 +147,27 @@ public class User extends BaseEntity {
     }
 
     /**
+     * Gets short name.
+     *
+     * @return the shortname
+     */
+    public String getShortname() {
+        if (this.fullname != null){
+            String[] fio = this.fullname.split(" ");
+            if (fio.length == 3){
+                StringBuilder sb = new StringBuilder(fio[0]);
+                sb.append(" ");
+                sb.append(fio[1].substring(0,1).toUpperCase());
+                sb.append(". ");
+                sb.append(fio[2].substring(0,1).toUpperCase());
+                sb.append(".");
+                return sb.toString();
+            }
+        }
+        return this.fullname;
+    }
+
+    /**
      * Gets IsBlock.
      *
      * @return the state
