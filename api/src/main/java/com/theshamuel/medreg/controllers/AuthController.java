@@ -70,7 +70,7 @@ public class AuthController {
                                     .claim("roles", user.getRoles()).setIssuedAt(new Date())
                                     .signWith(SignatureAlgorithm.HS256, "secretkey")
                                     .setExpiration(new Date(System.currentTimeMillis() + 43200000))
-                                    .compact(), user.getFullname());
+                                    .compact(), user.getShortname());
                     return new ResponseEntity(result, HttpStatus.OK);
                 } else {
                     throw new NotFoundEntityException("Неверный пароль");
