@@ -4,7 +4,7 @@ angular
     .controller('ScheduleCtrl', ScheduleCtrl)
 
 function ScheduleCtrl($http, $location, $localStorage, $scope, uiGridConstants, i18nService, $uibModal, dialogs, $route) {
-    var version_api = "v1";
+    let version_api = "v1";
     
     i18nService.setCurrentLang('ru');
     $scope.lang = 'ru-RU';
@@ -97,7 +97,7 @@ function ScheduleCtrl($http, $location, $localStorage, $scope, uiGridConstants, 
                                 value: "Apply",
                                 click: function () {
                                     $$('table').clearAll();
-                                    var url = $scope.getTableURI(15, 0);
+                                    let url = $scope.getTableURI(15, 0);
                                     $$('table').load("addHeaders->" + url);
                                     $$('table').refresh();
                                     $$('table').setPage(0);
@@ -112,7 +112,7 @@ function ScheduleCtrl($http, $location, $localStorage, $scope, uiGridConstants, 
                                     $$('filterDateWork').setValue(null)
                                     $$('filterDoctor').setValue("");
                                     $$('table').clearAll();
-                                    var url = $scope.getTableURI(15, 0);
+                                    let url = $scope.getTableURI(15, 0);
                                     $$('table').load("addHeaders->" + url);
                                     $$('table').refresh();
                                     $$('table').setPage(0);
@@ -281,7 +281,7 @@ function ScheduleCtrl($http, $location, $localStorage, $scope, uiGridConstants, 
                                 label: "Отмена",
                                 click: function () {
                                     this.getTopParentView().hide();
-                                    var item = $$("table").getSelectedId();
+                                    let item = $$("table").getSelectedId();
                                     if (item != null && item != undefined && item != "") {
                                         $$("table").unselectAll();
                                         $$("table").select(item);
@@ -404,8 +404,8 @@ function ScheduleCtrl($http, $location, $localStorage, $scope, uiGridConstants, 
                         this.hideOverlay();
                 },
                 onDataRequest: function (start, count) {
-                    var url = $scope.getTableURI(count, start);
-                    var dataGrid = webix.ajax().headers($localStorage.headers.value).get(url);
+                    let url = $scope.getTableURI(count, start);
+                    let dataGrid = webix.ajax().headers($localStorage.headers.value).get(url);
                     this.parse(dataGrid);
                     return false;
                 }
@@ -416,7 +416,7 @@ function ScheduleCtrl($http, $location, $localStorage, $scope, uiGridConstants, 
     });
 
     $scope.getTableURI = function (count, start) {
-        var url = "/api/"+version_api+"/schedule?count=" + count + "&start=" + start + "&filter=";
+        let url = "/api/"+version_api+"/schedule?count=" + count + "&start=" + start + "&filter=";
         if ($$("filterDateWork").getValue() != null && $$("filterDateWork").getValue().toJSON() != "")
             url = url + "dateWork=" + $$("filterDateWork").getValue().toJSON() + ";";
         if ($$("filterDoctor").getValue() != null && $$("filterDoctor").getValue() != "")
@@ -425,11 +425,11 @@ function ScheduleCtrl($http, $location, $localStorage, $scope, uiGridConstants, 
     }
 
     $scope.saveRow = function () {
-        var id = $$("table").getSelectedId();
-        var data = $$("editform").getValues();
+        let id = $$("table").getSelectedId();
+        let data = $$("editform").getValues();
         data.author = $localStorage.currentUser.login;
         if (!id) {
-            var url = "/api/"+version_api+"/schedule/";
+            let url = "/api/"+version_api+"/schedule/";
             webix.ajax().headers($localStorage.headers.value).sync()
                 .post(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -448,7 +448,7 @@ function ScheduleCtrl($http, $location, $localStorage, $scope, uiGridConstants, 
                 });
             $$("editform").bind($$("table"));
         } else {
-            var url = "/api/"+version_api+"/schedule/" + id;
+            let url = "/api/"+version_api+"/schedule/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -468,14 +468,14 @@ function ScheduleCtrl($http, $location, $localStorage, $scope, uiGridConstants, 
     }
 
     $scope.deleteRow = function () {
-        var id = $$("table").getSelectedId();
+        let id = $$("table").getSelectedId();
         if (!id) return;
         webix.confirm({
             title: "Удаление расписания",
             text: "Вы уверены, что хотите удалить расписание?",
             callback: function (result) {
                 if (result) {
-                    var url = "/api/"+version_api+"/schedule/" + id;
+                    let url = "/api/"+version_api+"/schedule/" + id;
                     webix.ajax().headers($localStorage.headers.value)
                         .del(url, JSON.stringify($$('editform').getValues()), {
                             success: function (text, data, XmlHttpRequest) {
@@ -499,11 +499,11 @@ function ScheduleCtrl($http, $location, $localStorage, $scope, uiGridConstants, 
     }
 
     $scope.copyRow = function () {
-        var id = $$("table").getSelectedId();
+        let id = $$("table").getSelectedId();
         if (id === null || id === "" || id === undefined) {
             webix.alert(" Не выбрано расписание для копирования ");
         } else {
-            var url = "/api/"+version_api+"/schedule/" + id;
+            let url = "/api/"+version_api+"/schedule/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .post(url, {
                     success: function (text, data, XmlHttpRequest) {
