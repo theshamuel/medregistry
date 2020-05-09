@@ -4,7 +4,7 @@ angular
     .controller('DoctorCtrl', DoctorCtrl)
 
 function DoctorCtrl($http, $location, $localStorage, $scope, uiGridConstants, i18nService, $uibModal, dialogs, $route) {
-    var version_api = "v1";
+    let version_api = "v1";
     
     i18nService.setCurrentLang('ru');
     $scope.lang = 'ru-RU';
@@ -57,9 +57,9 @@ function DoctorCtrl($http, $location, $localStorage, $scope, uiGridConstants, i1
     ]
 
     $scope.getInfoPersonalRate = function () {
-        var InfoPersonalRate = [];
-        var url = "";
-        var id = $scope.doctorId;
+        let InfoPersonalRate = [];
+        let url = "";
+        let id = $scope.doctorId;
         if (id != null && id != "") {
             url = "/api/"+version_api+"/services/" + id + "/doctor";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
@@ -208,7 +208,7 @@ function DoctorCtrl($http, $location, $localStorage, $scope, uiGridConstants, i1
                                 label: "Отмена",
                                 click: function () {
                                     this.getTopParentView().hide();
-                                    var item = $$("table").getSelectedId();
+                                    let item = $$("table").getSelectedId();
                                     if (item != null && item != undefined && item != "") {
                                         $$("table").unselectAll();
                                         $$("table").select(item);
@@ -265,11 +265,11 @@ function DoctorCtrl($http, $location, $localStorage, $scope, uiGridConstants, i1
     });
 
     $scope.saveRow = function () {
-        var id = $$("table").getSelectedId();
-        var data = $$("editform").getValues();
+        let id = $$("table").getSelectedId();
+        let data = $$("editform").getValues();
         data.author = $localStorage.currentUser.login;
         if (!id) {
-            var url = "/api/"+version_api+"/doctors/";
+            let url = "/api/"+version_api+"/doctors/";
             webix.ajax().headers($localStorage.headers.value).sync()
                 .post(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -289,7 +289,7 @@ function DoctorCtrl($http, $location, $localStorage, $scope, uiGridConstants, i1
                 });
             $$("editform").bind($$("table"));
         } else {
-            var url = "/api/"+version_api+"/doctors/" + id;
+            let url = "/api/"+version_api+"/doctors/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -310,14 +310,14 @@ function DoctorCtrl($http, $location, $localStorage, $scope, uiGridConstants, i1
     }
 
     $scope.deleteRow = function () {
-        var id = $$("table").getSelectedId();
+        let id = $$("table").getSelectedId();
         if (!id) return;
         webix.confirm({
             title: "Удаление услуги",
             text: "Вы уверены, что хотите удалить доктора?",
             callback: function (result) {
                 if (result) {
-                    var url = "/api/"+version_api+"/doctors/" + id;
+                    let url = "/api/"+version_api+"/doctors/" + id;
                     webix.ajax().headers($localStorage.headers.value)
                         .del(url, JSON.stringify($$('editform').getValues()), {
                             success: function (text, data, XmlHttpRequest) {
