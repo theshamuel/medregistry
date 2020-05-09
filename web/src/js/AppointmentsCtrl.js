@@ -4,7 +4,7 @@ angular
     .controller('AppointmentsCtrl', AppointmentsCtrl)
 
 function AppointmentsCtrl($http, $location, $localStorage, $scope, uiGridConstants, i18nService, $uibModal, dialogs, $route, $window) {
-    var version_api = "v1";
+    let version_api = "v1";
     
     i18nService.setCurrentLang('ru');
     $scope.lang = 'ru-RU';
@@ -46,11 +46,11 @@ function AppointmentsCtrl($http, $location, $localStorage, $scope, uiGridConstan
                 webix.ajax().bind(view).headers($localStorage.headers.value).get(this.source, params, callback); 
             }
         };
-        var getFreeAppointmets = function () {
-            var id = $$("table").getSelectedId();
+        let getFreeAppointmets = function () {
+            let id = $$("table").getSelectedId();
             if ($$("dateEvent").getValue() != null && $$("dateEvent") != undefined &&
                 $$("cmdDoctor").getValue() != null && $$("cmdDoctor") != undefined && $$("cmdDoctor").getValue() != "") {
-                var url = "/api/"+version_api+"/appointments/freetime?doctorId=" + $$("cmdDoctor").getValue() + "&dateEvent=" + $$("dateEvent").getValue().toJSON() + "&id";
+                let url = "/api/"+version_api+"/appointments/freetime?doctorId=" + $$("cmdDoctor").getValue() + "&dateEvent=" + $$("dateEvent").getValue().toJSON() + "&id";
                 if (id != undefined)
                     url = url + "=" + id;
                 $$("freeTimeEvent").define("options", JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get(url, {
@@ -108,7 +108,7 @@ function AppointmentsCtrl($http, $location, $localStorage, $scope, uiGridConstan
                                 value: "Apply",
                                 click: function () {
                                     $$('table').clearAll();
-                                    var url = $scope.getTableURI(15,0);
+                                    let url = $scope.getTableURI(15,0);
                                     $$('table').load("addHeaders->"+url);
                                     $$('table').refresh();
                                     $$('table').setPage(0);
@@ -124,7 +124,7 @@ function AppointmentsCtrl($http, $location, $localStorage, $scope, uiGridConstan
                                     $$('filterDoctor').setValue("");
                                     $$('filterClient').setValue("");
                                     $$('table').clearAll();
-                                    var url = $scope.getTableURI(15,0);
+                                    let url = $scope.getTableURI(15,0);
                                     $$('table').load("addHeaders->"+url);
                                     $$('table').refresh();
                                     $$('table').setPage(0);
@@ -254,7 +254,7 @@ function AppointmentsCtrl($http, $location, $localStorage, $scope, uiGridConstan
                                 label: "Отмена",
                                 click: function () {
                                     this.getTopParentView().hide();
-                                    var item = $$("table").getSelectedId();
+                                    let item = $$("table").getSelectedId();
                                     $$("editform").clear();
                                     $$("editform").clearValidation();
                                     if (item != null && item != undefined && item != "") {
@@ -313,8 +313,8 @@ function AppointmentsCtrl($http, $location, $localStorage, $scope, uiGridConstan
                 },
 
                 onDataRequest: function (start, count) {
-                    var url = $scope.getTableURI(count,start);
-                    var dataGrid = webix.ajax().headers($localStorage.headers.value).get(url);
+                    let url = $scope.getTableURI(count,start);
+                    let dataGrid = webix.ajax().headers($localStorage.headers.value).get(url);
                     this.parse(dataGrid);
                     return false;
                 }
@@ -323,7 +323,7 @@ function AppointmentsCtrl($http, $location, $localStorage, $scope, uiGridConstan
         $$("editform").bind($$("table"));
     });
     $scope.getTableURI = function(count,start){
-        var url = "/api/"+version_api+"/appointments?count=" + count + "&start=" + start+"&filter=";
+        let url = "/api/"+version_api+"/appointments?count=" + count + "&start=" + start+"&filter=";
         if ($$("filterDateEvent").getValue()!=null && $$("filterDateEvent").getValue().toJSON()!="")
             url = url + "dateEvent="+$$("filterDateEvent").getValue().toJSON()+";";
         if ($$("filterDoctor").getValue()!=null && $$("filterDoctor").getValue()!="")
@@ -333,11 +333,11 @@ function AppointmentsCtrl($http, $location, $localStorage, $scope, uiGridConstan
         return url;
     }
     $scope.saveRow = function () {
-        var id = $$("table").getSelectedId();
-        var data = $$("editform").getValues();
+        let id = $$("table").getSelectedId();
+        let data = $$("editform").getValues();
         data.author = $localStorage.currentUser.login;
         if (!id || $scope.isCopy) {
-            var url = "/api/"+version_api+"/appointments/";
+            let url = "/api/"+version_api+"/appointments/";
             if ($scope.isCopy)
                 data.id = null;
             webix.ajax().headers($localStorage.headers.value).sync()
@@ -361,7 +361,7 @@ function AppointmentsCtrl($http, $location, $localStorage, $scope, uiGridConstan
             $scope.isCopy = false;
             $$("editform").bind($$("table"));
         } else {
-            var url = "/api/"+version_api+"/appointments/" + id;
+            let url = "/api/"+version_api+"/appointments/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -385,14 +385,14 @@ function AppointmentsCtrl($http, $location, $localStorage, $scope, uiGridConstan
     }
 
     $scope.deleteRow = function () {
-        var id = $$("table").getSelectedId();
+        let id = $$("table").getSelectedId();
         if (!id) return;
         webix.confirm({
             title: "Удаление записи",
             text: "Вы уверены, что хотите удалить запись?",
             callback: function (result) {
                 if (result) {
-                    var url = "/api/"+version_api+"/appointments/" + id;
+                    let url = "/api/"+version_api+"/appointments/" + id;
                     webix.ajax().headers($localStorage.headers.value)
                         .del(url, JSON.stringify($$('editform').getValues()), {
                             success: function (text, data, XmlHttpRequest) {
@@ -416,7 +416,7 @@ function AppointmentsCtrl($http, $location, $localStorage, $scope, uiGridConstan
     }
 
     $scope.copyRow = function () {
-        var item = $$("table").getSelectedItem();
+        let item = $$("table").getSelectedItem();
         if (item === null || item === "" || item === undefined) {
             webix.alert(" Не выбрана запись на прием для копирования ");
         } else {
