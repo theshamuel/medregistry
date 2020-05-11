@@ -74,7 +74,6 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             });
 
         }
-        let elapsed = (new Date() - startElapsed ) / 1000;
         console.timeEnd("call getAllInfoClientById")
         return dataClient;
     };
