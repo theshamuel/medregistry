@@ -1140,7 +1140,8 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                 value: "Cancel",
                                 label: "Отмена",
                                 click: function () {
-                                    $scope.reloadGridVisit();
+                                    // Non-need to update after cancel temporary
+                                    // $scope.reloadGridVisit();
                                     this.getTopParentView().hide();
                                 }
                             }
