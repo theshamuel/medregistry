@@ -45,7 +45,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
     $scope.reloadComboClients = function () {
         console.time("call reloadComboClients")
         let dataClient = [];
-        let url = "/api/"+version_api+"/clients";
+        let url = "/api/" + version_api + "/clients";
         webix.ajax().headers($localStorage.headers.value).sync().get(url, {
             success: function (text, data, XmlHttpRequest) {
                 dataClient = JSON.parse(text);
@@ -63,7 +63,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         console.time("call getAllInfoClientById")
         let dataClient = [];
         if ($$("cmbClient").getValue() != null && $$("cmbClient").getValue() != undefined && $$("cmbClient").getValue() != "") {
-            let url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
+            let url = "/api/" + version_api + "/clients/" + $$("cmbClient").getValue();
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataClient = JSON.parse(text);
@@ -83,7 +83,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         let dataAppointments = [];
         if ($$("cmbDoctorOnForm").getValue() != null && $$("cmbDoctorOnForm").getValue() != undefined && $$("cmbDoctorOnForm").getValue() != "") {
             let id = $scope.visitId;
-            let url = "/api/"+version_api+"/appointments/reserved/hasvisit?doctorId=" + $$("cmbDoctorOnForm").getValue() + "&dateEvent=" + "&hasVisit=false&visitId";
+            let url = "/api/" + version_api + "/appointments/reserved/hasvisit?doctorId=" + $$("cmbDoctorOnForm").getValue() + "&dateEvent=" + "&hasVisit=false&visitId";
             if (id != undefined)
                 url = url + "=" + id;
             console.log("getReservedAppoinmentsHasVisit url=", url)
@@ -109,7 +109,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         let phoneClient = "";
         let addressClient = "";
         if ($$("cmbClient").getValue() != null && $$("cmbClient").getValue() != undefined && $$("cmbClient").getValue() != "") {
-            let url = "/api/"+version_api+"/clients/" + $$("cmbClient").getValue();
+            let url = "/api/" + version_api + "/clients/" + $$("cmbClient").getValue();
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     passportLabelClient = JSON.parse(text).passportLabel;
@@ -126,7 +126,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         $$("birthday").setValue(birthdayClient);
         $$("phone").setValue(phoneClient);
         $$("address").setValue(addressClient);
-        let elapsed = (new Date() - start ) / 1000;
+        let elapsed = (new Date() - start) / 1000;
         console.timeEnd("call getInfoClient")
     };
     // +
@@ -138,7 +138,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         let url = "";
         let id = $scope.clientId;
         if (id != null && id != "") {
-            url = "/api/"+version_api+"/clients/" + id + "/consult";
+            url = "/api/" + version_api + "/clients/" + id + "/consult";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataOfHistiryVisits = text;
@@ -148,7 +148,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     console.log("FAIL=" + text)
                 }
             });
-            url = "/api/"+version_api+"/clients/" + id + "/ultra";
+            url = "/api/" + version_api + "/clients/" + id + "/ultra";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataOfHistiryUltra = text;
@@ -158,7 +158,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     console.log("FAIL=" + text)
                 }
             });
-            url = "/api/"+version_api+"/clients/" + id + "/analyzes";
+            url = "/api/" + version_api + "/clients/" + id + "/analyzes";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataOfHistiryAnalyzes = text;
@@ -185,7 +185,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         let id = $scope.visitId;
         let error = false;
         if (id != null && id != "" && id != undefined) {
-            url = "/api/"+version_api+"/visits/" + id + "/services";
+            url = "/api/" + version_api + "/visits/" + id + "/services";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataOfServices = text;
@@ -212,7 +212,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         let url = "";
         let id = $scope.visitId;
         if (id != null && id != "") {
-            url = "/api/"+version_api+"/reports/" + id;
+            url = "/api/" + version_api + "/reports/" + id;
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataOfReports = text;
@@ -234,7 +234,8 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         let dateReport = new Date();
         let clientId = $$("cmbClient").getValue();
         let doctorId = $$("cmbDoctorOnForm").getValue();
-        let url = "/api/"+version_api+"/reports/file/clientCard/" + clientId + "/" + doctorId + "/" + dateReport.toJSON();
+        let url = "/api/" + version_api + "/reports/file/clientCard/" +
+            clientId + "/" + doctorId + "/" + dateReport.toJSON();
         webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
             $rootScope.saveByteArray([data], 'Карта_пациента-' + dateReport.toJSON() + '.xls');
         });
@@ -243,8 +244,8 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
     $scope.reloadGridVisit = function () {
         console.time("call reloadGridVisit")
         $$('visitsGrid').clearAll();
-        let url = $scope.getTableURI(15,0);
-        $$('visitsGrid').load("addHeaders->"+url);
+        let url = $scope.getTableURI(15, 0);
+        $$('visitsGrid').load("addHeaders->" + url);
         $$('visitsGrid').refresh();
         console.timeEnd("call reloadGridVisit")
     };
@@ -259,9 +260,12 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             id = $scope.visitId;
             serverValid = $scope.serverValidation;
         }
-        if ($$("editform").validate() && serverValid && id != null && id != "" && id != undefined && $$("cmbService").getValue() != null && $$("cmbService").getValue() != undefined && $$("cmbService").getValue() != "") {
-            url = "/api/"+version_api+"/visits/" + id + "/services/" + $$("cmbService").getValue() + "?discount=";
-            if ($$("discount").getValue() != "" && $$("discount").getValue() != undefined && $$("discount").getValue() != null)
+        if ($$("editform").validate() && serverValid && id != null && id != "" && id != undefined &&
+            $$("cmbService").getValue() != null && $$("cmbService").getValue() != undefined &&
+            $$("cmbService").getValue() != "") {
+            url = "/api/" + version_api + "/visits/" + id + "/services/" + $$("cmbService").getValue() + "?discount=";
+            if ($$("discount").getValue() != "" && $$("discount").getValue() != undefined &&
+                $$("discount").getValue() != null)
                 url = url + $$("discount").getValue();
             webix.ajax().headers($localStorage.headers.value).sync().post(url, {
                 success: function (text, data, XmlHttpRequest) {
@@ -285,26 +289,27 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         let visitId = $scope.visitId;
         let doctorId = $$("cmbDoctorOnForm").getValue();
         let dateReport = new Date();
+        let url_ = ""
         if (reportId === null || reportId === "" || reportId === undefined) {
             webix.alert(" Не выбран отчет для сохранения ");
         } else {
-            let url = "/api/"+version_api+"/reports/file/reportTemplate/" + clientId + "/" + doctorId + "/" + reportId + "/" + visitId + "/" + dateReport.toJSON();
-            console.log(reportItem.template)
-            console.log(reportItem)
+            url_ = "/api/" + version_api + "/reports/file/reportTemplate/" +
+                clientId + "/" + doctorId + "/" + reportId + "/" + visitId + "/" + dateReport.toJSON();
             if (reportItem != null && reportItem.template == "templateVisitResult") {
                 version_api = 'v2'
-                url = "/api/"+version_api+"/reports/file/reportVisitResult/" + visitId + "/report.xlsx"
+                url_ = "/api/" + version_api + "/reports/file/reportVisitResult/" + visitId + "/report.xlsx"
             } else {
                 version_api = 'v1'
             }
-            console.log(url)
-            webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
+            webix.ajax().response("blob").headers($localStorage.headers.value).get(url_, function (text, data) {
                 if (reportItem != null && reportItem.template === "templateVisitResult") {
-                    $rootScope.saveByteArray([data], 'Заключение_' + dateReport.toJSON() + '_' + visitId + '.xlsx')
-                }else if (reportItem != null && reportItem.template === "Contract")
+                    $rootScope.saveByteArray([data], 'Заключение_' + dateReport.toJSON() + '_' +
+                        visitId + '.xlsx')
+                } else if (reportItem != null && reportItem.template === "Contract")
                     $rootScope.saveByteArray([data], 'Договор_' + dateReport.toJSON() + '.xls');
                 else
-                    $rootScope.saveByteArray([data], 'Бланк_' + reportItem.label + "-" + dateReport.toJSON() + '.doc');
+                    $rootScope.saveByteArray([data], 'Бланк_' + reportItem.label + "-" +
+                        dateReport.toJSON() + '.doc');
             });
         }
         console.timeEnd("call saveReportAsFile")
@@ -320,7 +325,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         if (servicesId === null || servicesId === "" || servicesId === undefined) {
             webix.alert(" Не выбрана услуга для удаления ");
         } else if (id != null && id != "" && id != undefined) {
-            url = "/api/"+version_api+"/visits/" + id + "/services/" + servicesId;
+            url = "/api/" + version_api + "/visits/" + id + "/services/" + servicesId;
             webix.ajax().headers($localStorage.headers.value).sync().del(url, {
                 success: function (text, data, XmlHttpRequest) {
                     $scope.getServicesOfVisit();
@@ -337,8 +342,8 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
 
     webix.ready(function () {
         webix.proxy.addHeaders = {
-            $proxy:true,
-            load:function(view, callback, params){
+            $proxy: true,
+            load: function (view, callback, params) {
                 webix.ajax().bind(view).headers($localStorage.headers.value).get(this.source, params, callback);
             }
         };
@@ -395,8 +400,8 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                             value: "Apply",
                             click: function () {
                                 $$('visitsGrid').clearAll();
-                                let url = $scope.getTableURI(15,0);
-                                $$('visitsGrid').load("addHeaders->"+url);
+                                let url = $scope.getTableURI(15, 0);
+                                $$('visitsGrid').load("addHeaders->" + url);
                                 $$('visitsGrid').refresh();
                                 $$('visitsGrid').setPage(0);
                             }
@@ -412,8 +417,8 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                     $$('filterClient').setValue("");
                                     $$('filterPassport').setValue("");
                                     $$('visitsGrid').clearAll();
-                                    let url = $scope.getTableURI(15,0);
-                                    $$('visitsGrid').load("addHeaders->"+url);
+                                    let url = $scope.getTableURI(15, 0);
+                                    $$('visitsGrid').load("addHeaders->" + url);
                                     $$('visitsGrid').refresh();
                                     $$('visitsGrid').setPage(0);
                                 }
@@ -423,7 +428,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     {
                         gravity: 0.4,
                         view: "layout",
-                        rows:[{}]
+                        rows: [{}]
                     }
                 ]
             }]
@@ -815,7 +820,8 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     name: "doctorId",
                     id: "cmbDoctorOnForm",
                     labelWidth: 145,
-                    options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/doctors").response),
+                    options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/" +
+                        version_api + "/doctors").response),
                     on: {
                         onChange: $scope.getReservedAppoinmentsHasVisit
                     },
@@ -835,7 +841,8 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                             id: "cmbClient",
                             name: "clientId",
                             labelWidth: 145,
-                            options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/clients").response),
+                            options: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/" +
+                                version_api + "/clients").response),
                             on: {
                                 onChange: $scope.getInfoClient
                             },
@@ -948,10 +955,15 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                         labelWidth: 70,
                                         options: {
                                             filter: function (item, value) {
-                                                return item.label.toString().toLowerCase().indexOf(value.toLowerCase()) > -1;
+                                                return item.label.
+                                                toString().
+                                                toLowerCase().
+                                                indexOf(value.toLowerCase()) > -1;
                                             },
                                             body: {
-                                                data: JSON.parse(webix.ajax().headers($localStorage.headers.value).sync().get("/api/"+version_api+"/services").response)
+                                                data: JSON.parse(
+                                                    webix.ajax().headers($localStorage.headers.value).
+                                                    sync().get("/api/" + version_api + "/services").response)
                                             }
                                         }
                                     },
@@ -1041,17 +1053,17 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                             label: "Диагноз",
                                             id: "diagnosis",
                                             name: "diagnosis",
-                                            labelPosition:"top",
-                                            height:90,
+                                            labelPosition: "top",
+                                            height: 90,
                                             value: ""
-                                            },
+                                        },
                                             {
                                                 view: "textarea",
                                                 label: "Лечение",
                                                 id: "therapy",
                                                 name: "therapy",
-                                                labelPosition:"top",
-                                                height:110,
+                                                labelPosition: "top",
+                                                height: 110,
                                                 value: ""
                                             },
                                             {
@@ -1059,8 +1071,8 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                                 label: "Дообследование",
                                                 id: "additionalExamination",
                                                 name: "additionalExamination",
-                                                labelPosition:"top",
-                                                height:78,
+                                                labelPosition: "top",
+                                                height: 78,
                                                 value: ""
                                             }
                                         ]
@@ -1140,8 +1152,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                 value: "Cancel",
                                 label: "Отмена",
                                 click: function () {
-                                    // Non-need to update after cancel temporary
-                                    // $scope.reloadGridVisit();
+                                    $scope.reloadGridVisit();
                                     this.getTopParentView().hide();
                                 }
                             }
@@ -1169,7 +1180,8 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             datafetch: 15,
             datathrottle: 300,
             loadahead: 15,
-            data: webix.ajax().headers($localStorage.headers.value).get("/api/"+version_api+"/visits?count=15&start=0"),
+            data: webix.ajax().headers($localStorage.headers.value).get("/api/" + version_api +
+                "/visits?count=15&start=0"),
             datatype: "json",
             columns: $scope.colums,
             pager: {
@@ -1187,7 +1199,8 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     $$("gridServices").clearAll();
                     $$("cmbService").setValue(null);
                     $$("infoVisit").setValue("service");
-                    //$scope.getInfoClient();
+                    //Non necessary reload (temporary)
+                    // $scope.getInfoClient();
                     $scope.getServicesOfVisit();
                     $$("editwin").show();
                     console.timeEnd("call onItemDblClick")
@@ -1202,7 +1215,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                         this.hideOverlay();
                 },
                 onDataRequest: function (start, count) {
-                    let url = $scope.getTableURI(count,start);
+                    let url = $scope.getTableURI(count, start);
                     let dataGrid = webix.ajax().headers($localStorage.headers.value).get(url);
                     this.parse(dataGrid);
                     return false;
@@ -1211,19 +1224,17 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         });
         $$("editform").bind($$("visitsGrid"));
     });
-    $scope.getTableURI = function(count, start){
+    $scope.getTableURI = function (count, start) {
         console.time("call getTableURI")
-        let startElapsed = new Date()
-        let url = "/api/"+version_api+"/visits?count=" + count + "&start=" + start+"&filter=";
-        if ($$("filterDateEvent").getValue()!=null && $$("filterDateEvent").getValue().toJSON()!="")
-            url = url + "dateEvent="+$$("filterDateEvent").getValue().toJSON()+";";
-        if ($$("filterDoctor").getValue()!=null && $$("filterDoctor").getValue()!="")
-            url = url + "doctor.surname="+$$("filterDoctor").getValue()+";";
-        if ($$("filterClient").getValue()!=null && $$("filterClient").getValue()!="")
-            url = url + "client.surname="+$$("filterClient").getValue()+";";
-        if ($$("filterPassport").getValue()!=null && $$("filterPassport").getValue()!="")
-            url = url + "passport="+$$("filterPassport").getValue()+";";
-        let elapsed = (new Date() - startElapsed ) / 1000;
+        let url = "/api/" + version_api + "/visits?count=" + count + "&start=" + start + "&filter=";
+        if ($$("filterDateEvent").getValue() != null && $$("filterDateEvent").getValue().toJSON() != "")
+            url = url + "dateEvent=" + $$("filterDateEvent").getValue().toJSON() + ";";
+        if ($$("filterDoctor").getValue() != null && $$("filterDoctor").getValue() != "")
+            url = url + "doctor.surname=" + $$("filterDoctor").getValue() + ";";
+        if ($$("filterClient").getValue() != null && $$("filterClient").getValue() != "")
+            url = url + "client.surname=" + $$("filterClient").getValue() + ";";
+        if ($$("filterPassport").getValue() != null && $$("filterPassport").getValue() != "")
+            url = url + "passport=" + $$("filterPassport").getValue() + ";";
         console.timeEnd("call getTableURI")
         return url;
     }
@@ -1233,7 +1244,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         let data = $$("editform").getValues();
         data.author = $localStorage.currentUser.login;
         if (!id) {
-            let url = "/api/"+version_api+"/visits/";
+            let url = "/api/" + version_api + "/visits/";
             webix.ajax().headers($localStorage.headers.value).sync()
                 .post(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1252,7 +1263,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                 });
             $$("editform").bind($$("visitsGrid"));
         } else {
-            let url = "/api/"+version_api+"/visits/" + id;
+            let url = "/api/" + version_api + "/visits/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1280,7 +1291,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             text: "Вы уверены, что хотите удалить прием?",
             callback: function (result) {
                 if (result) {
-                    let url = "/api/"+version_api+"/visits/" + id;
+                    let url = "/api/" + version_api + "/visits/" + id;
                     webix.ajax().headers($localStorage.headers.value)
                         .del(url, JSON.stringify($$('editform').getValues()), {
                             success: function (text, data, XmlHttpRequest) {
@@ -1339,7 +1350,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         let id = data.id;
         data.author = $localStorage.currentUser.login;
         if (!id) {
-            let url = "/api/"+version_api+"/clients/";
+            let url = "/api/" + version_api + "/clients/";
             webix.ajax().headers($localStorage.headers.value).sync()
                 .post(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -1359,7 +1370,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     }
                 });
         } else {
-            let url = "/api/"+version_api+"/clients/" + id;
+            let url = "/api/" + version_api + "/clients/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
