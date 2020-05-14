@@ -12,7 +12,7 @@ html {
     padding: 0 !important;
     font-size: 100% !important;
     vertical-align: baseline !important;
-    min-width: 1280px !important;
+    min-width: 1580px !important;
     width: 100% !important;
     height: 100% !important;
 }
@@ -23,7 +23,7 @@ body {
     font-size: 100% !important;
     vertical-align: baseline !important;
     min-width: 1280px !important;
-    width: 1580px !important;
+    width: 100% !important;
     height: 100% !important;
 }
 
@@ -257,7 +257,7 @@ body {
 .wrap_list {
     margin-top: 1%;
     margin-left: 1% !important;
-    width: 1535px !important;
+    width: 1580px !important;
     overflow-y: auto !important;
     overflow-x: scroll !important;
 }
@@ -498,7 +498,7 @@ body {
 }
 
 .navbar-default .container {
-    width: 1280px;
+    min-width: 1280px !important;
     height: 60px;
 
 }
