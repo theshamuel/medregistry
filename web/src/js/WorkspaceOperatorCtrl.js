@@ -837,16 +837,16 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
             position: "center",
             width: 700,
             autoheight: false,
+            on: {
+                onShow: function () {
+                    $scope.reloadComboClients()
+                    $scope.reloadComboServices()
+                }
+            },
             body: {
                 view: "form",
                 id: "editformvisit",
                 complexData: true,
-                on: {
-                    onValues: function () {
-                        $scope.reloadComboClients()
-                        $scope.reloadComboServices()
-                    }
-                },
                 elements: [{
                     view: "combo",
                     label: "ФИО доктора",
