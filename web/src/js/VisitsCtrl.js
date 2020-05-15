@@ -1068,7 +1068,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                             name: "diagnosis",
                                             labelPosition: "left",
                                             height: 60,
-                                            labelWidth: 100,
+                                            labelWidth: 110,
                                             value: ""
                                         },
                                             {
@@ -1078,7 +1078,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                                 name: "therapy",
                                                 labelPosition: "left",
                                                 height: 160,
-                                                labelWidth: 100,
+                                                labelWidth: 110,
                                                 value: ""
                                             },
                                             {
@@ -1088,7 +1088,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                                 name: "additionalExamination",
                                                 labelPosition: "left",
                                                 height: 58,
-                                                labelWidth: 100,
+                                                labelWidth: 110,
                                                 value: ""
                                             }
                                         ]
