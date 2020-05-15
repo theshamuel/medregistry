@@ -127,7 +127,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                 },
                 error: function (text, data, XmlHttpRequest) {
                     //  $scope.checkAuth(XmlHttpRequest);
-                    console.log("error");
+                    console.log("error dataListToday " + text);
                 }
             })
             $$('listToday').clearAll();
@@ -140,7 +140,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                 },
                 error: function (text, data, XmlHttpRequest) {
                     //    $scope.checkAuth(XmlHttpRequest);
-                    console.log("error");
+                    console.log("error dataListTomorrow" + text);
                 }
             })
             $$('listTomorrow').clearAll();
@@ -1079,7 +1079,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                                         name: "diagnosis",
                                         labelPosition: "left",
                                         height: 60,
-                                        labelWidth: 100,
+                                        labelWidth: 110,
                                         value: ""
                                     },
                                         {
@@ -1089,7 +1089,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                                             name: "therapy",
                                             labelPosition: "left",
                                             height: 160,
-                                            labelWidth: 100,
+                                            labelWidth: 110,
                                             value: ""
                                         },
                                         {
@@ -1099,7 +1099,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                                             name: "additionalExamination",
                                             labelPosition: "left",
                                             height: 58,
-                                            labelWidth: 100,
+                                            labelWidth: 110,
                                             value: ""
                                         }
                                     ]
