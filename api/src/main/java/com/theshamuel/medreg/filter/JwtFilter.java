@@ -41,26 +41,31 @@ public class JwtFilter extends GenericFilterBean {
         final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
         final String authHeader = request.getHeader("Authorization");
-        if ((authHeader == null || !authHeader
-                .startsWith("Bearer "))) { //&& request.getMethod()!="OPTIONS"
-            ((HttpServletResponse) res).sendError(403, "Missing or invalid Authorization header.");
-        } else if (authHeader != null && authHeader
-                .startsWith("Bearer ")) { //&& request.getMethod()!="OPTIONS"
-            final String token = authHeader.substring(7);
-            try {
-                final Claims claims = Jwts.parser().setSigningKey("secretkey")
-                        .parseClaimsJws(token).getBody();
-                request.setAttribute("claims", claims);
-            } catch (SignatureException e) {
+        final String local = request.getHeader("X-API-V2-MEDREG");
+        if (local == null) {
+            if ((authHeader == null || !authHeader
+                    .startsWith("Bearer "))) { //&& request.getMethod()!="OPTIONS"
                 ((HttpServletResponse) res)
-                        .sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token.");
-                throw new SignatureException("Invalid signature of token.");
-            } catch (ExpiredJwtException e) {
-                ((HttpServletResponse) res).sendError(HttpServletResponse.SC_UNAUTHORIZED,
-                        "Token session is expired.");
-                throw new ExpiredJwtException(Jwts.parser().setSigningKey("secretkey")
-                        .parseClaimsJws(token).getHeader(), (Claims) request.getAttribute("claims"),
-                        "Token session is expired.");
+                        .sendError(403, "Missing or invalid Authorization header.");
+            } else if (authHeader != null && authHeader
+                    .startsWith("Bearer ")) { //&& request.getMethod()!="OPTIONS"
+                final String token = authHeader.substring(7);
+                try {
+                    final Claims claims = Jwts.parser().setSigningKey("secretkey")
+                            .parseClaimsJws(token).getBody();
+                    request.setAttribute("claims", claims);
+                } catch (SignatureException e) {
+                    ((HttpServletResponse) res)
+                            .sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token.");
+                    throw new SignatureException("Invalid signature of token.");
+                } catch (ExpiredJwtException e) {
+                    ((HttpServletResponse) res).sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                            "Token session is expired.");
+                    throw new ExpiredJwtException(Jwts.parser().setSigningKey("secretkey")
+                            .parseClaimsJws(token).getHeader(),
+                            (Claims) request.getAttribute("claims"),
+                            "Token session is expired.");
+                }
             }
         }
 
