@@ -312,6 +312,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                         dateReport.toJSON() + '.doc');
             });
         }
+        version_api = 'v1'
         console.timeEnd("call saveReportAsFile")
     };
 
