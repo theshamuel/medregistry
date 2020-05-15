@@ -923,7 +923,13 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                             height: 35,
                             multiview: true,
                             on: {
-                                onBeforeTabClick: $scope.getReportsOfVisit
+                                onChange: function() {
+                                    if ($$("infoVisit").getValue() != null &&
+                                        $$("infoVisit").getValue().localeCompare("report") == 0) {
+                                        $scope.saveRow();
+                                        $scope.getReportsOfVisit()
+                                    }
+                                }
                             },
                             options: [{
                                 id: "service",
