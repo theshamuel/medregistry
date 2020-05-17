@@ -302,9 +302,15 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                 version_api = 'v1'
             }
             webix.ajax().response("blob").headers($localStorage.headers.value).get(url_, function (text, data) {
+                let fioClientArray = $$("cmbClient").getText().split(" ")
+                let suffixClient = clientId
+                if (fioClientArray.length > 0) {
+                    suffixClient = fioClientArray[0]
+                }
+                console.log("")
                 if (reportItem != null && reportItem.template === "templateVisitResult") {
                     $rootScope.saveByteArray([data], 'Заключение_' + dateReport.toJSON() + '_' +
-                        visitId + '.xlsx')
+                        suffixClient + '.xlsx')
                 } else if (reportItem != null && reportItem.template === "Contract")
                     $rootScope.saveByteArray([data], 'Договор_' + dateReport.toJSON() + '.xls');
                 else
