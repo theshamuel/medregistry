@@ -301,7 +301,7 @@ body {
     border-radius: 10px;
     margin: 5px;
     overflow: hidden;
-    background-color: #FFEBEE;
+    background-color: var(--beige);
     padding: 5px;
 }
 
