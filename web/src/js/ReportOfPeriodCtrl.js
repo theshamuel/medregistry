@@ -121,7 +121,7 @@ function ReportOfPeriodCtrl($http, $location, $localStorage, $scope, $rootScope,
                     text: " Начальная дата должна быть меньше или равна конечной "
                 });
             } else {
-                let url = "/api/" + version_api + "/report/file/reportPeriodByDoctor/" + doctorId + "/" +
+                let url = "/api/" + version_api + "/reports/file/reportPeriodByDoctor/" + doctorId + "/" +
                     startDate.toJSON() + "/" + endDate.toJSON() + "/report.xlsx";
                 webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
                     $rootScope.saveByteArray([data], 'Расчетный_лист_' + startDate.toJSON() + '_' + endDate.toJSON() + '.xlsx');
