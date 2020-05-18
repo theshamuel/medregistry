@@ -142,8 +142,17 @@ public class AppointmentRepositoryImpl implements AppointmentOperations {
     public List<Appointment> findReservedAppointmentsByDoctorAndDateAndHasVisit(Doctor doctor,
             LocalDate dateEvent, boolean hasVisit) {
         Instant start = Instant.now();
-        Criteria where = Criteria.where("doctor").is(doctor).and("dateEvent").is(dateEvent)
-                .and("hasVisit").is(hasVisit);
+        Criteria where = new Criteria();
+        if (!hasVisit) {
+            where = where
+                    .orOperator(Criteria.where("doctor").is(doctor).and("dateEvent").is(dateEvent)
+                                    .and("hasVisit").is(hasVisit),
+                            Criteria.where("hasVisit").exists(false).
+                                    where("doctor").is(doctor).and("dateEvent").is(dateEvent));
+        } else {
+            where = Criteria.where("doctor").is(doctor).and("dateEvent").is(dateEvent)
+                                    .and("hasVisit").is(true);
+        }
         Query query = Query.query(where)
                 .with(new Sort(new Sort.Order(Sort.Direction.ASC, "dateEvent")))
                 .with(new Sort(new Sort.Order(Sort.Direction.ASC, "timeEvent")));
@@ -160,7 +169,15 @@ public class AppointmentRepositoryImpl implements AppointmentOperations {
     public List<Appointment> findReservedAppointmentsByDoctorAndHasVisit(Doctor doctor,
             boolean hasVisit) {
         Instant start = Instant.now();
-        Criteria where = Criteria.where("doctor").is(doctor).and("hasVisit").is(hasVisit);
+        Criteria where = new Criteria();
+        if (!hasVisit) {
+            where = where
+                    .orOperator(Criteria.where("doctor").is(doctor).and("hasVisit").is(hasVisit),
+                            Criteria.where("hasVisit").exists(false).
+                                    where("doctor").is(doctor));
+        } else {
+            where = Criteria.where("doctor").is(doctor).and("hasVisit").is(true);
+        }
         Query query = Query.query(where)
                 .with(new Sort(new Sort.Order(Sort.Direction.ASC, "dateEvent")))
                 .with(new Sort(new Sort.Order(Sort.Direction.ASC, "timeEvent")));
