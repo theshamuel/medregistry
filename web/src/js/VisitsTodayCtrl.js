@@ -498,8 +498,10 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                                     onChange: function() {
                                         if ($$("infoVisit").getValue() != null &&
                                             $$("infoVisit").getValue().localeCompare("report") == 0) {
-                                            $scope.saveRow();
-                                            $scope.getReportsOfVisit()
+                                            if ($$("editform").validate()) {
+                                                $scope.saveRow();
+                                                $scope.getReportsOfVisit();
+                                            }
                                         }
                                     }
                                 },
