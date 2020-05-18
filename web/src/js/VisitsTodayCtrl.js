@@ -159,23 +159,44 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
     };
 
     $scope.saveReportAsFile = function () {
+        console.time("call saveReportAsFile")
         let reportId = $$("gridReports").getSelectedId();
         let reportItem = $$("gridReports").getSelectedItem();
         let clientId = $$("cmbClient").getValue();
         let visitId = $scope.visitId;
         let doctorId = $$("cmbDoctorOnForm").getValue();
         let dateReport = new Date();
+        let url_ = ""
         if (reportId === null || reportId === "" || reportId === undefined) {
             webix.alert(" Не выбран отчет для сохранения ");
         } else {
-            let url = "/api/"+version_api+"/reports/file/reportTemplate/" + clientId + "/" + doctorId + "/" + reportId + "/" + visitId + "/" + dateReport.toJSON();
-            webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
-                if (reportItem!=null && reportItem.template === "Contract")
+            url_ = "/api/" + version_api + "/reports/file/reportTemplate/" +
+                clientId + "/" + doctorId + "/" + reportId + "/" + visitId + "/" + dateReport.toJSON();
+            if (reportItem != null && reportItem.template == "templateVisitResult") {
+                version_api = 'v2'
+                url_ = "/api/" + version_api + "/reports/file/reportVisitResult/" + visitId + "/report.xlsx"
+            } else {
+                version_api = 'v1'
+            }
+            webix.ajax().response("blob").headers($localStorage.headers.value).get(url_, function (text, data) {
+                let fioClientArray = $$("cmbClient").getText().split(" ")
+                let suffixClient = clientId
+                if (fioClientArray.length > 0) {
+                    suffixClient = fioClientArray[0]
+                }
+                console.log("")
+                if (reportItem != null && reportItem.template === "templateVisitResult") {
+                    $rootScope.saveByteArray([data], 'Заключение_' + dateReport.toJSON() + '_' +
+                        suffixClient + '.xlsx')
+                } else if (reportItem != null && reportItem.template === "Contract")
                     $rootScope.saveByteArray([data], 'Договор_' + dateReport.toJSON() + '.xls');
                 else
-                    $rootScope.saveByteArray([data], 'Бланк_' +reportItem.label+"-"+dateReport.toJSON() + '.doc');
+                    $rootScope.saveByteArray([data], 'Бланк_' + reportItem.label + "-" +
+                        dateReport.toJSON() + '.doc');
             });
         }
+        version_api = 'v1'
+        console.timeEnd("call saveReportAsFile")
     };
 
     $scope.printCardClient = function () {
@@ -483,6 +504,11 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                                         value: "Услуги"
                                     },
                                     {
+                                        id: "result",
+                                        css: "common_tab",
+                                        value: "Заключение"
+                                    },
+                                    {
                                         id: "report",
                                         css: "common_tab",
                                         value: "Отчеты",
@@ -584,6 +610,40 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                                                     }
                                                 },
                                                 data: []
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        id: "result",
+                                        view: "layout",
+                                        margin: 8,
+                                        padding: 10,
+                                        rows: [{
+                                            view: "textarea",
+                                            label: "Диагноз",
+                                            id: "diagnosis",
+                                            name: "diagnosis",
+                                            labelPosition: "top",
+                                            height: 90,
+                                            value: ""
+                                        },
+                                            {
+                                                view: "textarea",
+                                                label: "Лечение",
+                                                id: "therapy",
+                                                name: "therapy",
+                                                labelPosition: "top",
+                                                height: 110,
+                                                value: ""
+                                            },
+                                            {
+                                                view: "textarea",
+                                                label: "Дообследование",
+                                                id: "additionalExamination",
+                                                name: "additionalExamination",
+                                                labelPosition: "top",
+                                                height: 78,
+                                                value: ""
                                             }
                                         ]
                                     },
