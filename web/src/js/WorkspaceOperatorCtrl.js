@@ -1058,8 +1058,9 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                                         label: "Диагноз",
                                         id: "diagnosis",
                                         name: "diagnosis",
-                                        labelPosition: "top",
-                                        height: 90,
+                                        labelPosition: "left",
+                                        height: 60,
+                                        labelWidth: 100,
                                         value: ""
                                     },
                                         {
@@ -1067,17 +1068,19 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                                             label: "Лечение",
                                             id: "therapy",
                                             name: "therapy",
-                                            labelPosition: "top",
-                                            height: 110,
+                                            labelPosition: "left",
+                                            height: 160,
+                                            labelWidth: 100,
                                             value: ""
                                         },
                                         {
                                             view: "textarea",
-                                            label: "Дообследование",
+                                            label: "Доп/oбслед.",
                                             id: "additionalExamination",
                                             name: "additionalExamination",
-                                            labelPosition: "top",
-                                            height: 78,
+                                            labelPosition: "left",
+                                            height: 58,
+                                            labelWidth: 100,
                                             value: ""
                                         }
                                     ]
