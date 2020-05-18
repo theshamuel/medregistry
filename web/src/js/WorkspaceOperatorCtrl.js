@@ -365,17 +365,36 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
         let visitId = $scope.visitId;
         let doctorId = $$("cmbDoctorOnForm").getValue();
         let dateReport = new Date();
+        let url_ = ""
         if (reportId === null || reportId === "" || reportId === undefined) {
             webix.alert(" Не выбран отчет для сохранения ");
         } else {
-            let url = "/api/" + version_api + "/reports/file/reportTemplate/" + clientId + "/" + doctorId + "/" + reportId + "/" + visitId + "/" + dateReport.toJSON();
-            webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
-                if (reportItem != null && reportItem.template === "Contract")
+            url_ = "/api/" + version_api + "/reports/file/reportTemplate/" +
+                clientId + "/" + doctorId + "/" + reportId + "/" + visitId + "/" + dateReport.toJSON();
+            if (reportItem != null && reportItem.template == "templateVisitResult") {
+                version_api = 'v2'
+                url_ = "/api/" + version_api + "/reports/file/reportVisitResult/" + visitId + "/report.xlsx"
+            } else {
+                version_api = 'v1'
+            }
+            webix.ajax().response("blob").headers($localStorage.headers.value).get(url_, function (text, data) {
+                let fioClientArray = $$("cmbClient").getText().split(" ")
+                let suffixClient = clientId
+                if (fioClientArray.length > 0) {
+                    suffixClient = fioClientArray[0]
+                }
+                console.log("")
+                if (reportItem != null && reportItem.template === "templateVisitResult") {
+                    $rootScope.saveByteArray([data], 'Заключение_' + dateReport.toJSON() + '_' +
+                        suffixClient + '.xlsx')
+                } else if (reportItem != null && reportItem.template === "Contract")
                     $rootScope.saveByteArray([data], 'Договор_' + dateReport.toJSON() + '.xls');
                 else
-                    $rootScope.saveByteArray([data], 'Бланк_' + reportItem.label + "-" + dateReport.toJSON() + '.doc');
+                    $rootScope.saveByteArray([data], 'Бланк_' + reportItem.label + "-" +
+                        dateReport.toJSON() + '.doc');
             });
         }
+        version_api = 'v1'
         console.timeEnd("call saveReportAsFile")
     };
     // +
