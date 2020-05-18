@@ -146,9 +146,9 @@ public class AppointmentRepositoryImpl implements AppointmentOperations {
         if (!hasVisit) {
             where = where
                     .orOperator(Criteria.where("doctor").is(doctor).and("dateEvent").is(dateEvent)
-                                    .and("hasVisit").is(hasVisit),
-                            Criteria.where("hasVisit").exists(false).
-                                    where("doctor").is(doctor).and("dateEvent").is(dateEvent));
+                                    .and("hasVisit").is(false),
+                            Criteria.where("doctor").is(doctor).and("dateEvent").
+                                    is(dateEvent).and("hasVisit").exists(false));
         } else {
             where = Criteria.where("doctor").is(doctor).and("dateEvent").is(dateEvent)
                                     .and("hasVisit").is(true);
@@ -173,8 +173,7 @@ public class AppointmentRepositoryImpl implements AppointmentOperations {
         if (!hasVisit) {
             where = where
                     .orOperator(Criteria.where("doctor").is(doctor).and("hasVisit").is(hasVisit),
-                            Criteria.where("hasVisit").exists(false).
-                                    where("doctor").is(doctor));
+                            Criteria.where("doctor").is(doctor).and("hasVisit").exists(false));
         } else {
             where = Criteria.where("doctor").is(doctor).and("hasVisit").is(true);
         }
