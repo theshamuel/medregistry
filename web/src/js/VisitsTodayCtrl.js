@@ -184,7 +184,6 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                 if (fioClientArray.length > 0) {
                     suffixClient = fioClientArray[0]
                 }
-                console.log("")
                 if (reportItem != null && reportItem.template === "templateVisitResult") {
                     $rootScope.saveByteArray([data], 'Заключение_' + dateReport.toJSON() + '_' +
                         suffixClient + '.xlsx')
@@ -496,7 +495,13 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                                 height: 35,
                                 multiview: true,
                                 on: {
-                                    onBeforeTabClick: $scope.getReportsOfVisit
+                                    onChange: function() {
+                                        if ($$("infoVisit").getValue() != null &&
+                                            $$("infoVisit").getValue().localeCompare("report") == 0) {
+                                            $scope.saveRow();
+                                            $scope.getReportsOfVisit()
+                                        }
+                                    }
                                 },
                                 options: [{
                                         id: "service",
@@ -713,6 +718,7 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                                         if ($scope.serverValidation) {
                                             this.getTopParentView().hide();
                                         }
+                                        $scope.getAppointmentsList()
                                     } else {
                                         webix.alert({
                                             title: "Ошибка",
@@ -728,7 +734,7 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                                 value: "Cancel",
                                 label: "Отмена",
                                 click: function () {
-                                    $scope.reloadGridVisit();
+                                    $scope.getAppointmentsList()
                                     this.getTopParentView().hide();
                                 }
                             }
@@ -766,7 +772,6 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
             on: {
                 onItemDblClick: function () {
                     $scope.visitId = $$("visitsGrid").getSelectedId();
-                    console.log("getSelectedId()=" + $$("visitsGrid").getSelectedId());
                     $$("editform").clearValidation();
                     $$("gridServices").clearAll();
                     $$("cmbService").setValue(null);
@@ -1224,7 +1229,6 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                 .post(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
                         $$("visitsGrid").parse(text);
-                        $scope.getAppointmentsList();
                         $scope.visitId = JSON.parse(text).id;
                         $scope.serverValidation = true;
                     },
@@ -1243,7 +1247,6 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
                         $$("visitsGrid").parse(text);
-                        $scope.getAppointmentsList();
                         $scope.serverValidation = true;
                     },
                     error: function (text, data, XmlHttpRequest) {
