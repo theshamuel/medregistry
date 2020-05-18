@@ -934,12 +934,21 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                             height: 35,
                             multiview: true,
                             on: {
-                                onBeforeTabClick: $scope.getReportsOfVisit
+                                onChange: function () {
+                                    if ($$("infoVisit").getValue().localeCompare("report") == 0) {
+                                        $scope.saveRowVisit();
+                                        $scope.getReportsOfVisit()
+                                    }
+                                }
                             },
                             options: [{
                                 id: "service",
                                 css: "common_tab",
                                 value: "Услуги"
+                            }, {
+                                id: "result",
+                                css: "common_tab",
+                                value: "Заключение"
                             },
                                 {
                                     id: "report",
@@ -1038,6 +1047,39 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                                                 }
                                             },
                                             data: []
+                                        }
+                                    ]
+                                }, {
+                                    id: "result",
+                                    view: "layout",
+                                    margin: 8,
+                                    padding: 10,
+                                    rows: [{
+                                        view: "textarea",
+                                        label: "Диагноз",
+                                        id: "diagnosis",
+                                        name: "diagnosis",
+                                        labelPosition: "top",
+                                        height: 90,
+                                        value: ""
+                                    },
+                                        {
+                                            view: "textarea",
+                                            label: "Лечение",
+                                            id: "therapy",
+                                            name: "therapy",
+                                            labelPosition: "top",
+                                            height: 110,
+                                            value: ""
+                                        },
+                                        {
+                                            view: "textarea",
+                                            label: "Дообследование",
+                                            id: "additionalExamination",
+                                            name: "additionalExamination",
+                                            labelPosition: "top",
+                                            height: 78,
+                                            value: ""
                                         }
                                     ]
                                 },
