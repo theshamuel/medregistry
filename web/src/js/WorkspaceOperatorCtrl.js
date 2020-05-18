@@ -823,7 +823,7 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                 id: "editformvisit",
                 complexData: true,
                 on: {
-                    onValues: function() {
+                    onValues: function () {
                         $scope.reloadComboClients()
                         $scope.reloadComboServices()
                     }
@@ -987,7 +987,6 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                                                         value: "AddService",
                                                         label: "Добавить",
                                                         click: function () {
-                                                            console.log("CALL ADD")
                                                             $scope.addServicesOfVisit();
                                                         }
                                                     },
