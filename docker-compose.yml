@@ -1,7 +1,69 @@
 version: '2'
 services:
-    medregdb:
-        build: db
+      medregapi-v1:
+        image: theshamuel/medregapi-v1:2.0.0
+        hostname: medregapi-v1
+        restart: always
+        container_name: medregapi-v1
+        logging:
+          driver: json-file
+          options:
+              max-size: "3m"
+              max-file: "2"
+        volumes:
+            - /reports:/opt/reports
+        environment:
+              - TZ=Europe/Moscow
+              - VERSION=2.0.0
+              - REPORT_PATH=
+              - MONGO_SERVER=medregdb
+              - MONGO_PORT=
+              - MONGO_DB=
+              - MONGO_USER=
+              - MONGO_USER_PASSWORD=
+              - SERVER_PORT=
+    
+      medregapi-v2:
+        image: theshamuel/medregapi-v2:1.0.0
+        hostname: medregapi-v2
+        restart: always
+        container_name: medregapi-v2
+        logging:
+            driver: json-file
+            options:
+                max-size: "3m"
+                max-file: "2"
+        volumes:
+            - /reports:/opt/reports
+        environment:
+            - TZ=Europe/Moscow
+            - MEDREG_API_V1_URL=http://medregapi-v1:9001/api/v1/
+            - REPORT_PATH=
+        
+      medregweb-20:
+        image: theshamuel/medregweb:2.0.0
+        hostname: medregweb20
+        restart: always
+        container_name: medregweb
+        logging:
+            driver: json-file
+            options:
+                max-size: "3m"
+                max-file: "2"
+        volumes:
+            - /web/src/:/usr/share/nginx/
+        ports:
+            - "80:80"
+            - "443:443"
+        environment:
+            - TZ=Europe/Moscow
+            - PROXY_SERVER_V1=medregapi-v1
+            - PROXY_PORT_V1=
+            - PROXY_SERVER_V2=medregapi-v2
+            - PROXY_PORT_V2=
+      
+      medregdb:
+        image: theshamuel/medregdb:2.0.0
         hostname: medregdb
         restart: always
         container_name: medregdb
@@ -11,98 +73,25 @@ services:
                 max-size: "3m"
                 max-file: "2"
         volumes:
-            - ./db/data:/data/db
-            - ./backup:/backup
-        ports:
-            - "57017:27017"
+            - /data:/data/db
+            - /backup:/backup
         environment:
             - TZ=Europe/Moscow
             - MONGO_AUTH=false
             - MONGO_SERVER=medregdb
             - MONGO_PORT=27017
             - MONGO_DB=medregDB
-            - MONGO_ARCHIVE=medregdb_2017-11-25-143324.tar.gz
+            - MONGO_ARCHIVE=
             - MONGO_ADMIN=
             - MONGO_ADMIN_PASSWORD=
             - MONGO_USER=
             - MONGO_USER_PASSWORD=
-            - INVITRO_DB_SERVER=localhost
-            - INVITRO_DB_PORT=5432
-            - INVITRO_DB=
-            - INVITRO_QUEUE=invitro_events
-            - INVITRO_DB_USER=postgres
-            - INVITRO_DB_USER_PASSWORD=postgres
-        networks:
-            - medregistry
-
-    medregapi-v1:
-        build: api
-        hostname: medregapi-v1
-        restart: always
-        container_name: medregapi-v1
-        logging:
-            driver: json-file
-            options:
-                max-size: "3m"
-                max-file: "2"
-        volumes:
-            - ./log/medregistry:/var/log/medregistry
-        ports:
-            - "9001:9000"
-        environment:
-            - TZ=Europe/Moscow
-            - VERSION=1.1.0
-            - REPORT_PATH=/reports
-            - MONGO_SERVER=medregdb
-            - MONGO_PORT=27017
-            - MONGO_DB=medregDB
-            #- MONGO_USER=
-            #- MONGO_USER_PASSWORD=
-        networks:
-          - medregistry
-
-    #The image of Medreg API-v2 should be pre-builded
-    medregapi-v2:
-        image: theshamuel/medreg20
-        hostname: medregapi-v2
-        restart: always
-        container_name: medregapi-v2
-        logging:
-            driver: json-file
-            options:
-                max-size: "3m"
-                max-file: "2"
-        ports:
-            - "9002:9002"
-        environment:
-            - MEDREG_API_V1="medregapi-v1:9000"
-        networks:
-          - medregistry
-
-    medregweb:
-        build: web
-        hostname: medregweb
-        restart: always
-        container_name: medregweb
-        logging:
-            driver: json-file
-            options:
-                max-size: "3m"
-                max-file: "2"
-        volumes:
-            - ./web/src/:/usr/share/nginx/
-        ports:
-            - "8080:80"
-            - "8443:443"
-        environment:
-            - TZ=Europe/Moscow
-            - PROXY_SERVER_V1=medregapi-v1
-            - PROXY_PORT_V1=9000
-            - PROXY_SERVER_V2=medregapi-v2
-            - PROXY_PORT_V2=9002
-        networks:
-          - medregistry
-
+            - COPY_TO_S3=false
+            - AWS_ACCESS_KEY_ID=
+            - AWS_SECRET_KEY=
+            - AWS_PATH=
+            - BACKET_NAME=
 networks:
-    medregistry:
-        driver: bridge
+    default:
+        external:
+            name: medregistry_default
