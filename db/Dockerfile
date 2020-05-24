@@ -17,7 +17,7 @@ RUN \
  mkdir /backup && \
  apt-get update && \
  export DEBIAN_FRONTEND=noninteractive && \
- apt-get install -y tzdata && \
+ apt-get install -y tzdata curl && \
  apt-get clean
 
 CMD ["/entrypoint.sh"]
