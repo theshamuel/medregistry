@@ -7,7 +7,7 @@ mongo_port=27017
     while :; do
         find /backup -mtime +10 -type f -delete
         name_archive=$(date +%Y-%m-%d-%H%M%S.tag.gz)
-        path_archive="/backup/medregdb_"$(name_archive)
+        path_archive="/backup/mrdb_"$(name_archive)
         
         echo $name_archive
         if [ "${MONGO_AUTH}" = true ]; then
@@ -19,7 +19,7 @@ mongo_port=27017
             AWSAccessKeyId=${AWS_ACCESS_KEY_ID}
             AWSSecretKey=${AWS_SECRET_KEY}
             aws_path=${AWS_PATH}
-            bucket='medreg-backups'
+            bucket=${BACKET_NAME}
             date=$(date +"%a, %d %b %Y %T %z")
             resource="/${bucket}/$name_archive"
             acl="x-amz-acl:private"
