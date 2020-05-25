@@ -259,7 +259,19 @@ function WorkspaceOperatorCtrl($http, $location, $localStorage, $scope, $rootSco
                 $scope.checkAuth(XmlHttpRequest);
             }
         });
-        $$('cmbService').define("options", dataServices);
+        $$('cmbService').define({
+            options:{
+                filter: function (item, value) {
+                    return item.label.
+                    toString().
+                    toLowerCase().
+                    indexOf(value.toLowerCase()) > -1;
+                },
+                body:{
+                    data: dataServices
+                }
+            }
+        });
         $$('cmbService').refresh();
         console.timeEnd("call reloadComboServices")
     }
