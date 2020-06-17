@@ -53,11 +53,11 @@ public class MedRegExceptionHandler {
      * @return the response error
      */
     @ExceptionHandler(NotFoundEntityException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public @ResponseBody
     ResponseError notFoundEntity(NotFoundEntityException e) {
         logger.error("MedRegistryError:", e);
-        return new ResponseError(HttpStatus.NOT_FOUND.value(), e.getMessage());
+        return new ResponseError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 
     /**
