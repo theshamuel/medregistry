@@ -1,6 +1,6 @@
 import React from 'react';
 
-class LoginForm extends React.PureComponent {
+class LoginForm extends React.Component {
 
     constructor(props) {
         super(props);
@@ -44,6 +44,7 @@ class LoginForm extends React.PureComponent {
 
     //TODO: fix twice render
     render() {
+        console.log("123")
         return (
             <div>
                 <h1>{this.props.title}</h1>
