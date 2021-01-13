@@ -27,8 +27,6 @@ This docker container based on my own openjdk docker images version 15 for [buil
 #### API 2.0
 The new [API 2.0](https://github.com/theshamuel/medregistry20) [`https://github.com/theshamuel/medregistry20`]
 
-#### Monit
-If you have a smtp-server you can setup enviromet for monit container which will send you metrics about host instance.
 
 ## DEPLOYMENT
 1. Download any release
