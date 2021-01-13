@@ -13,7 +13,7 @@ This is project which provide API and UI for building up workflow for small busi
 OpenJDK version 15.0.1 is recommended for building jar archive. Build jar to `target` directory.
 
 #### Database
-The first start of db container import medregdb_starter.tar.gz dumb of database with collection and demo admin-user for getting JWT token and manage `users` (admin/admin). The database is ready deploy on production and has all necessary indexes for optimisation in queries. Also for container has scripts for backup on host instanse and to `AWS S3`. If you need this setup specal enviroment variables.
+The first start of db container import medregdb_starter.tar.gz dumb of database with collection and demo admin-user for getting JWT token and manage `users` (admin/admin). The database is ready deploy on production and has all necessary indexes for optimization in queries. Also for container has scripts for backup on host instance and to `AWS S3`. If you need this setup special environment variables.
 Important after first start change `MONGO_RESTORE` variable to false.
 
 There is deploy one container of mongo `medregdb`.
@@ -45,10 +45,10 @@ The new [API 2.0](https://github.com/theshamuel/medregistry20) [`https://github.
         - MONGO_USER - Login of user by medregDB database
         - MONGO_USER_PASSWORD - Password of user by medregDB database
         - COPY_TO_S3 - Create backups to AWS S3 bucket (Ex. true or false)
-        - AWS_ACCESS_KEY_ID - Security parametr from AWS account for accesing to AWS S3
-        - AWS_SECRET_KEY - Security parametr from AWS account for accesing to AWS S3
+        - AWS_ACCESS_KEY_ID - Security parameter from AWS account for accessing to AWS S3
+        - AWS_SECRET_KEY - Security parameter from AWS account for accessing to AWS S3
         - AWS_PATH -  Path into bucket on AWS S3
-        - BACKET_NAME - Name of backet for storing dump
+        - BUCKET_NAME - Name of bucket for storing dump
     - `medregapi-v1:` - Java API backend container (old version)
         - VERSION - Version of release api jar
         - REPORT_PATH - Filepath to folder with report`s templates
@@ -62,8 +62,8 @@ The new [API 2.0](https://github.com/theshamuel/medregistry20) [`https://github.
         - MEDREG_API_V1_URL - URL to API 1.0
         - REPORT_PATH - Filepath to folder with report`s templates
     - `medregweb-20` - Nginx reverse proxy container for routing requests to frontend and backend API
-        - PROXY_SERVER_V1 - Sevice name of Server API 1.0
+        - PROXY_SERVER_V1 - Service name of Server API 1.0
         - PROXY_PORT_V1 - Server port microservice API 1.0
-        - PROXY_SERVER_V2=medregapi-v2 - Sevice name of Server API 2.0
+        - PROXY_SERVER_V2=medregapi-v2 - Service name of Server API 2.0
         - PROXY_PORT_V2 - Server port microservice API 2.0
 1. Execute `docker-compose up --build`
