@@ -30,7 +30,7 @@ The new [API 2.0](https://github.com/theshamuel/medregistry20) [`https://github.
 
 ## DEPLOYMENT
 1. Download any release
-1. Define all nessasery environment variables into docker-compose.xml. 
+1. Define all necessary environment variables into docker-compose.yml. 
     - `medregdb`  - MongoDB container (Primary)
         - TZ - TimeZone (Ex. Europe/Moscow)
         - MONGO_AUTH - Create user/password for mongod (Ex. true or false)
