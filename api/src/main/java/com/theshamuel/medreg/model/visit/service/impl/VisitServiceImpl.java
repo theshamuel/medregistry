@@ -95,8 +95,8 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
         Optional<Doctor> doctor = Optional.ofNullable(doctorRepository.findOne(doctorId));
         final boolean[] result = new boolean[]{true};
         doctor.ifPresent(e -> {
-            LocalDate dateEvent = null;
-            LocalTime timeEvent = null;
+            LocalDate dateEvent;
+            LocalTime timeEvent;
             if (appointment.isPresent()) {
                 dateEvent = appointment.get().getDateEvent();
                 timeEvent = appointment.get().getTimeEvent();
