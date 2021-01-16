@@ -67,7 +67,7 @@ public class UserController {
     public ResponseEntity<List<User>> getUsersOrderByFullname(@RequestParam(value = "sort",
             defaultValue = "ASC") String sort) {
         Sort.Direction sortDirection = Sort.Direction.ASC;
-        if (sort.toUpperCase().equals("DESC")) {
+        if (sort.equalsIgnoreCase("DESC")) {
             sortDirection = Sort.Direction.DESC;
         }
         List<User> result = userRepository

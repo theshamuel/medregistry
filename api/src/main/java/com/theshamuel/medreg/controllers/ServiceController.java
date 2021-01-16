@@ -78,7 +78,7 @@ public class ServiceController {
     public ResponseEntity<List<Service>> getServiceOrderByLabel(@RequestParam(value = "sort",
             defaultValue = "ASC") String sort) {
         Sort.Direction sortDirection = Sort.Direction.ASC;
-        if (sort.toUpperCase().equals("DESC")) {
+        if (sort.equalsIgnoreCase("DESC")) {
             sortDirection = Sort.Direction.DESC;
         }
         List<Service> result = serviceRepository

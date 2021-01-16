@@ -77,7 +77,7 @@ public class DoctorController {
     public ResponseEntity<List> getDoctorsOrderBySurname(@RequestParam(value = "sort",
             defaultValue = "ASC") String sort) {
         Sort.Direction sortDirection = Sort.Direction.ASC;
-        if (sort.toUpperCase().equals("DESC")) {
+        if (sort.equalsIgnoreCase("DESC")) {
             sortDirection = Sort.Direction.DESC;
         }
         List<DoctorDto> result = doctorService
