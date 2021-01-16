@@ -59,10 +59,9 @@ public class CompanyController {
      * Gets company.
      *
      * @return the company
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/company")
-    public ResponseEntity<Company> getCompany() throws ServletException {
+    public ResponseEntity<Company> getCompany() {
         List<Company> result = companyRepository.findAll();
         if (result.size() > 0) {
             return new ResponseEntity(result.get(0), HttpStatus.OK);

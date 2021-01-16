@@ -276,7 +276,6 @@ public class AppointmentController {
      * @param hasVisit  the flag which show relation appointments to visit
      * @param visitId   the visit id
      * @return the response entity included reserved appointments by doctor
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/appointments/reserved/hasvisit")
     public ResponseEntity<List<AppointmentDto>> getReservedAppointmentsByDoctorHasVisit(

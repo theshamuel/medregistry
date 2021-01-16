@@ -142,11 +142,10 @@ public class ClientController {
      * @param clientId the client id
      * @param category the category
      * @return the client info
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/clients/{clientId}/{category}")
     public ResponseEntity<List> getClientInfo(@PathVariable("clientId") String clientId,
-            @PathVariable("category") String category) throws ServletException {
+            @PathVariable("category") String category) {
         return new ResponseEntity(
                 clientService.getServicesToClientByCategoryService(clientId, category),
                 HttpStatus.OK);

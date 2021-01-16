@@ -122,11 +122,10 @@ public class ServiceController {
      *
      * @param id the id
      * @return the personal rates of doctor
-     * @throws ServletException the servlet exception
      */
     @GetMapping(value = "/services/{id}/doctor", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<PersonalRate>> getPersonalRatesOfDoctor(
-            @PathVariable("id") String id) throws ServletException {
+            @PathVariable("id") String id) {
         return new ResponseEntity(serviceService.getPersonalRatesByDoctorId(id), HttpStatus.OK);
     }
 
