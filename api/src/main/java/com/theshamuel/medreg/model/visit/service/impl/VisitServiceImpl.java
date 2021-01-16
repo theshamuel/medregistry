@@ -121,18 +121,15 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
         Visit visit = visitRepository.findOne(visitId);
         if (visit != null) {
             Optional<List<Service>> tmp = Optional.ofNullable(visit.getServices());
-            tmp.ifPresent(item -> {
-                item.forEach(e -> {
-                    BigInteger price = e.getPrice();
+            tmp.ifPresent(item -> item.forEach(e -> {
+                BigInteger price = e.getPrice();
 
-                    if (serviceService.hasPersonalRate(e.getId(), visit.getDoctor().getId())) {
-                        price = serviceService
-                                .getPriceFromPersonalRate(e.getId(), visit.getDoctor().getId());
-                    }
+                if (serviceService.hasPersonalRate(e.getId(), visit.getDoctor().getId())) {
+                    price = serviceService.getPriceFromPersonalRate(e.getId(), visit.getDoctor().getId());
+                }
 
-                    result.add(new ServiceDto(e.getId(), e.getLabel(), price, e.getDiscount()));
-                });
-            });
+                result.add(new ServiceDto(e.getId(), e.getLabel(), price, e.getDiscount()));
+            }));
             return result;
         }
         return Collections.emptyList();
