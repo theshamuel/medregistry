@@ -73,12 +73,12 @@ public class ScheduleServiceImpl extends BaseServiceImpl<ScheduleDto, Schedule> 
                             .collect(Collectors.toList());
                     content = content.stream().filter(p -> doctorsId.contains(p.getDoctor()))
                             .collect(Collectors.toList());
-                    result = new PageImpl<ScheduleDto>(content, pageRequest, content.size());
+                    result = new PageImpl<>(content, pageRequest, content.size());
                     return result;
                 }
             }
         }
-        return new PageImpl<ScheduleDto>(Collections.emptyList());
+        return new PageImpl<>(Collections.emptyList());
     }
 
     /**
