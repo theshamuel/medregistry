@@ -414,7 +414,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
     public byte[] getReportOfWorkDayByDoctor(LocalDate dateWork, String author) {
         logger.info("CALL getReportOfWorkDayByDoctor START - {}", LocalDateTime.now()
                 .format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss", Locale.getDefault())));
-        byte[] resultFile = null;
+        byte[] resultFile;
         Long start = System.currentTimeMillis();
         Path commonPath = Paths.get("//Users/theal-f/IdeaProjects/reportstest/");
         if (environment.getProperty("REPORT_PATH") != null) {
