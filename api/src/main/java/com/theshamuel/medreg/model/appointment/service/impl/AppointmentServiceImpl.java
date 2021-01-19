@@ -138,12 +138,12 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
                             .collect(Collectors.toList());
                     content = content.stream().filter(p -> doctorsId.contains(p.getDoctorId()))
                             .collect(Collectors.toList());
-                    result = new PageImpl<AppointmentDto>(content, pageRequest, content.size());
+                    result = new PageImpl<>(content, pageRequest, content.size());
                     return result;
                 }
             }
         }
-        return new PageImpl<AppointmentDto>(Collections.emptyList());
+        return new PageImpl<>(Collections.emptyList());
     }
 
     /**
@@ -735,7 +735,7 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
                 result.add(obj2dto(item));
             });
         });
-        logger.debug("Elapsed time getReservedAppointmentsByDoctorDateEvent: {}", Duration
+        logger.debug("Elapsed time: {}", Duration
                 .between(start, Instant.now()).toMillis());
         return result.stream().sorted().collect(Collectors.toList());
     }
@@ -756,7 +756,7 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
                 result.add(obj2dto(item));
             });
         });
-        logger.debug("Elapsed time getReservedAppointmentsByDoctor: {}", Duration
+        logger.debug("Elapsed time: {}", Duration
                 .between(start, Instant.now()).toMillis());
         return result;
     }
@@ -777,7 +777,7 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
                 result.add(obj2dto(item));
             });
         });
-        logger.debug("Elapsed time getReservedAppointmentsByDoctor: {}", Duration
+        logger.debug("Elapsed time: {}", Duration
                 .between(start, Instant.now()).toMillis());
         return result;
     }
@@ -816,7 +816,7 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
         visit.ifPresent(i -> {
             apppointment[0] = Optional.ofNullable(i.getAppointment());
         });
-        Stream<AppointmentDto> stream = null;
+        Stream<AppointmentDto> stream;
         if (dateEvent != null) {
             stream = getReservedAppointmentsByDoctorDateEventHasVisit(doctorId, dateEvent, hasVisit).stream();
         } else {
