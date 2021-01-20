@@ -51,8 +51,6 @@ public class AppointmentDto extends BaseEntity implements Comparable {
 
     private String dateTimeEventLabel;
 
-    private String title;
-
     private int state = 0;
 
     private Boolean hasVisit;
@@ -255,25 +253,6 @@ public class AppointmentDto extends BaseEntity implements Comparable {
      */
     public void setDateTimeEventLabel(String dateTimeEventLabel) {
         this.dateTimeEventLabel = dateTimeEventLabel;
-    }
-
-    /**
-     * Gets title.
-     *
-     * @return the title
-     */
-    public String getTitle() {
-        StringBuilder sb = new StringBuilder();
-        if (getTimeEvent() != null) {
-            sb.append(getTimeEvent());
-        }
-        if (getClient() != null) {
-            sb.append(" ".concat(client));
-        }
-        if (getService() != null) {
-            sb.append(" ".concat(service));
-        }
-        return sb.toString();
     }
 
     /**
