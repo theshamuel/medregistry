@@ -18,7 +18,6 @@ import com.theshamuel.medreg.model.company.dao.CompanyRepository;
 import com.theshamuel.medreg.model.company.entity.Company;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
