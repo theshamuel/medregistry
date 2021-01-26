@@ -88,16 +88,8 @@ import org.springframework.core.env.Environment;
 public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implements ReportService {
 
     private static Logger logger = LoggerFactory.getLogger(ReportRepositoryImpl.class);
-    /**
-     * The Report params service.
-     */
-    @Autowired
-    ReportParamsService reportParamsService;
-    /**
-     * The Environment var.
-     */
-    @Autowired
-    Environment environment;
+    private final ReportParamsService reportParamsService;
+    private final Environment environment;
     private ReportRepository reportRepository;
     private VisitRepository visitRepository;
     private ServiceRepository serviceRepository;
@@ -119,9 +111,9 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
      */
     @Autowired
     public ReportServiceImpl(ReportRepository reportRepository, VisitRepository visitRepository,
-            ServiceRepository serviceRepository, AppointmentService appointmentService,
-            ServiceService serviceService, DoctorRepository doctorRepository,
-            CompanyRepository companyRepository) {
+                             ServiceRepository serviceRepository, AppointmentService appointmentService,
+                             ServiceService serviceService, DoctorRepository doctorRepository,
+                             CompanyRepository companyRepository, ReportParamsService reportParamsService, Environment environment) {
         super(reportRepository);
         this.reportRepository = reportRepository;
         this.visitRepository = visitRepository;
@@ -130,6 +122,8 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
         this.appointmentService = appointmentService;
         this.doctorRepository = doctorRepository;
         this.companyRepository = companyRepository;
+        this.reportParamsService = reportParamsService;
+        this.environment = environment;
     }
 
 
