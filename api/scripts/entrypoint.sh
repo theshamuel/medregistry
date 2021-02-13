@@ -5,4 +5,4 @@ echo "Start api......."
 cp /usr/share/zoneinfo/$TZ /etc/localtime && \
 echo $TZ > /etc/timezone
 
-java -Xmx1024m -XX:+UseG1GC -cp /app:/app/lib/* com.theshamuel.medreg.MedregistryBootstrap
+java -Xmx1024m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -cp /app:/app/lib/* com.theshamuel.medreg.MedregistryBootstrap
