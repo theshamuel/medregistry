@@ -80,10 +80,8 @@ public class ReportParamsService {
                 }
                 return "";
             case "[clientCardNum]":
-                if (doctor.isPresent() && doctor.get().getPosition() != null && doctor.get()
+                if (doctor.isEmpty() || doctor.get().getPosition() == null || !doctor.get()
                         .getPosition().toLowerCase().contains("ginekolog")) {
-                    return "";
-                } else {
                     if (client.isPresent() && client.get().getCardNumber() != null) {
                         return client.get().getCardNumber().toString();
                     } else {
@@ -95,8 +93,8 @@ public class ReportParamsService {
                             return client.get().getCardNumber().toString();
                         }
                     }
-                    return "";
                 }
+                return "";
             case "[date]": {
                 if (date != null) {
                     return date.format(BaseEntity.formatterDate);
