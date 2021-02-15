@@ -80,6 +80,7 @@ public class ReportParamsService {
                 }
                 return "";
             case "[clientCardNum]":
+                //TODO: move to continues sequence
                 if (doctor.isEmpty() || doctor.get().getPosition() == null || !doctor.get()
                         .getPosition().toLowerCase().contains("ginekolog")) {
                     if (client.isPresent() && client.get().getCardNumber() != null) {
