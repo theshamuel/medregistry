@@ -68,13 +68,13 @@ public class ScheduleRepositoryImpl implements ScheduleOperations {
         String[] params = filter.trim().split(";");
         if (params.length > 0) {
             Criteria where = Criteria.where("id").exists(true);
-            for (int i = 0; i < params.length; i++) {
-                String[] tmp = params[i].split("=");
+            for (String param : params) {
+                String[] tmp = param.split("=");
                 if (tmp[0].equals("dateWork")) {
                     where = where.and("dateWork").is(LocalDate.parse(tmp[1].trim()));
-                } else if (!tmp[0]
-                        .equals("doctor")) //Filter by doctor is implemented in ScheduleServiceImpl, due to complex relation. So that doctor parameter is excludes
-                {
+                } else if (!tmp[0].equals("doctor")) {
+                    //Filter by doctor is implemented in ScheduleServiceImpl,
+                    //due to complex relation. So that doctor parameter is excludes
                     where = where.and(tmp[0]).regex("^.*".concat(tmp[1].trim()).concat(".*$"), "i");
                 }
             }
