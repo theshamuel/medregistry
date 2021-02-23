@@ -223,7 +223,7 @@ public class Service extends BaseEntity {
         if (getCategory() != null && !getCategory().isEmpty()) {
             if (getCategory().equals(CategoryOfService.ULTRA)) {
                 return "УЗИ";
-            } else if (getCategory().equals(CategoryOfService.CONSUTLATION)) {
+            } else if (getCategory().equals(CategoryOfService.CONSULTATION)) {
                 return "Консультации";
             } else if (getCategory().equals(CategoryOfService.ANALYZES)) {
                 return "Анализы";

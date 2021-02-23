@@ -27,7 +27,7 @@ public final class CategoryOfService {
     /**
      * The constant CONSULTATION.
      */
-    public static final String CONSUTLATION = "consult";
+    public static final String CONSULTATION = "consult";
 
     /**
      * The constant ANALYZES.

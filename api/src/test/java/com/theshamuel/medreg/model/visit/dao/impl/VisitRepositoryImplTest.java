@@ -95,7 +95,7 @@ public class VisitRepositoryImplTest extends BaseRepositoryImplTest {
     @Test
     public void testFindAllClientVisits() {
         List<Visit> actual = visitRepositoryImpl
-                .findAllClientVisits(client1.getId(), CategoryOfService.CONSUTLATION);
+                .findAllClientVisits(client1.getId(), CategoryOfService.CONSULTATION);
         assertThat(actual.size(), is(2));
         actual = visitRepositoryImpl.findAllClientVisits(client2.getId(), CategoryOfService.ULTRA);
         assertThat(actual.size(), is(0));
@@ -148,9 +148,9 @@ public class VisitRepositoryImplTest extends BaseRepositoryImplTest {
         Service service1 = new ServiceBuilder().label("uzi").price(BigInteger.valueOf(500))
                 .category(CategoryOfService.ULTRA).build();
         Service service2 = new ServiceBuilder().label("surgeon operation")
-                .price(BigInteger.valueOf(1000)).category(CategoryOfService.CONSUTLATION).build();
+                .price(BigInteger.valueOf(1000)).category(CategoryOfService.CONSULTATION).build();
         Service service3 = new ServiceBuilder().label("checking").price(BigInteger.valueOf(200))
-                .category(CategoryOfService.CONSUTLATION).build();
+                .category(CategoryOfService.CONSULTATION).build();
 
         initCollection("clients");
         template.findAllAndRemove(Query.query(Criteria.where("id").exists(true)), Client.class);
