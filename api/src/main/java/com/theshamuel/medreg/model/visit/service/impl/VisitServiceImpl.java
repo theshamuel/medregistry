@@ -147,10 +147,9 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
             return Collections.emptyList();
         }
 
-        List<VisitDto> result = new ArrayList<>();
         List<Visit> visitList = visitRepository.findByDoctorAndDateEvent(doctor, dateEvent);
 
-        result.addAll(visitList.stream().map(i -> obj2dto(i)).collect(Collectors.toList()));
+        ArrayList<VisitDto> result = new ArrayList<>(visitList.stream().map(i -> obj2dto(i)).collect(Collectors.toList()));
         calculateTotalSumByServices(result);
 
         return result;
@@ -210,7 +209,7 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
         Service service = serviceRepository.findOne(serviceId);
         Doctor doctor = visit.getDoctor();
         Random random = new Random();
-        if (visit != null && service != null && doctor != null) {
+        if (service != null && doctor != null) {
             if (service.getPersonalRates() != null && service.getPersonalRates().size() > 0) {
                 for (PersonalRate personalRate : service.getPersonalRates()) {
                     if (personalRate.getDoctorId().equals(doctor.getId())) {
@@ -228,13 +227,12 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
                 List result = visit.getServices();
                 result.add(service);
                 visit.setServices(result);
-                visitRepository.save(visit);
             } else {
                 List<Service> list = new ArrayList<>();
                 list.add(service);
                 visit.setServices(list);
-                visitRepository.save(visit);
             }
+            visitRepository.save(visit);
         }
 
     }
