@@ -15,8 +15,6 @@ package com.theshamuel.medreg.model.user.dao.impl;
 
 import com.theshamuel.medreg.model.user.dao.UserOperations;
 import com.theshamuel.medreg.model.user.entity.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -31,8 +29,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class UserRepositoryImpl implements UserOperations {
-
-    private final static Logger logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
 
     @Autowired
     private MongoOperations mongo;
