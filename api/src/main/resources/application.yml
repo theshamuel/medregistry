@@ -1,16 +1,13 @@
 logging:
   level:
     com.theshamuel: INFO
-#  pattern:
-#    console: "%d{ISO8601} [%-5p][%-12.12t][%-64.64c:%L] - %m%n"
-#    file: "%d{ISO8601} [%-5p][%-12.12t][%-64.64c:%L] - %m%n"
   file: /var/log/medregistry.log
 spring:
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
   main:
-    banner-mode: off
+    banner-mode: "off"
 endpoints:
   shutdown.enabled: true
 management:
