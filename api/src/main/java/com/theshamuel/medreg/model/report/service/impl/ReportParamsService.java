@@ -80,22 +80,12 @@ public class ReportParamsService {
                 }
                 return "";
             case "[clientCardNum]":
-                //TODO: move to continues sequence
-                if (doctor.isEmpty() || doctor.get().getPosition() == null || !doctor.get()
-                        .getPosition().toLowerCase().contains("ginekolog")) {
-                    if (client.isPresent() && client.get().getCardNumber() != null) {
-                        return client.get().getCardNumber().toString();
-                    } else {
-                        if (doctor.isPresent() && doctor.get().getPosition() != null && !doctor
-                                .get().getPosition().toLowerCase().contains("ginekolog")) {
-                            client.get().setCardNumber(Long.valueOf(
-                                    sequenceRepository.getNextSequence("clientCardNum")));
-                            clientRepository.save(client.get());
-                            return client.get().getCardNumber().toString();
-                        }
-                    }
+                if (client.isEmpty() || client.get().getCardNumber() == null) {
+                    client.get().setCardNumber(Long.valueOf(
+                            sequenceRepository.getNextSequence("clientCardNum")));
+                    clientRepository.save(client.get());
                 }
-                return "";
+                return client.get().getCardNumber().toString();
             case "[date]": {
                 if (date != null) {
                     return date.format(BaseEntity.formatterDate);
