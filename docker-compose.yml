@@ -1,7 +1,7 @@
-version: '2'
+version: '3.8'
 services:
       medregapi-v1:
-        image: theshamuel/medregapi-v1:2.0.0
+        image: theshamuel/medregapi-v1:2.0.1
         hostname: medregapi-v1
         restart: always
         container_name: medregapi-v1
@@ -21,8 +21,16 @@ services:
               - MONGO_DB=
               - MONGO_USER=
               - MONGO_USER_PASSWORD=
-              - SERVER_PORT=
-    
+              - SERVER_PORT=9001
+        healthcheck:
+            test: ["CMD-SHELL", "curl -f http://localhost:9001/info"]
+            interval: 10s
+            timeout: 5s
+            retries: 20
+        depends_on:
+            medregdb:
+                condition: service_healthy
+
       medregapi-v2:
         image: theshamuel/medregapi-v2:1.0.0
         hostname: medregapi-v2
@@ -39,7 +47,12 @@ services:
             - TZ=Europe/Moscow
             - MEDREG_API_V1_URL=http://medregapi-v1:9001/api/v1/
             - REPORT_PATH=
-        
+        healthcheck:
+            test: ["CMD-SHELL", "curl -f http://localhost:9002/ping"]
+            interval: 10s
+            timeout: 5s
+            retries: 20
+
       medregweb-20:
         image: theshamuel/medregweb:2.0.0
         hostname: medregweb20
@@ -51,17 +64,22 @@ services:
                 max-size: "3m"
                 max-file: "2"
         volumes:
-            - /web/src/:/usr/share/nginx/
+            - ./web/src/:/usr/share/nginx/
         ports:
             - "80:80"
             - "443:443"
         environment:
             - TZ=Europe/Moscow
             - PROXY_SERVER_V1=medregapi-v1
-            - PROXY_PORT_V1=
+            - PROXY_PORT_V1=9001
             - PROXY_SERVER_V2=medregapi-v2
-            - PROXY_PORT_V2=
-      
+            - PROXY_PORT_V2=9002
+        depends_on:
+            medregapi-v1:
+                condition: service_healthy
+            medregapi-v2:
+                condition: service_healthy
+
       medregdb:
         image: theshamuel/medregdb:2.0.0
         hostname: medregdb
@@ -91,6 +109,12 @@ services:
             - AWS_SECRET_KEY=
             - AWS_PATH=
             - BUCKET_NAME=
+        healthcheck:
+            test: ["CMD-SHELL", "while [ $$(echo 'db.runCommand(\"ping\").ok' | mongo localhost:27017/test --quiet) -ne 1 ]; do sleep 3; done"]
+            interval: 5s
+            timeout: 5s
+            retries: 20
+
 networks:
     default:
         external:
