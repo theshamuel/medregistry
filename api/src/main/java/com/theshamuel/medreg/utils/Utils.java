@@ -25,7 +25,7 @@ import java.security.SecureRandom;
  */
 public class Utils {
 
-    public static String[] badSymbols = new String[]{"_", ".", ":", "@", ",", " ", "-", "\\\\", "/",
+    public static String[] BAD_SYMBOLS = new String[]{"_", ".", ":", "@", ",", " ", "-", "\\\\", "/",
             "'"};
 
     /**

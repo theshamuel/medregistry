@@ -192,10 +192,10 @@ public class ClientController {
                         .equals("-"))
                 || (!clientRepository.isUniqueClient(client) &&
                 client.getPassportSerial() != null && currentClient.getPassportSerial().equals(Utils
-                .deleteNotNeedSymbol(client.getPassportSerial().trim(), Utils.badSymbols))
+                .deleteNotNeedSymbol(client.getPassportSerial().trim(), Utils.BAD_SYMBOLS))
                 && client.getPassportNumber() != null && currentClient.getPassportNumber()
                 .equals(Utils.deleteNotNeedSymbol(client.getPassportNumber().trim(),
-                        Utils.badSymbols)))) {
+                        Utils.BAD_SYMBOLS)))) {
             currentClient.setName(client.getName().trim());
             currentClient.setSurname(client.getSurname().trim());
             currentClient.setMiddlename(client.getMiddlename().trim());

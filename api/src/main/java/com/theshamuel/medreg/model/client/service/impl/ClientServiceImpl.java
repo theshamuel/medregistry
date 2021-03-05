@@ -103,9 +103,9 @@ public class ClientServiceImpl extends BaseServiceImpl<Client, Client> implement
     public Client save(Client dto) {
         if (!dto.getPassportSerial().equals("-") && !dto.getPassportNumber().equals("-")) {
             String passportSerial = Utils
-                    .deleteNotNeedSymbol(dto.getPassportSerial().trim(), Utils.badSymbols);
+                    .deleteNotNeedSymbol(dto.getPassportSerial().trim(), Utils.BAD_SYMBOLS);
             String passportNumber = Utils
-                    .deleteNotNeedSymbol(dto.getPassportNumber().trim(), Utils.badSymbols);
+                    .deleteNotNeedSymbol(dto.getPassportNumber().trim(), Utils.BAD_SYMBOLS);
             if (passportSerial.length() > 0 && passportNumber.length() > 0) {
                 dto.setPassportSerial(passportSerial);
                 dto.setPassportNumber(passportNumber);
