@@ -16,9 +16,9 @@ services:
               - TZ=Europe/Moscow
               - VERSION=2.0.0
               - REPORT_PATH=
-              - MONGO_SERVER=medregdb
+              - MONGO_SERVER=
               - MONGO_PORT=
-              - MONGO_DB=
+              - MONGO_DB=medregdb
               - MONGO_USER=
               - MONGO_USER_PASSWORD=
               - SERVER_PORT=9001
