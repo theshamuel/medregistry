@@ -5,8 +5,6 @@ COPY etc/medregistry.conf /etc/nginx/medregistry.conf
 
 ADD scripts/entrypoint.sh /entrypoint.sh
 
-# Expose the ports for nginx
-EXPOSE 80
 
 RUN \
  rm /etc/nginx/conf.d/default.conf && \
