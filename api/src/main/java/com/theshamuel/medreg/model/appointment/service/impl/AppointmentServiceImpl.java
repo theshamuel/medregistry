@@ -53,15 +53,15 @@ import org.springframework.stereotype.Service;
 public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appointment> implements
         AppointmentService {
 
-    private static Logger logger = LoggerFactory.getLogger(AppointmentServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(AppointmentServiceImpl.class);
 
-    private AppointmentRepository appointmentRepository;
+    private final AppointmentRepository appointmentRepository;
 
-    private DoctorRepository doctorRepository;
+    private final DoctorRepository doctorRepository;
 
-    private ScheduleRepository scheduleRepository;
+    private final ScheduleRepository scheduleRepository;
 
-    private VisitRepository visitRepository;
+    private final VisitRepository visitRepository;
 
     /**
      * Instantiates a new Appointment service.
