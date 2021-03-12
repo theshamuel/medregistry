@@ -98,7 +98,7 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
                 result[0] = true;
             }
         });
-        return false;
+        return result[0];
     }
 
 
