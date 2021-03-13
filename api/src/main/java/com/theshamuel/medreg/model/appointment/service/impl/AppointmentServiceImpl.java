@@ -907,9 +907,9 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
     @Override
     public AppointmentDto save(AppointmentDto appointmentDto) {
         final AppointmentDto[] result = {null};
-        if (appointmentDto.getIsDoubleAppointment() != null && appointmentDto
+        if (appointmentDto != null && appointmentDto.getIsDoubleAppointment() != null && appointmentDto
                 .getIsDoubleAppointment().equals(true)) {
-            if (appointmentDto != null && appointmentDto.getDoctorId() != null) {
+            if (appointmentDto.getDoctorId() != null) {
                 final Doctor doctor = doctorRepository.findOne(appointmentDto.getDoctorId());
                 if (doctor != null) {
                     Optional<Schedule> currentSchedule = Optional.ofNullable(scheduleRepository
