@@ -128,11 +128,11 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
         } else {
             Page<AppointmentDto> result = super.findByFilter(pageRequest, filter);
             String[] params = filter.trim().split(";");
-            for (int i = 0; i < params.length; i++) {
-                String[] tookens = params[i].trim().split("=");
-                if (tookens[0].equals("doctor") && tookens.length == 2 && result != null
+            for (String param : params) {
+                String[] tokens = param.trim().split("=");
+                if (tokens[0].equals("doctor") && tokens.length == 2 && result != null
                         && result.getContent() != null) {
-                    List<Doctor> doctorList = doctorRepository.findBySurnameWeak(tookens[1]);
+                    List<Doctor> doctorList = doctorRepository.findBySurnameWeak(tokens[1]);
                     List<AppointmentDto> content = result.getContent();
                     List<String> doctorsId = doctorList.stream().map(doctor -> doctor.getId())
                             .collect(Collectors.toList());
@@ -668,7 +668,7 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
                                 && !currentTime.equals(breakFrom.get()) && !(
                                 currentTime.isAfter(breakFrom.get().minusMinutes(interval.get()))
                                         && currentTime.isBefore(breakFrom.get()))
-                                || !breakFrom.isPresent() || !breakTo.isPresent()) {
+                                || breakFrom.isEmpty() || breakTo.isEmpty()) {
                             AppointmentDto appointmentDto = new AppointmentDto();
                             appointmentDto.setTimeEvent(currentTimeOnline);
                             appointmentDto.setState(0);
@@ -877,9 +877,7 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
         }
         result.addAll(getAppointmentsByDoctorDateEventWithState(doctorId, dateEvent).stream()
                 .filter(item -> item.getState() == 0).collect(Collectors.toSet()));
-        result.forEach(item -> {
-            item.setValue(item.getTimeEvent().toString());
-        });
+        result.forEach(item -> item.setValue(item.getTimeEvent().toString()));
         return result.stream().sorted().collect(Collectors.toList());
     }
 
@@ -928,7 +926,7 @@ public class AppointmentServiceImpl extends BaseServiceImpl<AppointmentDto, Appo
                                 nextApppointmentDto.setTimeEvent(
                                         appointmentDto.getTimeEvent().plusMinutes(interval));
                                 nextApppointmentDto.setPhone(appointmentDto.getPhone());
-                                if (free.stream().map(i -> i.getTimeEvent())
+                                if (free.stream().map(AppointmentDto::getTimeEvent)
                                         .collect(Collectors.toList())
                                         .contains(nextApppointmentDto.getTimeEvent())) {
                                     appointmentRepository.save(dto2obj(nextApppointmentDto));
