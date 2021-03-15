@@ -79,21 +79,19 @@ public class ClientServiceImpl extends BaseServiceImpl<Client, Client> implement
         List<Visit> visits = visitRepository.findAllClientVisits(clientId, category);
         List<History> histories = new ArrayList<>();
 
-        visits.forEach(e -> {
+        for (Visit e : visits) {
             Optional<List<com.theshamuel.medreg.model.service.entity.Service>> services = Optional
                     .ofNullable(e.getServices());
 
-            services.ifPresent(item -> {
-                item.forEach(i -> {
-                    if (category.equals(i.getCategory())) {
-                        Optional<LocalDate> dateEvent = Optional.ofNullable(e.getDateEvent());
-                        histories.add(new History(i.getLabel(),
-                                dateEvent.isPresent() ? dateEvent.get()
-                                        .format(BaseEntity.formatterDate) : ""));
-                    }
-                });
-            });
-        });
+            services.ifPresent(item -> item.forEach(i -> {
+                if (category.equals(i.getCategory())) {
+                    Optional<LocalDate> dateEvent = Optional.ofNullable(e.getDateEvent());
+                    histories.add(new History(i.getLabel(),
+                            dateEvent.map(localDate -> localDate
+                                    .format(BaseEntity.formatterDate)).orElse("")));
+                }
+            }));
+        }
 
         return histories;
     }
