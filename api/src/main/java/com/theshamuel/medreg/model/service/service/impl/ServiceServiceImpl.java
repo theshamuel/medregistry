@@ -167,7 +167,7 @@ public class ServiceServiceImpl extends BaseServiceImpl<ServiceDto, Service> imp
         final BigInteger[] result = {BigInteger.valueOf(0)};
         service.ifPresent(i -> {
             result[0] = i.getPrice();
-            Optional<List<PersonalRate>> personalRates = Optional.ofNullable(
+            Optional<List<PersonalRate>> personalRates = Optional.of(
                     i.getPersonalRates().stream()
                             .filter(e -> e.getDoctorId() != null && e.getDoctorId()
                                     .equals(doctorId)).collect(Collectors.toList()));
@@ -188,7 +188,7 @@ public class ServiceServiceImpl extends BaseServiceImpl<ServiceDto, Service> imp
         final PersonalRate[] result = {null};
         service.ifPresent(i -> {
             if (i.getPersonalRates() != null) {
-                Optional<List<PersonalRate>> personalRates = Optional.ofNullable(
+                Optional<List<PersonalRate>> personalRates = Optional.of(
                         i.getPersonalRates().stream()
                                 .filter(e -> e.getDoctorId() != null && e.getDoctorId()
                                         .equals(doctorId)).collect(Collectors.toList()));
@@ -214,13 +214,11 @@ public class ServiceServiceImpl extends BaseServiceImpl<ServiceDto, Service> imp
         if (service.isPresent()) {
             Optional<List<PersonalRate>> rates = Optional
                     .ofNullable(service.get().getPersonalRates());
-            rates.ifPresent(list -> {
-                list.forEach(rate -> {
-                    if (doctorId.equals(rate.getDoctorId())) {
-                        result[0] = true;
-                    }
-                });
-            });
+            rates.ifPresent(list -> list.forEach(rate -> {
+                if (doctorId.equals(rate.getDoctorId())) {
+                    result[0] = true;
+                }
+            }));
         }
         return result[0];
     }
