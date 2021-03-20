@@ -40,7 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ServiceServiceImpl extends BaseServiceImpl<ServiceDto, Service> implements
         ServiceService {
 
-    private static Logger logger = LoggerFactory.getLogger(ServiceServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServiceServiceImpl.class);
     private ServiceRepository serviceRepository;
 
     private DoctorRepository doctorRepository;
