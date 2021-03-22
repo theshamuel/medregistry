@@ -28,6 +28,7 @@ public abstract class BaseRepositoryImplTest implements BaseRepositoryTest {
         factory = MongodForTestsFactory.with(Version.Main.PRODUCTION);
         mongo = factory.newMongo();
         db = mongo.getDatabase(DB_NAME);
+        template = new MongoTemplate(mongo, DB_NAME);
     }
 
     public static void initCollection(String collectionName) {
@@ -40,12 +41,4 @@ public abstract class BaseRepositoryImplTest implements BaseRepositoryTest {
             factory.shutdown();
         }
     }
-
-    @Before
-    public void setUp() throws Exception {
-        template = new MongoTemplate(mongo, DB_NAME);
-        setMongo();
-    }
-
-
 }

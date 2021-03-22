@@ -27,7 +27,8 @@ import org.springframework.data.mongodb.core.query.Query;
  */
 public class ScheduleRepositoryImplTest extends BaseRepositoryImplTest {
 
-    ScheduleRepositoryImpl scheduleRepositoryImpl = new ScheduleRepositoryImpl();
+    private final ScheduleRepositoryImpl scheduleRepositoryImpl = new ScheduleRepositoryImpl(template);
+
     private Doctor doc1;
     private Doctor doc2;
     private Doctor doc3;
@@ -104,8 +105,4 @@ public class ScheduleRepositoryImplTest extends BaseRepositoryImplTest {
         template.save(schedule4);
     }
 
-    @Override
-    public void setMongo() {
-        scheduleRepositoryImpl.setMongo(template);
-    }
 }

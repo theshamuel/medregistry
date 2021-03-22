@@ -36,8 +36,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ScheduleRepositoryImpl implements ScheduleOperations {
 
-    @Autowired
-    private MongoOperations mongo;
+    private final MongoOperations mongo;
+
+    public ScheduleRepositoryImpl(MongoOperations mongo) {
+        this.mongo = mongo;
+    }
 
 
     /**
@@ -47,7 +50,7 @@ public class ScheduleRepositoryImpl implements ScheduleOperations {
     public Schedule findByDateWorkAndDoctor(Doctor doctor, LocalDate dateWork) {
         Criteria where = Criteria.where("doctor").is(doctor).and("dateWork").is(dateWork);
         Query query = Query.query(where);
-        return mongo.findOne(query, Schedule.class);
+        return this.mongo.findOne(query, Schedule.class);
     }
 
 
@@ -99,12 +102,4 @@ public class ScheduleRepositoryImpl implements ScheduleOperations {
         return mongo.findOne(query, Schedule.class);
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setMongo(MongoOperations mongo) {
-        this.mongo = mongo;
-    }
 }

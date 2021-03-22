@@ -64,10 +64,4 @@ public interface ScheduleOperations {
      */
     Schedule findByDateWorkAndDoctor(Doctor doctor, LocalDate dateWork);
 
-    /**
-     * Sets mongo.
-     *
-     * @param mongo the mongo
-     */
-    void setMongo(MongoOperations mongo);
 }

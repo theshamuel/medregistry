@@ -4,5 +4,8 @@ public interface BaseRepositoryTest {
 
     void createTestRecords();
 
-    void setMongo();
+
+    //Add temporary till upgrade all tests
+    default void setMongo() {
+    }
 }
