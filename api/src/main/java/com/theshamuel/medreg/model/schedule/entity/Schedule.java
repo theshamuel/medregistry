@@ -32,7 +32,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @author Alex Gladkikh
  */
 @Document(collection = "schedule")
-public class Schedule extends BaseEntity implements Comparable {
+public class Schedule extends BaseEntity {
 
     @DBRef
     private Doctor doctor;
@@ -67,6 +67,7 @@ public class Schedule extends BaseEntity implements Comparable {
 
     @Field("intervalOnline")
     private Integer intervalOnline;
+
     @Transient
     private String dateWorkLabel;
 
@@ -311,12 +312,6 @@ public class Schedule extends BaseEntity implements Comparable {
      */
     public void setIntervalOnline(Integer intervalOnline) {
         this.intervalOnline = intervalOnline;
-    }
-
-    @Override
-    public int compareTo(Object o) {
-
-        return 0;
     }
 
     @Override
