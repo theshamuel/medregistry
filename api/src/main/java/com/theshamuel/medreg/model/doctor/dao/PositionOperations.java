@@ -14,7 +14,6 @@
 package com.theshamuel.medreg.model.doctor.dao;
 
 import com.theshamuel.medreg.model.doctor.entity.Position;
-import org.springframework.data.mongodb.core.MongoOperations;
 
 /**
  * The interface Position operations.
@@ -38,13 +37,5 @@ public interface PositionOperations {
      * @return the string
      */
     Position findById(String id);
-
-    /**
-     * Sets mongo.
-     *
-     * @param mongo the mongo
-     */
-    void setMongo(MongoOperations mongo);
-
 
 }

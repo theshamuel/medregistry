@@ -15,26 +15,22 @@ package com.theshamuel.medreg.model.doctor.dao.impl;
 
 import com.theshamuel.medreg.model.doctor.dao.PositionOperations;
 import com.theshamuel.medreg.model.doctor.entity.Position;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  * The Position repository implementation.
  *
  * @author Alex Gladkikh
  */
+@Repository
 public class PositionRepositoryImpl implements PositionOperations {
 
-    @Autowired
-    private MongoOperations mongo;
+    private final MongoOperations mongo;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setMongo(MongoOperations mongo) {
+    public PositionRepositoryImpl(MongoOperations mongo) {
         this.mongo = mongo;
     }
 

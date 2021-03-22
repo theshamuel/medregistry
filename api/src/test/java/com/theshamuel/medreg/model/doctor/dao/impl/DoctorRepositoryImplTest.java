@@ -23,7 +23,7 @@ import org.springframework.data.mongodb.core.query.Query;
  */
 public class DoctorRepositoryImplTest extends BaseRepositoryImplTest {
 
-    DoctorRepositoryImpl doctorRepositoryImpl = new DoctorRepositoryImpl();
+    DoctorRepositoryImpl doctorRepositoryImpl = new DoctorRepositoryImpl(template);
 
     private Doctor docIvanov;
     private Doctor docPetrov;
@@ -91,8 +91,4 @@ public class DoctorRepositoryImplTest extends BaseRepositoryImplTest {
         template.save(docOlegov);
     }
 
-    @Override
-    public void setMongo() {
-        doctorRepositoryImpl.setMongo(template);
-    }
 }

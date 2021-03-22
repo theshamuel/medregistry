@@ -31,8 +31,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class DoctorRepositoryImpl implements DoctorOperations {
 
-    @Autowired
-    private MongoOperations mongo;
+    private final MongoOperations mongo;
+
+    public DoctorRepositoryImpl(MongoOperations mongo) {
+        this.mongo = mongo;
+    }
 
     /**
      * {@inheritDoc}
@@ -89,11 +92,4 @@ public class DoctorRepositoryImpl implements DoctorOperations {
         return mongo.find(query, Doctor.class);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setMongo(MongoOperations mongo) {
-        this.mongo = mongo;
-    }
 }
