@@ -17,15 +17,19 @@ import com.theshamuel.medreg.model.report.dao.ReportOperations;
 import com.theshamuel.medreg.model.report.entity.Report;
 import com.theshamuel.medreg.model.service.entity.Service;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ReportRepositoryImpl implements ReportOperations {
 
-    @Autowired
-    private MongoOperations mongo;
+    private final MongoOperations mongo;
+
+    public ReportRepositoryImpl(MongoOperations mongo) {
+        this.mongo = mongo;
+    }
 
     @Override
     public boolean isUniqueReport(Service service, String template) {
@@ -54,9 +58,5 @@ public class ReportRepositoryImpl implements ReportOperations {
         Query query = Query.query(where);
         return mongo.find(query, Report.class);
     }
-
-    @Override
-    public void setMongo(MongoOperations mongo) {
-        this.mongo = mongo;
-    }
+    
 }

@@ -26,7 +26,7 @@ import org.springframework.data.mongodb.core.query.Query;
 public class ReportRepositoryImplTest extends BaseRepositoryImplTest {
 
     private Service service = null;
-    private ReportRepositoryImpl reportRepositoryImpl = new ReportRepositoryImpl();
+    private ReportRepositoryImpl reportRepositoryImpl = new ReportRepositoryImpl(template);
 
     @Test
     public void testIsUniqueReportServiceNull() {
@@ -111,8 +111,4 @@ public class ReportRepositoryImplTest extends BaseRepositoryImplTest {
                 new ReportBuilder().label("report common").template("commonTemplate").build());
     }
 
-    @Override
-    public void setMongo() {
-        reportRepositoryImpl.setMongo(template);
-    }
 }

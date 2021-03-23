@@ -16,7 +16,6 @@ package com.theshamuel.medreg.model.report.dao;
 import com.theshamuel.medreg.model.report.entity.Report;
 import com.theshamuel.medreg.model.service.entity.Service;
 import java.util.List;
-import org.springframework.data.mongodb.core.MongoOperations;
 
 /**
  * The interface Report operations.
@@ -47,10 +46,4 @@ public interface ReportOperations {
      */
     List<Report> findCommonReports();
 
-    /**
-     * Sets mongo.
-     *
-     * @param mongo the mongo
-     */
-    void setMongo(MongoOperations mongo);
 }
