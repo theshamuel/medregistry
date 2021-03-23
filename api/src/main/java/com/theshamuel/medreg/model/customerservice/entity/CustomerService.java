@@ -11,7 +11,7 @@
  * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
-package com.theshamuel.medreg.model.service.entity;
+package com.theshamuel.medreg.model.customerservice.entity;
 
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
 import com.theshamuel.medreg.model.types.CategoryOfService;
@@ -25,14 +25,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * The Service entity.
+ * The CustomerService entity.
  * <p>
  * The class describe info about service which provide medical center.
  *
  * @author Alex Gladkikh
  */
 @Document(collection = "services")
-public class Service extends BaseEntity {
+public class CustomerService extends BaseEntity {
 
     @Field("label")
     private String label;
@@ -68,20 +68,20 @@ public class Service extends BaseEntity {
     private String existTemplateLabel;
 
     /**
-     * Instantiates a new Service.
+     * Instantiates a new CustomerService.
      */
-    public Service() {
+    public CustomerService() {
     }
 
     /**
-     * Instantiates a new Service.
+     * Instantiates a new CustomerService.
      *
      * @param id       the id
      * @param label    the label
      * @param price    the price
      * @param discount the discount
      */
-    public Service(String id, String label, BigInteger price, BigInteger discount) {
+    public CustomerService(String id, String label, BigInteger price, BigInteger discount) {
         setId(id);
         this.label = label;
         this.price = price;
@@ -294,17 +294,17 @@ public class Service extends BaseEntity {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof Service)) {
+        if (!(o instanceof CustomerService)) {
             return false;
         }
 
-        Service service = (Service) o;
+        CustomerService customerService = (CustomerService) o;
 
         return new EqualsBuilder()
-                .append(getId(), service.getId())
-                .append(label, service.label)
-                .append(price, service.price)
-                .append(discount, service.discount)
+                .append(getId(), customerService.getId())
+                .append(label, customerService.label)
+                .append(price, customerService.price)
+                .append(discount, customerService.discount)
                 .isEquals();
     }
 

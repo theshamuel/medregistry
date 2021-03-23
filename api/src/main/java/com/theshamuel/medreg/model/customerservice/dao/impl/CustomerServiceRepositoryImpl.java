@@ -11,10 +11,11 @@
  * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
-package com.theshamuel.medreg.model.service.dao.impl;
+package com.theshamuel.medreg.model.customerservice.dao.impl;
 
-import com.theshamuel.medreg.model.service.dao.ServiceOperations;
-import com.theshamuel.medreg.model.service.entity.Service;
+import com.theshamuel.medreg.model.customerservice.dao.CustomerServiceOperations;
+import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
+
 import java.math.BigInteger;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +25,18 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 /**
- * The Service repository implementation class.
+ * The CustomerService repository implementation class.
  *
  * @author Alex Gladkikh
  */
 @Repository
-public class ServiceRepositoryImpl implements ServiceOperations {
+public class CustomerServiceRepositoryImpl implements CustomerServiceOperations {
 
-    @Autowired
-    private MongoOperations mongo;
+    private final MongoOperations mongo;
+
+    public CustomerServiceRepositoryImpl(MongoOperations mongo) {
+        this.mongo = mongo;
+    }
 
     /**
      * {@inheritDoc}
@@ -42,7 +46,7 @@ public class ServiceRepositoryImpl implements ServiceOperations {
         Criteria where = Criteria.where("label").regex("^" + label + "$", "i").and("price")
                 .is(price);
         Query query = Query.query(where);
-        return mongo.findOne(query, Service.class) == null;
+        return mongo.findOne(query, CustomerService.class) == null;
 
     }
 
@@ -50,16 +54,10 @@ public class ServiceRepositoryImpl implements ServiceOperations {
      * {@inheritDoc}
      */
     @Override
-    public List<Service> findPersonalRatesByDoctorId(String doctorId) {
+    public List<CustomerService> findPersonalRatesByDoctorId(String doctorId) {
         Criteria where = Criteria.where("personalRate.doctorId").is(doctorId);
         Query query = Query.query(where);
-        return mongo.find(query, Service.class);
+        return mongo.find(query, CustomerService.class);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setMongo(MongoOperations mongo) {
-        this.mongo = mongo;
-    }
 }

@@ -11,7 +11,7 @@
  * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
-package com.theshamuel.medreg.model.service.dto;
+package com.theshamuel.medreg.model.customerservice.dto;
 
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
 import java.math.BigInteger;
@@ -19,9 +19,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * The Service data transaction object class.
+ * The CustomerService data transaction object class.
  */
-public class ServiceDto extends BaseEntity {
+public class CustomerServiceDto extends BaseEntity {
 
 
     private String label;
@@ -31,20 +31,20 @@ public class ServiceDto extends BaseEntity {
     private BigInteger discount;
 
     /**
-     * Instantiates a new Service dto.
+     * Instantiates a new CustomerService dto.
      */
-    public ServiceDto() {
+    public CustomerServiceDto() {
     }
 
     /**
-     * Instantiates a new Service dto.
+     * Instantiates a new CustomerService dto.
      *
      * @param id       the id
      * @param label    the label
      * @param price    the price
      * @param discount the discount
      */
-    public ServiceDto(String id, String label, BigInteger price, BigInteger discount) {
+    public CustomerServiceDto(String id, String label, BigInteger price, BigInteger discount) {
         setId(id);
         this.label = label;
         this.price = price;
@@ -112,11 +112,11 @@ public class ServiceDto extends BaseEntity {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof ServiceDto)) {
+        if (!(o instanceof CustomerServiceDto)) {
             return false;
         }
 
-        ServiceDto dto = (ServiceDto) o;
+        CustomerServiceDto dto = (CustomerServiceDto) o;
 
         return new EqualsBuilder()
                 .append(getId(), dto.getId())

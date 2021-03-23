@@ -14,7 +14,8 @@
 package com.theshamuel.medreg.model.report.dao;
 
 import com.theshamuel.medreg.model.report.entity.Report;
-import com.theshamuel.medreg.model.service.entity.Service;
+import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
+
 import java.util.List;
 
 /**
@@ -25,19 +26,19 @@ public interface ReportOperations {
     /**
      * Is unique report boolean.
      *
-     * @param service  the service
+     * @param customerService  the customerService
      * @param template the template
      * @return the boolean (true - unique, false - not)
      */
-    boolean isUniqueReport(Service service, String template);
+    boolean isUniqueReport(CustomerService customerService, String template);
 
     /**
-     * Find by service list.
+     * Find by customerService list.
      *
-     * @param service the service
+     * @param customerService the customerService
      * @return the list
      */
-    List<Report> findByService(Service service);
+    List<Report> findByService(CustomerService customerService);
 
     /**
      * Find common reports list.

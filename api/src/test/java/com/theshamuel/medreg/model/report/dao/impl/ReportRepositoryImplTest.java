@@ -9,7 +9,8 @@ import com.theshamuel.medreg.buiders.ReportBuilder;
 import com.theshamuel.medreg.buiders.ServiceBuilder;
 import com.theshamuel.medreg.model.base.dao.impl.BaseRepositoryImplTest;
 import com.theshamuel.medreg.model.report.entity.Report;
-import com.theshamuel.medreg.model.service.entity.Service;
+import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
+
 import java.math.BigInteger;
 import java.util.List;
 import org.junit.Before;
@@ -25,7 +26,7 @@ import org.springframework.data.mongodb.core.query.Query;
  */
 public class ReportRepositoryImplTest extends BaseRepositoryImplTest {
 
-    private Service service = null;
+    private CustomerService customerService = null;
     private ReportRepositoryImpl reportRepositoryImpl = new ReportRepositoryImpl(template);
 
     @Test
@@ -40,37 +41,37 @@ public class ReportRepositoryImplTest extends BaseRepositoryImplTest {
 
     @Test
     public void testIsUniqueReportServiceNotNull() {
-        service = new ServiceBuilder().price(BigInteger.valueOf(500))
-                .discount(BigInteger.valueOf(0)).label("Service 1").build();
+        customerService = new ServiceBuilder().price(BigInteger.valueOf(500))
+                .discount(BigInteger.valueOf(0)).label("CustomerService 1").build();
         initCollection("services");
-        template.save(service);
-        service = template.findOne(Query.query(
-                Criteria.where("label").is("Service 1").and("price").is(BigInteger.valueOf(500))),
-                Service.class);
+        template.save(customerService);
+        customerService = template.findOne(Query.query(
+                Criteria.where("label").is("CustomerService 1").and("price").is(BigInteger.valueOf(500))),
+                CustomerService.class);
 
         createTestRecords();
-        Boolean actualTrue = reportRepositoryImpl.isUniqueReport(service, "newTemplate");
+        Boolean actualTrue = reportRepositoryImpl.isUniqueReport(customerService, "newTemplate");
         assertThat(actualTrue, is(Boolean.valueOf(true)));
 
-        Boolean actualFalse = reportRepositoryImpl.isUniqueReport(service, "contract");
+        Boolean actualFalse = reportRepositoryImpl.isUniqueReport(customerService, "contract");
         assertThat(actualFalse, is(Boolean.valueOf(false)));
 
     }
 
     @Test
     public void testFindByService() {
-        service = new ServiceBuilder().price(BigInteger.valueOf(500))
-                .discount(BigInteger.valueOf(0)).label("Service 1").build();
+        customerService = new ServiceBuilder().price(BigInteger.valueOf(500))
+                .discount(BigInteger.valueOf(0)).label("CustomerService 1").build();
         initCollection("services");
-        template.save(service);
-        service = template.findOne(Query.query(
-                Criteria.where("label").is("Service 1").and("price").is(BigInteger.valueOf(500))),
-                Service.class);
+        template.save(customerService);
+        customerService = template.findOne(Query.query(
+                Criteria.where("label").is("CustomerService 1").and("price").is(BigInteger.valueOf(500))),
+                CustomerService.class);
         createTestRecords();
 
         Report report = template
                 .findOne(Query.query(Criteria.where("template").is("contract")), Report.class);
-        List<Report> actual = reportRepositoryImpl.findByService(service);
+        List<Report> actual = reportRepositoryImpl.findByService(customerService);
         assertThat(actual, notNullValue());
         assertThat(actual.size(), is(2));
         assertThat(actual.get(0), is(equalTo(report)));
@@ -78,13 +79,13 @@ public class ReportRepositoryImplTest extends BaseRepositoryImplTest {
 
     @Test
     public void testFindCommonReports() {
-        service = new ServiceBuilder().price(BigInteger.valueOf(500))
-                .discount(BigInteger.valueOf(0)).label("Service 1").build();
+        customerService = new ServiceBuilder().price(BigInteger.valueOf(500))
+                .discount(BigInteger.valueOf(0)).label("CustomerService 1").build();
         initCollection("services");
-        template.save(service);
-        service = template.findOne(Query.query(
-                Criteria.where("label").is("Service 1").and("price").is(BigInteger.valueOf(500))),
-                Service.class);
+        template.save(customerService);
+        customerService = template.findOne(Query.query(
+                Criteria.where("label").is("CustomerService 1").and("price").is(BigInteger.valueOf(500))),
+                CustomerService.class);
 
         createTestRecords();
         Report report = template
@@ -102,10 +103,10 @@ public class ReportRepositoryImplTest extends BaseRepositoryImplTest {
     public void createTestRecords() {
         initCollection("reports");
         template.findAllAndRemove(Query.query(Criteria.where("id").exists(true)), Report.class);
-        template.save(new ReportBuilder().label("report 1").service(service).template("contract")
+        template.save(new ReportBuilder().label("report 1").service(customerService).template("contract")
                 .build());
         template.save(
-                new ReportBuilder().label("report 2").service(service).template("testTemplate")
+                new ReportBuilder().label("report 2").service(customerService).template("testTemplate")
                         .build());
         template.save(
                 new ReportBuilder().label("report common").template("commonTemplate").build());

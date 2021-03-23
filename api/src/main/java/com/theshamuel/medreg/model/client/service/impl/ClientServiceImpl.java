@@ -20,7 +20,8 @@ import com.theshamuel.medreg.model.client.dao.ClientRepository;
 import com.theshamuel.medreg.model.client.entity.Client;
 import com.theshamuel.medreg.model.client.entity.History;
 import com.theshamuel.medreg.model.client.service.ClientService;
-import com.theshamuel.medreg.model.service.dao.ServiceRepository;
+import com.theshamuel.medreg.model.customerservice.dao.CustomerCustomerServiceRepository;
+import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
 import com.theshamuel.medreg.model.visit.dao.VisitRepository;
 import com.theshamuel.medreg.model.visit.entity.Visit;
 import com.theshamuel.medreg.utils.Utils;
@@ -50,24 +51,24 @@ public class ClientServiceImpl extends BaseServiceImpl<Client, Client> implement
     VisitRepository visitRepository;
 
     /**
-     * The Service repository.
+     * The CustomerService repository.
      */
-    ServiceRepository serviceRepository;
+    CustomerCustomerServiceRepository customerServiceRepository;
 
     /**
      * Instantiates a new Client service.
      *
      * @param clientRepository  the client repository
      * @param visitRepository   the visit repository
-     * @param serviceRepository the service repository
+     * @param customerServiceRepository the service repository
      */
     @Autowired
     public ClientServiceImpl(ClientRepository clientRepository, VisitRepository visitRepository,
-            ServiceRepository serviceRepository) {
+            CustomerCustomerServiceRepository customerServiceRepository) {
         super(clientRepository);
         this.clientRepository = clientRepository;
         this.visitRepository = visitRepository;
-        this.serviceRepository = serviceRepository;
+        this.customerServiceRepository = customerServiceRepository;
     }
 
     /**
@@ -80,7 +81,7 @@ public class ClientServiceImpl extends BaseServiceImpl<Client, Client> implement
         List<History> histories = new ArrayList<>();
 
         for (Visit e : visits) {
-            Optional<List<com.theshamuel.medreg.model.service.entity.Service>> services = Optional
+            Optional<List<CustomerService>> services = Optional
                     .ofNullable(e.getServices());
 
             services.ifPresent(item -> item.forEach(i -> {

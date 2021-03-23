@@ -18,10 +18,10 @@ import com.theshamuel.medreg.model.appointment.entity.Appointment;
 import com.theshamuel.medreg.model.client.dao.ClientRepository;
 import com.theshamuel.medreg.model.doctor.dao.DoctorRepository;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
-import com.theshamuel.medreg.model.service.dao.ServiceRepository;
-import com.theshamuel.medreg.model.service.dto.ServiceDto;
-import com.theshamuel.medreg.model.service.entity.Service;
-import com.theshamuel.medreg.model.service.service.ServiceService;
+import com.theshamuel.medreg.model.customerservice.dao.CustomerCustomerServiceRepository;
+import com.theshamuel.medreg.model.customerservice.dto.CustomerServiceDto;
+import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
+import com.theshamuel.medreg.model.customerservice.service.CustomerServiceService;
 import com.theshamuel.medreg.model.visit.dao.VisitRepository;
 import com.theshamuel.medreg.model.visit.dto.VisitDto;
 import com.theshamuel.medreg.model.visit.entity.Visit;
@@ -41,7 +41,7 @@ import org.mockito.Mock;
  *
  * @author Alex Gladkikh
  */
-public class VisitServiceImplTest {
+public class VisitCustomerServiceImplTest {
 
     @Mock
     private VisitRepository visitRepository;
@@ -56,10 +56,10 @@ public class VisitServiceImplTest {
     private AppointmentRepository appointmentRepository;
 
     @Mock
-    private ServiceRepository serviceRepository;
+    private CustomerCustomerServiceRepository customerServiceRepository;
 
     @Mock
-    private ServiceService serviceService;
+    private CustomerServiceService customerServiceService;
 
     private VisitService visitService;
 
@@ -67,7 +67,7 @@ public class VisitServiceImplTest {
     public void setUp() {
         initMocks(this);
         visitService = new VisitServiceImpl(visitRepository, doctorRepository, clientRepository,
-                appointmentRepository, serviceRepository, serviceService);
+                appointmentRepository, customerServiceRepository, customerServiceService);
     }
 
     @Test
@@ -102,34 +102,34 @@ public class VisitServiceImplTest {
                 .timeEvent(LocalTime.parse("15:00")).build();
         Doctor doctor = new DoctorBuilder().id("doc1").build();
 
-        List<Service> services = new ArrayList<>();
-        services.add(
+        List<CustomerService> customerServices = new ArrayList<>();
+        customerServices.add(
                 new ServiceBuilder().id("s01").label("Ultrasound 1").price(BigInteger.valueOf(1000))
                         .build());
-        services.add(new ServiceBuilder().id("s02").label("Consultation 1")
+        customerServices.add(new ServiceBuilder().id("s02").label("Consultation 1")
                 .price(BigInteger.valueOf(500)).build());
 
         Visit visit = new VisitBuilder().id("visit01").appointment(appointment).doctor(doctor)
-                .services(services).build();
+                .services(customerServices).build();
 
         when(visitRepository.findOne(visit.getId())).thenReturn(visit);
-        when(serviceService.obj2dto(services.get(0))).thenReturn(
-                new ServiceDto(services.get(0).getId(), services.get(0).getLabel(),
-                        services.get(0).getPrice(), services.get(0).getDiscount()));
-        when(serviceService.obj2dto(services.get(1))).thenReturn(
-                new ServiceDto(services.get(1).getId(), services.get(1).getLabel(),
-                        services.get(1).getPrice(), services.get(1).getDiscount()));
+        when(customerServiceService.obj2dto(customerServices.get(0))).thenReturn(
+                new CustomerServiceDto(customerServices.get(0).getId(), customerServices.get(0).getLabel(),
+                        customerServices.get(0).getPrice(), customerServices.get(0).getDiscount()));
+        when(customerServiceService.obj2dto(customerServices.get(1))).thenReturn(
+                new CustomerServiceDto(customerServices.get(1).getId(), customerServices.get(1).getLabel(),
+                        customerServices.get(1).getPrice(), customerServices.get(1).getDiscount()));
 
-        List<ServiceDto> actualDto = visitService.getServices(visit.getId());
-        List<ServiceDto> expectedDto = services.stream().map(serviceService::obj2dto)
+        List<CustomerServiceDto> actualDto = visitService.getServices(visit.getId());
+        List<CustomerServiceDto> expectedDto = customerServices.stream().map(customerServiceService::obj2dto)
                 .collect(Collectors.toList());
         assertThat(actualDto.size(), is(2));
 
         assertThat(actualDto, hasItems(expectedDto.get(0), expectedDto.get(1)));
 
         verify(visitRepository, times(1)).findOne(visit.getId());
-        verify(serviceService, times(1)).obj2dto(services.get(0));
-        verify(serviceService, times(1)).obj2dto(services.get(1));
+        verify(customerServiceService, times(1)).obj2dto(customerServices.get(0));
+        verify(customerServiceService, times(1)).obj2dto(customerServices.get(1));
 
     }
 
@@ -141,14 +141,14 @@ public class VisitServiceImplTest {
                 .timeEvent(LocalTime.parse("16:00")).build();
         Appointment appointment3 = new AppointmentBuilder().id("app3").dateEvent(LocalDate.now())
                 .timeEvent(LocalTime.parse("17:00")).build();
-        List<Service> services = new ArrayList<>();
-        services.add(
+        List<CustomerService> customerServices = new ArrayList<>();
+        customerServices.add(
                 new ServiceBuilder().id("s01").label("Ultrasound 1").price(BigInteger.valueOf(1000))
                         .build());
-        services.add(new ServiceBuilder().id("s02").label("Consultation 1")
+        customerServices.add(new ServiceBuilder().id("s02").label("Consultation 1")
                 .price(BigInteger.valueOf(500)).build());
 
-        List<Service> services2 = new ArrayList<>();
+        List<CustomerService> services2 = new ArrayList<>();
         services2.add(new ServiceBuilder().id("s201").label("Ultrasound 2")
                 .price(BigInteger.valueOf(500)).build());
         services2.add(new ServiceBuilder().id("s202").label("Consultation 2")
@@ -158,9 +158,9 @@ public class VisitServiceImplTest {
         Doctor doctor2 = new DoctorBuilder().id("doc2").build();
 
         Visit visit = new VisitBuilder().id("visit01").appointment(appointment).doctor(doctor)
-                .services(services).build();
+                .services(customerServices).build();
         Visit visit2 = new VisitBuilder().id("visit02").appointment(appointment2).doctor(doctor)
-                .services(services).build();
+                .services(customerServices).build();
         Visit visit3 = new VisitBuilder().id("visit03").appointment(appointment3).doctor(doctor2)
                 .services(services2).build();
         List<Visit> visits = new ArrayList<>();
@@ -209,14 +209,14 @@ public class VisitServiceImplTest {
                 .timeEvent(LocalTime.parse("16:00")).build();
         Appointment appointment3 = new AppointmentBuilder().id("app3").dateEvent(LocalDate.now())
                 .timeEvent(LocalTime.parse("17:00")).build();
-        List<Service> services = new ArrayList<>();
-        services.add(
+        List<CustomerService> customerServices = new ArrayList<>();
+        customerServices.add(
                 new ServiceBuilder().id("s01").label("Ultrasound 1").price(BigInteger.valueOf(1000))
                         .build());
-        services.add(new ServiceBuilder().id("s02").label("Consultation 1")
+        customerServices.add(new ServiceBuilder().id("s02").label("Consultation 1")
                 .price(BigInteger.valueOf(500)).build());
 
-        List<Service> services2 = new ArrayList<>();
+        List<CustomerService> services2 = new ArrayList<>();
         services2.add(new ServiceBuilder().id("s201").label("Ultrasound 2")
                 .price(BigInteger.valueOf(500)).build());
         services2.add(new ServiceBuilder().id("s202").label("Consultation 2")
@@ -225,9 +225,9 @@ public class VisitServiceImplTest {
         Doctor doctor = new DoctorBuilder().id("doc1").build();
 
         Visit visit = new VisitBuilder().id("visit01").appointment(appointment).doctor(doctor)
-                .services(services).build();
+                .services(customerServices).build();
         Visit visit2 = new VisitBuilder().id("visit02").appointment(appointment2).doctor(doctor)
-                .services(services).build();
+                .services(customerServices).build();
         Visit visit3 = new VisitBuilder().id("visit03").appointment(appointment3).doctor(doctor)
                 .services(services2).build();
         List<Visit> visits = new ArrayList<>();

@@ -14,13 +14,13 @@
 package com.theshamuel.medreg.controllers;
 
 import com.theshamuel.medreg.exception.DuplicateRecordException;
-import com.theshamuel.medreg.model.service.dao.ServiceRepository;
-import com.theshamuel.medreg.model.service.entity.PersonalRate;
-import com.theshamuel.medreg.model.service.entity.Service;
-import com.theshamuel.medreg.model.service.service.ServiceService;
+import com.theshamuel.medreg.model.customerservice.dao.CustomerCustomerServiceRepository;
+import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
+import com.theshamuel.medreg.model.customerservice.entity.PersonalRate;
+import com.theshamuel.medreg.model.customerservice.service.CustomerServiceService;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.servlet.ServletException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * The Service's controller class.
+ * The CustomerService's controller class.
  *
  * @author Alex Gladkikh
  */
@@ -46,25 +46,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class ServiceController {
 
     /**
-     * The Service repository.
+     * The CustomerService repository.
      */
-    ServiceRepository serviceRepository;
+    CustomerCustomerServiceRepository customerServiceRepository;
     /**
-     * The Service repository.
+     * The CustomerService repository.
      */
-    ServiceService serviceService;
+    CustomerServiceService customerServiceService;
 
 
     /**
-     * Instantiates a new Service controller.
+     * Instantiates a new CustomerService controller.
      *
-     * @param serviceRepository the service repository
-     * @param serviceService    the service of service
+     * @param customerServiceRepository the service repository
+     * @param customerServiceService    the service of service
      */
     @Autowired
-    public ServiceController(ServiceRepository serviceRepository, ServiceService serviceService) {
-        this.serviceRepository = serviceRepository;
-        this.serviceService = serviceService;
+    public ServiceController(CustomerCustomerServiceRepository customerServiceRepository, CustomerServiceService customerServiceService) {
+        this.customerServiceRepository = customerServiceRepository;
+        this.customerServiceService = customerServiceService;
     }
 
 
@@ -75,33 +75,33 @@ public class ServiceController {
      * @return the service order by label
      */
     @GetMapping(value = "/services")
-    public ResponseEntity<List<Service>> getServiceOrderByLabel(@RequestParam(value = "sort",
+    public ResponseEntity<List<CustomerService>> getServiceOrderByLabel(@RequestParam(value = "sort",
             defaultValue = "ASC") String sort) {
         Sort.Direction sortDirection = Sort.Direction.ASC;
         if (sort.equalsIgnoreCase("DESC")) {
             sortDirection = Sort.Direction.DESC;
         }
-        List<Service> result = serviceRepository
+        List<CustomerService> result = customerServiceRepository
                 .findAll(new Sort(new Sort.Order(sortDirection, "label")));
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
     /**
-     * Save service.
+     * Save customerService.
      *
-     * @param service the service
-     * @return the response entity included saved service
+     * @param customerService the customerService
+     * @return the response entity included saved customerService
      */
     @PostMapping(value = "/services", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Service> saveService(@RequestBody Service service) {
-        if (!serviceRepository.isUniqueService(service.getLabel().trim(), service.getPrice())) {
+    public ResponseEntity<CustomerService> saveService(@RequestBody CustomerService customerService) {
+        if (!customerServiceRepository.isUniqueService(customerService.getLabel().trim(), customerService.getPrice())) {
             throw new DuplicateRecordException(
                     "Услуга с данным наименованием и ценой уже существует");
         } else {
             LocalDateTime now = LocalDateTime.now();
-            service.setModifyDate(now);
-            service.setCreatedDate(now);
-            return new ResponseEntity(serviceRepository.save(service), HttpStatus.CREATED);
+            customerService.setModifyDate(now);
+            customerService.setCreatedDate(now);
+            return new ResponseEntity(customerServiceRepository.save(customerService), HttpStatus.CREATED);
         }
     }
 
@@ -114,7 +114,7 @@ public class ServiceController {
     @GetMapping(value = "/services/{id}/service", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<PersonalRate>> getPersonalRatesOfService(
             @PathVariable("id") String id) {
-        return new ResponseEntity(serviceService.getPersonalRatesByServiceId(id), HttpStatus.OK);
+        return new ResponseEntity(customerServiceService.getPersonalRatesByServiceId(id), HttpStatus.OK);
     }
 
     /**
@@ -126,7 +126,7 @@ public class ServiceController {
     @GetMapping(value = "/services/{id}/doctor", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<PersonalRate>> getPersonalRatesOfDoctor(
             @PathVariable("id") String id) {
-        return new ResponseEntity(serviceService.getPersonalRatesByDoctorId(id), HttpStatus.OK);
+        return new ResponseEntity(customerServiceService.getPersonalRatesByDoctorId(id), HttpStatus.OK);
     }
 
     /**
@@ -139,7 +139,7 @@ public class ServiceController {
     @PostMapping(value = "/services/{id}/personalRate", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity addServiceOfVisit(@PathVariable("id") String id,
             @RequestBody PersonalRate personalRate) {
-        serviceService.addPersonalRate(id, personalRate);
+        customerServiceService.addPersonalRate(id, personalRate);
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -153,40 +153,40 @@ public class ServiceController {
     @DeleteMapping(value = "/services/{id}/personalRate", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity deleteServiceOfVisit(@PathVariable("id") String id,
             @RequestBody PersonalRate personalRate) {
-        serviceService.deletePersonalRate(id, personalRate);
+        customerServiceService.deletePersonalRate(id, personalRate);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     /**
-     * Update service response entity.
+     * Update customerService response entity.
      *
-     * @param id      the service's id
-     * @param service the service
-     * @return the response entity  included updated service
+     * @param id      the customerService's id
+     * @param customerService the customerService
+     * @return the response entity  included updated customerService
      */
     @PutMapping(value = "/services/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Service> updateService(@PathVariable("id") String id,
-            @RequestBody Service service) {
+    public ResponseEntity<CustomerService> updateService(@PathVariable("id") String id,
+                                                         @RequestBody CustomerService customerService) {
 
-        Service currentService = serviceRepository.findOne(id);
-        if (!currentService.getLabel().toLowerCase().trim()
-                .equals(service.getLabel().toLowerCase().trim()) ||
-                !currentService.getPrice().equals(service.getPrice())) {
-            if (!serviceRepository.isUniqueService(service.getLabel().trim(), service.getPrice())) {
+        CustomerService currentCustomerService = customerServiceRepository.findOne(id);
+        if (!currentCustomerService.getLabel().toLowerCase().trim()
+                .equals(customerService.getLabel().toLowerCase().trim()) ||
+                !currentCustomerService.getPrice().equals(customerService.getPrice())) {
+            if (!customerServiceRepository.isUniqueService(customerService.getLabel().trim(), customerService.getPrice())) {
                 throw new DuplicateRecordException(
                         "Услуга с данным наименованием и ценой уже существует");
             }
         }
-        currentService.setLabel(service.getLabel());
-        currentService.setCategory(service.getCategory());
-        currentService.setDoctorPay(service.getDoctorPay());
-        currentService.setDoctorPayType(service.getDoctorPayType());
-        currentService.setPrice(service.getPrice());
-        currentService.setAuthor(service.getAuthor());
-        currentService.setModifyDate(LocalDateTime.now());
+        currentCustomerService.setLabel(customerService.getLabel());
+        currentCustomerService.setCategory(customerService.getCategory());
+        currentCustomerService.setDoctorPay(customerService.getDoctorPay());
+        currentCustomerService.setDoctorPayType(customerService.getDoctorPayType());
+        currentCustomerService.setPrice(customerService.getPrice());
+        currentCustomerService.setAuthor(customerService.getAuthor());
+        currentCustomerService.setModifyDate(LocalDateTime.now());
 
-        serviceRepository.save(currentService);
-        return new ResponseEntity(currentService, HttpStatus.OK);
+        customerServiceRepository.save(currentCustomerService);
+        return new ResponseEntity(currentCustomerService, HttpStatus.OK);
     }
 
     /**
@@ -197,11 +197,11 @@ public class ServiceController {
      */
     @DeleteMapping(value = "/services/{id}")
     public ResponseEntity deleteService(@PathVariable(value = "id") String id) {
-        Service service = serviceRepository.findOne(id);
-        if (service == null) {
+        CustomerService customerService = customerServiceRepository.findOne(id);
+        if (customerService == null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
-        serviceRepository.delete(id);
+        customerServiceRepository.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }
 

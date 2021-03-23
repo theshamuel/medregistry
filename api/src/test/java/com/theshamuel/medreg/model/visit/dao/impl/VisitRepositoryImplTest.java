@@ -13,7 +13,7 @@ import com.theshamuel.medreg.model.appointment.entity.Appointment;
 import com.theshamuel.medreg.model.base.dao.impl.BaseRepositoryImplTest;
 import com.theshamuel.medreg.model.client.entity.Client;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
-import com.theshamuel.medreg.model.service.entity.Service;
+import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
 import com.theshamuel.medreg.model.types.CategoryOfService;
 import com.theshamuel.medreg.model.visit.entity.Visit;
 import java.math.BigInteger;
@@ -142,14 +142,14 @@ public class VisitRepositoryImplTest extends BaseRepositoryImplTest {
         template.save(appointment4);
         template.save(appointment5);
 
-        initCollection("services");
-        template.findAllAndRemove(Query.query(Criteria.where("id").exists(true)), Service.class);
+        initCollection("customerServices");
+        template.findAllAndRemove(Query.query(Criteria.where("id").exists(true)), CustomerService.class);
 
-        Service service1 = new ServiceBuilder().label("uzi").price(BigInteger.valueOf(500))
+        CustomerService customerService1 = new ServiceBuilder().label("uzi").price(BigInteger.valueOf(500))
                 .category(CategoryOfService.ULTRA).build();
-        Service service2 = new ServiceBuilder().label("surgeon operation")
+        CustomerService customerService2 = new ServiceBuilder().label("surgeon operation")
                 .price(BigInteger.valueOf(1000)).category(CategoryOfService.CONSULTATION).build();
-        Service service3 = new ServiceBuilder().label("checking").price(BigInteger.valueOf(200))
+        CustomerService customerService3 = new ServiceBuilder().label("checking").price(BigInteger.valueOf(200))
                 .category(CategoryOfService.CONSULTATION).build();
 
         initCollection("clients");
@@ -168,36 +168,36 @@ public class VisitRepositoryImplTest extends BaseRepositoryImplTest {
         initCollection("visits");
         template.findAllAndRemove(Query.query(Criteria.where("id").exists(true)), Visit.class);
 
-        List<Service> services = new ArrayList<>();
-        services.add(service1);
+        List<CustomerService> customerServices = new ArrayList<>();
+        customerServices.add(customerService1);
 
         Visit visit1 = new VisitBuilder().appointment(appointment1).doctor(doc1).client(client1)
                 .dateEvent(appointment1.getDateEvent()).timeEvent(appointment1.getTimeEvent())
-                .services(services).build();
-        services.clear();
-        services.add(service2);
+                .services(customerServices).build();
+        customerServices.clear();
+        customerServices.add(customerService2);
 
         Visit visit2 = new VisitBuilder().appointment(appointment2).doctor(doc2).client(client2)
                 .dateEvent(appointment2.getDateEvent()).timeEvent(appointment2.getTimeEvent())
-                .services(services).build();
-        services.clear();
-        services.add(service3);
+                .services(customerServices).build();
+        customerServices.clear();
+        customerServices.add(customerService3);
 
         visit3 = new VisitBuilder().appointment(appointment3).doctor(doc3).client(client3)
                 .dateEvent(appointment3.getDateEvent()).timeEvent(appointment3.getTimeEvent())
-                .services(services).build();
+                .services(customerServices).build();
 
         Visit visit4 = new VisitBuilder().appointment(appointment4).doctor(doc3).client(client2)
                 .dateEvent(appointment4.getDateEvent()).timeEvent(appointment4.getTimeEvent())
-                .services(services).build();
-        services.clear();
-        services.add(service3);
+                .services(customerServices).build();
+        customerServices.clear();
+        customerServices.add(customerService3);
 
         Visit visit5 = new VisitBuilder().appointment(appointment5).doctor(doc3).client(client1)
                 .dateEvent(appointment5.getDateEvent()).timeEvent(appointment5.getTimeEvent())
-                .services(services).build();
-        services.clear();
-        services.add(service3);
+                .services(customerServices).build();
+        customerServices.clear();
+        customerServices.add(customerService3);
 
         template.save(visit1);
         template.save(visit2);

@@ -1,7 +1,7 @@
 package com.theshamuel.medreg.buiders;
 
 import com.theshamuel.medreg.model.report.entity.Report;
-import com.theshamuel.medreg.model.service.entity.Service;
+import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
 
 /**
  * The Builder class for {@link Report}
@@ -21,8 +21,8 @@ public class ReportBuilder {
         return this;
     }
 
-    public ReportBuilder service(Service service) {
-        report.setService(service);
+    public ReportBuilder service(CustomerService customerService) {
+        report.setService(customerService);
         return this;
     }
 

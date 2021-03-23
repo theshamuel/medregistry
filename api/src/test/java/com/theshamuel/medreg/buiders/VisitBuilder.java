@@ -3,7 +3,7 @@ package com.theshamuel.medreg.buiders;
 import com.theshamuel.medreg.model.appointment.entity.Appointment;
 import com.theshamuel.medreg.model.client.entity.Client;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
-import com.theshamuel.medreg.model.service.entity.Service;
+import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
 import com.theshamuel.medreg.model.visit.entity.Visit;
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -53,8 +53,8 @@ public class VisitBuilder {
         return this;
     }
 
-    public VisitBuilder services(List<Service> services) {
-        visit.setServices(services);
+    public VisitBuilder services(List<CustomerService> customerServices) {
+        visit.setServices(customerServices);
         return this;
     }
 

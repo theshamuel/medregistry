@@ -37,7 +37,7 @@ import org.mockito.Mock;
  *
  * @author Alex Gladkikh
  */
-public class AppointmentServiceImplTest {
+public class AppointmentCustomerServiceImplTest {
 
     @Mock
     private AppointmentRepository appointmentRepository;

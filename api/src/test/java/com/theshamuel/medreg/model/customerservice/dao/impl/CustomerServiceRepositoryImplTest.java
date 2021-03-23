@@ -1,4 +1,4 @@
-package com.theshamuel.medreg.model.service.dao.impl;
+package com.theshamuel.medreg.model.customerservice.dao.impl;
 
 
 import static org.hamcrest.Matchers.hasItem;
@@ -10,8 +10,9 @@ import com.theshamuel.medreg.buiders.PersonalRateBuilder;
 import com.theshamuel.medreg.buiders.ServiceBuilder;
 import com.theshamuel.medreg.model.base.dao.impl.BaseRepositoryImplTest;
 import com.theshamuel.medreg.model.report.entity.Report;
-import com.theshamuel.medreg.model.service.entity.PersonalRate;
-import com.theshamuel.medreg.model.service.entity.Service;
+import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
+import com.theshamuel.medreg.model.customerservice.entity.PersonalRate;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +22,17 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 /**
- * The integration tests for {@link ServiceRepositoryImpl}
+ * The integration tests for {@link CustomerServiceRepositoryImpl}
  *
  * @author Alex Gladkikh
  */
-public class ServiceRepositoryImplTest extends BaseRepositoryImplTest {
+public class CustomerServiceRepositoryImplTest extends BaseRepositoryImplTest {
 
-    ServiceRepositoryImpl serviceRepositoryImpl = new ServiceRepositoryImpl();
+    CustomerServiceRepositoryImpl serviceRepositoryImpl = new CustomerServiceRepositoryImpl(template);
 
     @Test
     public void testIsUniqueService() {
-        Service service = new ServiceBuilder().label("service 1").price(BigInteger.valueOf(500))
+        CustomerService customerService = new ServiceBuilder().label("service 1").price(BigInteger.valueOf(500))
                 .build();
 
         Boolean actualTrue = serviceRepositoryImpl
@@ -39,7 +40,7 @@ public class ServiceRepositoryImplTest extends BaseRepositoryImplTest {
         assertThat(actualTrue, is(Boolean.valueOf(true)));
 
         Boolean actualFalse = serviceRepositoryImpl
-                .isUniqueService(service.getLabel(), BigInteger.valueOf(500));
+                .isUniqueService(customerService.getLabel(), BigInteger.valueOf(500));
         assertThat(actualFalse, is(Boolean.valueOf(false)));
 
     }
@@ -54,18 +55,18 @@ public class ServiceRepositoryImplTest extends BaseRepositoryImplTest {
                 .build();
         personalRates.add(personalRate1);
         personalRates.add(personalRate2);
-        Service service4 = new ServiceBuilder().label("service 4").personalRates(personalRates)
+        CustomerService customerService4 = new ServiceBuilder().label("service 4").personalRates(personalRates)
                 .price(BigInteger.valueOf(5100)).build();
-        template.save(service4);
-        Service service5 = new ServiceBuilder().label("service 5").personalRates(personalRates)
+        template.save(customerService4);
+        CustomerService customerService5 = new ServiceBuilder().label("service 5").personalRates(personalRates)
                 .price(BigInteger.valueOf(5100)).build();
-        template.save(service5);
+        template.save(customerService5);
 
-        List<Service> actualServices = serviceRepositoryImpl.findPersonalRatesByDoctorId("doc001");
-        assertThat(actualServices, notNullValue());
-        assertThat(actualServices.size(), is(2));
-        assertThat(actualServices, hasItem(service4));
-        assertThat(actualServices, hasItem(service5));
+        List<CustomerService> actualCustomerServices = serviceRepositoryImpl.findPersonalRatesByDoctorId("doc001");
+        assertThat(actualCustomerServices, notNullValue());
+        assertThat(actualCustomerServices.size(), is(2));
+        assertThat(actualCustomerServices, hasItem(customerService4));
+        assertThat(actualCustomerServices, hasItem(customerService5));
 
     }
 
@@ -82,8 +83,4 @@ public class ServiceRepositoryImplTest extends BaseRepositoryImplTest {
                 new ServiceBuilder().label("service 3").price(BigInteger.valueOf(200)).build());
     }
 
-    @Override
-    public void setMongo() {
-        serviceRepositoryImpl.setMongo(template);
-    }
 }

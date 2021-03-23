@@ -15,7 +15,8 @@ package com.theshamuel.medreg.model.report.dao.impl;
 
 import com.theshamuel.medreg.model.report.dao.ReportOperations;
 import com.theshamuel.medreg.model.report.entity.Report;
-import com.theshamuel.medreg.model.service.entity.Service;
+import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
+
 import java.util.List;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -32,13 +33,13 @@ public class ReportRepositoryImpl implements ReportOperations {
     }
 
     @Override
-    public boolean isUniqueReport(Service service, String template) {
+    public boolean isUniqueReport(CustomerService customerService, String template) {
         Criteria where = null;
-        if (service != null) {
-            where = Criteria.where("service").is(service).and("template")
+        if (customerService != null) {
+            where = Criteria.where("customerService").is(customerService).and("template")
                     .regex("^" + template + "$", "i");
         } else {
-            where = Criteria.where("service").exists(false).and("template").is(template);
+            where = Criteria.where("customerService").exists(false).and("template").is(template);
         }
         Query query = Query.query(where);
         return mongo.findOne(query, Report.class) == null;
@@ -46,8 +47,8 @@ public class ReportRepositoryImpl implements ReportOperations {
     }
 
     @Override
-    public List<Report> findByService(Service service) {
-        Criteria where = Criteria.where("service").is(service);
+    public List<Report> findByService(CustomerService customerService) {
+        Criteria where = Criteria.where("customerService").is(customerService);
         Query query = Query.query(where);
         return mongo.find(query, Report.class);
     }
@@ -58,5 +59,5 @@ public class ReportRepositoryImpl implements ReportOperations {
         Query query = Query.query(where);
         return mongo.find(query, Report.class);
     }
-    
+
 }

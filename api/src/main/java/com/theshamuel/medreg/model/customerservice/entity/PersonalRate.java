@@ -11,7 +11,7 @@
  * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
-package com.theshamuel.medreg.model.service.entity;
+package com.theshamuel.medreg.model.customerservice.entity;
 
 import java.math.BigInteger;
 import org.apache.commons.lang3.builder.EqualsBuilder;
