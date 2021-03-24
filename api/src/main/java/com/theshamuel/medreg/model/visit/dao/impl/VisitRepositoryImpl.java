@@ -43,8 +43,8 @@ public class VisitRepositoryImpl implements VisitOperations {
         String[] params = filter.trim().split(";");
         if (params.length > 0) {
             Criteria where = Criteria.where("id").exists(true);
-            for (int i = 0; i < params.length; i++) {
-                String[] tmp = params[i].split("=");
+            for (String param : params) {
+                String[] tmp = param.split("=");
                 if (tmp[0].equals("passport")) {
                     where = where.orOperator(Criteria.where("client.passportSerial")
                                     .regex("^.*".concat(tmp[1].trim()).concat(".*$"), "i"),
