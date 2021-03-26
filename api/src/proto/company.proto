@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.theshamuel.medreg.model.company.grpc";
+option java_outer_classname = "CompanyProto";
+option objc_class_prefix = "MRG";
+
+import "google/protobuf/empty.proto";
+package company;
+
+service CompanySrv {
+  rpc GetDetails(google.protobuf.Empty) returns (CompanyResponse) {}
+}
+
+message CompanyResponse {
+  string okpo = 1;
+
+  string extraName = 2;
+
+  string shortName = 3;
+
+  string fullName = 4;
+
+  string addressFact = 5;
+
+  string addressJur = 6;
+
+  string ogrn = 7;
+
+  string okato = 8;
+
+  string inn = 9;
+
+  string kpp = 10;
+
+  string license = 11;
+
+  string bank = 12;
+
+  string checkingAccount = 13;
+
+  string corrAccount = 14;
+
+  string director = 15;
+
+  string directorNameRp = 16;
+
+  string directorNameDp = 17;
+
+  string phone = 18;
+
+  string site = 19;
+
+  string extraInfo = 20;
+}
