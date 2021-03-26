@@ -34,7 +34,7 @@ public class ReportRepositoryImpl implements ReportOperations {
 
     @Override
     public boolean isUniqueReport(CustomerService customerService, String template) {
-        Criteria where = null;
+        Criteria where;
         if (customerService != null) {
             where = Criteria.where("customerService").is(customerService).and("template")
                     .regex("^" + template + "$", "i");
