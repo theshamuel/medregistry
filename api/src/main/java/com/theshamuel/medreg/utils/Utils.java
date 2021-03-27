@@ -44,15 +44,17 @@ public class Utils {
             byte[] bytes = md.digest(password.getBytes());
             StringBuilder sb = new StringBuilder();
 
-            for (int i = 0; i < bytes.length; ++i) {
-                sb.append(Integer.toString((bytes[i] & 255) + 256, 16).substring(1));
+            for (byte b : bytes) {
+                sb.append(Integer.toString((b & 255) + 256, 16).substring(1));
             }
 
             generatedPassword = sb.toString();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
+        if (generatedPassword == null) {
+            throw new IllegalArgumentException("Cannot convert password to sha256");
+        }
         return generatedPassword.substring(0, 16);
     }
 
@@ -108,12 +110,12 @@ public class Utils {
     public static String deleteNotNeedSymbol(String str, String[] symbols) {
         StringBuilder result = new StringBuilder();
         result.append(str);
-        for (int i = 0; i < symbols.length; i++) {
-            String[] tookens = result.toString().split(symbols[i]);
-            if (tookens.length > 1) {
+        for (String symbol : symbols) {
+            String[] tokens = result.toString().split(symbol);
+            if (tokens.length > 1) {
                 result = new StringBuilder();
-                for (int j = 0; j < tookens.length; j++) {
-                    result.append(tookens[j]);
+                for (int j = 0; j < tokens.length; j++) {
+                    result.append(tokens[j]);
                 }
             }
         }
