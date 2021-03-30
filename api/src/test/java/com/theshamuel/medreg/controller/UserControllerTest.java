@@ -207,8 +207,6 @@ public class UserControllerTest {
                 delete("/api/v1/users/" + testUser.getId()).accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-
         verify(userRepository, times(1)).findOne(testUser.getId());
 
     }
