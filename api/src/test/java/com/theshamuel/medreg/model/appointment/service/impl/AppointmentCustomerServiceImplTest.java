@@ -71,11 +71,11 @@ public class AppointmentCustomerServiceImplTest {
                 .interval(15).build();
         Visit visitToIvanov = new VisitBuilder().id("v0001").appointment(
                 new AppointmentBuilder().id("a0001").doctor(docIvanov).dateEvent(LocalDate.now())
-                        .timeEvent(LocalTime.of(8, 00)).hasVisit(true).build()).doctor(docIvanov).
+                        .timeEvent(LocalTime.of(8, 0)).hasVisit(true).build()).doctor(docIvanov).
                 dateEvent(LocalDate.now()).build();
         List<Appointment> appointmentList = Arrays
                 .asList(new AppointmentBuilder().id("a0001").doctor(docIvanov)
-                                .dateEvent(LocalDate.now()).timeEvent(LocalTime.of(8, 00)).hasVisit(true)
+                                .dateEvent(LocalDate.now()).timeEvent(LocalTime.of(8, 0)).hasVisit(true)
                                 .build(),
                         new AppointmentBuilder().id("a0002").doctor(docIvanov)
                                 .dateEvent(LocalDate.now()).timeEvent(LocalTime.of(8, 15))
@@ -127,7 +127,7 @@ public class AppointmentCustomerServiceImplTest {
                 .interval(15).build();
         List<Appointment> appointmentList = Arrays
                 .asList(new AppointmentBuilder().id("a0001").doctor(docIvanov)
-                                .dateEvent(LocalDate.now()).timeEvent(LocalTime.of(8, 00)).build(),
+                                .dateEvent(LocalDate.now()).timeEvent(LocalTime.of(8, 0)).build(),
                         new AppointmentBuilder().id("a0002").doctor(docIvanov)
                                 .dateEvent(LocalDate.now()).timeEvent(LocalTime.of(8, 15)).build(),
                         new AppointmentBuilder().id("a0003").doctor(docIvanov)
@@ -149,7 +149,7 @@ public class AppointmentCustomerServiceImplTest {
 
         //Check only time in free appointments + updated time (3rd element)
         assertThat(actualDto.stream().map(i -> i.getTimeEvent()).collect(Collectors.toList()),
-                hasItems(LocalTime.of(8, 45), LocalTime.of(9, 00), LocalTime.of(8, 00)));
+                hasItems(LocalTime.of(8, 45), LocalTime.of(9, 0), LocalTime.of(8, 0)));
 
         actualDto = appointmentService
                 .getFreeTimeAppointmentsByDoctorDateEvent(docIvanov.getId(), LocalDate.now());
@@ -157,7 +157,7 @@ public class AppointmentCustomerServiceImplTest {
 
         //Check only time in free appointments without updated time (3rd element)
         assertThat(actualDto.stream().map(i -> i.getTimeEvent()).collect(Collectors.toList()),
-                hasItems(LocalTime.of(8, 45), LocalTime.of(9, 00)));
+                hasItems(LocalTime.of(8, 45), LocalTime.of(9, 0)));
 
         verify(appointmentRepository, times(1)).findOne(updatedAppointment.getId());
         verify(appointmentRepository, times(2))
@@ -172,7 +172,7 @@ public class AppointmentCustomerServiceImplTest {
 
         List<Appointment> appointmentList = Arrays
                 .asList(new AppointmentBuilder().id("a0001").dateEvent(LocalDate.now())
-                                .timeEvent(LocalTime.of(8, 00)).build(),
+                                .timeEvent(LocalTime.of(8, 0)).build(),
                         new AppointmentBuilder().id("a0002").dateEvent(LocalDate.now())
                                 .timeEvent(LocalTime.of(8, 15)).build(),
                         new AppointmentBuilder().id("a0003").dateEvent(LocalDate.now())
