@@ -37,11 +37,11 @@ public class CustomerServiceRepositoryImplTest extends BaseRepositoryImplTest {
 
         Boolean actualTrue = serviceRepositoryImpl
                 .isUniqueService("newLabel", BigInteger.valueOf(500));
-        assertThat(actualTrue, is(Boolean.valueOf(true)));
+        assertThat(actualTrue, is(Boolean.TRUE));
 
         Boolean actualFalse = serviceRepositoryImpl
                 .isUniqueService(customerService.getLabel(), BigInteger.valueOf(500));
-        assertThat(actualFalse, is(Boolean.valueOf(false)));
+        assertThat(actualFalse, is(Boolean.FALSE));
 
     }
 
