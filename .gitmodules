@@ -1,0 +1,3 @@
+[submodule "api20"]
+	path = api20
+	url = git@github.com:theshamuel/medregistry20.git
