@@ -1,0 +1,12 @@
+apiVersion: v2
+name: medregistry
+description: CRM for Medical Clinic
+type: application
+maintainers:
+  - email: theshamuel@gmail.com
+    name: Alex Shamuel
+version: 1.0.0-1
+appVersion: 1.0.0
+sources:
+  - https://github.com/theshamuel/medregistry
+  - https://github.com/theshamuel/medregistry20
