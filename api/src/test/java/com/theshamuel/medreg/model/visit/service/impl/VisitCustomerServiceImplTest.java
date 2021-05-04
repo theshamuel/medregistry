@@ -18,7 +18,7 @@ import com.theshamuel.medreg.model.appointment.entity.Appointment;
 import com.theshamuel.medreg.model.client.dao.ClientRepository;
 import com.theshamuel.medreg.model.doctor.dao.DoctorRepository;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
-import com.theshamuel.medreg.model.customerservice.dao.CustomerCustomerServiceRepository;
+import com.theshamuel.medreg.model.customerservice.dao.CustomerServiceRepository;
 import com.theshamuel.medreg.model.customerservice.dto.CustomerServiceDto;
 import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
 import com.theshamuel.medreg.model.customerservice.service.CustomerServiceService;
@@ -56,7 +56,7 @@ public class VisitCustomerServiceImplTest {
     private AppointmentRepository appointmentRepository;
 
     @Mock
-    private CustomerCustomerServiceRepository customerServiceRepository;
+    private CustomerServiceRepository customerServiceRepository;
 
     @Mock
     private CustomerServiceService customerServiceService;

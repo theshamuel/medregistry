@@ -21,6 +21,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  *
  * @author Alex Gladkikh
  */
-public interface CustomerCustomerServiceRepository extends MongoRepository<CustomerService, String>, CustomerServiceOperations {
+public interface CustomerServiceRepository extends MongoRepository<CustomerService, String>, CustomerServiceOperations {
 
 }

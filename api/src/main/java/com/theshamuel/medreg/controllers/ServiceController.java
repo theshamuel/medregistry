@@ -14,7 +14,7 @@
 package com.theshamuel.medreg.controllers;
 
 import com.theshamuel.medreg.exception.DuplicateRecordException;
-import com.theshamuel.medreg.model.customerservice.dao.CustomerCustomerServiceRepository;
+import com.theshamuel.medreg.model.customerservice.dao.CustomerServiceRepository;
 import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
 import com.theshamuel.medreg.model.customerservice.entity.PersonalRate;
 import com.theshamuel.medreg.model.customerservice.service.CustomerServiceService;
@@ -48,7 +48,7 @@ public class ServiceController {
     /**
      * The CustomerService repository.
      */
-    CustomerCustomerServiceRepository customerServiceRepository;
+    CustomerServiceRepository customerServiceRepository;
     /**
      * The CustomerService repository.
      */
@@ -62,7 +62,7 @@ public class ServiceController {
      * @param customerServiceService    the service of service
      */
     @Autowired
-    public ServiceController(CustomerCustomerServiceRepository customerServiceRepository, CustomerServiceService customerServiceService) {
+    public ServiceController(CustomerServiceRepository customerServiceRepository, CustomerServiceService customerServiceService) {
         this.customerServiceRepository = customerServiceRepository;
         this.customerServiceService = customerServiceService;
     }

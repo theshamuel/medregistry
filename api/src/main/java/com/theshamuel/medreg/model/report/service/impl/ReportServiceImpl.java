@@ -30,13 +30,14 @@ import com.theshamuel.medreg.model.report.entity.ReportOfWorkDayByDoctor;
 import com.theshamuel.medreg.model.report.entity.ReportOfWorkDayRecord;
 import com.theshamuel.medreg.model.report.entity.RootReportByDoctor;
 import com.theshamuel.medreg.model.report.service.ReportService;
-import com.theshamuel.medreg.model.customerservice.dao.CustomerCustomerServiceRepository;
+import com.theshamuel.medreg.model.customerservice.dao.CustomerServiceRepository;
 import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
 import com.theshamuel.medreg.model.customerservice.entity.PersonalRate;
 import com.theshamuel.medreg.model.customerservice.service.CustomerServiceService;
 import com.theshamuel.medreg.model.types.CategoryOfService;
 import com.theshamuel.medreg.model.visit.dao.VisitRepository;
 import com.theshamuel.medreg.model.visit.entity.Visit;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,6 +55,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -91,7 +93,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
     private final Environment environment;
     private ReportRepository reportRepository;
     private VisitRepository visitRepository;
-    private CustomerCustomerServiceRepository customerServiceRepository;
+    private CustomerServiceRepository customerServiceRepository;
     private AppointmentService appointmentService;
     private CustomerServiceService customerServiceService;
     private DoctorRepository doctorRepository;
@@ -100,16 +102,16 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
     /**
      * Instantiates a new Report service.
      *
-     * @param reportRepository   the report repository
-     * @param visitRepository    the visit repository
-     * @param customerServiceRepository  the service repository
-     * @param appointmentService the appointment service
-     * @param customerServiceService     the service service
-     * @param doctorRepository   the doctor repository
-     * @param companyRepository  the company repository
+     * @param reportRepository          the report repository
+     * @param visitRepository           the visit repository
+     * @param customerServiceRepository the service repository
+     * @param appointmentService        the appointment service
+     * @param customerServiceService    the service service
+     * @param doctorRepository          the doctor repository
+     * @param companyRepository         the company repository
      */
     public ReportServiceImpl(ReportRepository reportRepository, VisitRepository visitRepository,
-                             CustomerCustomerServiceRepository customerServiceRepository, AppointmentService appointmentService,
+                             CustomerServiceRepository customerServiceRepository, AppointmentService appointmentService,
                              CustomerServiceService customerServiceService, DoctorRepository doctorRepository,
                              CompanyRepository companyRepository, ReportParamsService reportParamsService, Environment environment) {
         super(reportRepository);
@@ -462,7 +464,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
                                                 .get(j).getDoctorPayTypePersonal().equals("percent")
                                                 ? records.get(j).getDoctorPayPersonal() + "%"
                                                 : records.get(j).getDoctorPayPersonal()
-                                                        + " руб.");
+                                                + " руб.");
                                 if (records.get(j).getDoctorPayTypePersonal() != null && records
                                         .get(j).getDoctorPayTypePersonal().equals("percent")) {
                                     ((XWPFTable) element).getRows().get(recordRow).getCell(4)
@@ -579,7 +581,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
      */
     @Override
     public byte[] getReportTemplate(String clientId, String doctorId, String reportId,
-            String visitId, LocalDate dateEvent) {
+                                    String visitId, LocalDate dateEvent) {
         logger.info("CALL getReportClientCard START - {}", LocalDateTime.now()
                 .format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss", Locale.getDefault())));
         Report report = reportRepository.findOne(reportId);
@@ -693,7 +695,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
      */
     @Override
     public byte[] getReportContract(String clientId, String doctorId, String visitId,
-            LocalDate dateEvent) {
+                                    LocalDate dateEvent) {
         logger.info("CALL getReportContract START - {}", LocalDateTime.now()
                 .format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss", Locale.getDefault())));
         byte[] resultFile = null;

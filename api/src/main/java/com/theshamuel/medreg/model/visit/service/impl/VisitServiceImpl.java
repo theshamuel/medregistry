@@ -20,7 +20,7 @@ import com.theshamuel.medreg.model.client.dao.ClientRepository;
 import com.theshamuel.medreg.model.client.entity.Client;
 import com.theshamuel.medreg.model.doctor.dao.DoctorRepository;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
-import com.theshamuel.medreg.model.customerservice.dao.CustomerCustomerServiceRepository;
+import com.theshamuel.medreg.model.customerservice.dao.CustomerServiceRepository;
 import com.theshamuel.medreg.model.customerservice.dto.CustomerServiceDto;
 import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
 import com.theshamuel.medreg.model.customerservice.entity.PersonalRate;
@@ -57,7 +57,7 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
 
     private AppointmentRepository appointmentRepository;
 
-    private CustomerCustomerServiceRepository customerServiceRepository;
+    private CustomerServiceRepository customerServiceRepository;
 
     private CustomerServiceService customerServiceService;
 
@@ -74,7 +74,7 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
     @Autowired
     public VisitServiceImpl(VisitRepository visitRepository, DoctorRepository doctorRepository,
                             ClientRepository clientRepository, AppointmentRepository appointmentRepository,
-                            CustomerCustomerServiceRepository customerServiceRepository, CustomerServiceService customerServiceService) {
+                            CustomerServiceRepository customerServiceRepository, CustomerServiceService customerServiceService) {
         super(visitRepository);
         this.visitRepository = visitRepository;
         this.doctorRepository = doctorRepository;

@@ -17,7 +17,7 @@ import com.theshamuel.medreg.exception.DuplicateRecordException;
 import com.theshamuel.medreg.model.baseclasses.service.BaseServiceImpl;
 import com.theshamuel.medreg.model.doctor.dao.DoctorRepository;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
-import com.theshamuel.medreg.model.customerservice.dao.CustomerCustomerServiceRepository;
+import com.theshamuel.medreg.model.customerservice.dao.CustomerServiceRepository;
 import com.theshamuel.medreg.model.customerservice.dto.CustomerServiceDto;
 import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
 import com.theshamuel.medreg.model.customerservice.entity.PersonalRate;
@@ -41,7 +41,7 @@ public class CustomerServiceServiceImpl extends BaseServiceImpl<CustomerServiceD
         CustomerServiceService {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerServiceServiceImpl.class);
-    private CustomerCustomerServiceRepository customerServiceRepository;
+    private CustomerServiceRepository customerServiceRepository;
 
     private DoctorRepository doctorRepository;
 
@@ -52,7 +52,7 @@ public class CustomerServiceServiceImpl extends BaseServiceImpl<CustomerServiceD
      * @param doctorRepository  the doctor repository
      */
     @Autowired
-    public CustomerServiceServiceImpl(CustomerCustomerServiceRepository customerServiceRepository,
+    public CustomerServiceServiceImpl(CustomerServiceRepository customerServiceRepository,
                                       DoctorRepository doctorRepository) {
         super(customerServiceRepository);
         this.customerServiceRepository = customerServiceRepository;

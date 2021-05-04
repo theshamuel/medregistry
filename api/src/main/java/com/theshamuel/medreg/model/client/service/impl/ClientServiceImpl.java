@@ -20,7 +20,7 @@ import com.theshamuel.medreg.model.client.dao.ClientRepository;
 import com.theshamuel.medreg.model.client.entity.Client;
 import com.theshamuel.medreg.model.client.entity.History;
 import com.theshamuel.medreg.model.client.service.ClientService;
-import com.theshamuel.medreg.model.customerservice.dao.CustomerCustomerServiceRepository;
+import com.theshamuel.medreg.model.customerservice.dao.CustomerServiceRepository;
 import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
 import com.theshamuel.medreg.model.visit.dao.VisitRepository;
 import com.theshamuel.medreg.model.visit.entity.Visit;
@@ -53,7 +53,7 @@ public class ClientServiceImpl extends BaseServiceImpl<Client, Client> implement
     /**
      * The CustomerService repository.
      */
-    CustomerCustomerServiceRepository customerServiceRepository;
+    CustomerServiceRepository customerServiceRepository;
 
     /**
      * Instantiates a new Client service.
@@ -64,7 +64,7 @@ public class ClientServiceImpl extends BaseServiceImpl<Client, Client> implement
      */
     @Autowired
     public ClientServiceImpl(ClientRepository clientRepository, VisitRepository visitRepository,
-            CustomerCustomerServiceRepository customerServiceRepository) {
+            CustomerServiceRepository customerServiceRepository) {
         super(clientRepository);
         this.clientRepository = clientRepository;
         this.visitRepository = visitRepository;
