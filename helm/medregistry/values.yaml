@@ -17,4 +17,4 @@ images:
   web:
     repository: ghcr.io
     name: theshamuel/medregweb
-    tag: 2.0.0
+    tag: 2.0.1
