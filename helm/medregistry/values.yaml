@@ -18,3 +18,5 @@ images:
     repository: ghcr.io
     name: theshamuel/medregweb
     tag: 2.0.1
+
+tz: Europe/UTC
