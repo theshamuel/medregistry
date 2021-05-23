@@ -29,10 +29,7 @@ Create chart name and version as used by the chart label.
 {{- printf "%s-%s" .Chart.Name .Chart.Version | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{/*
-
-Common labels
-*/}}
+{{/*Common labels*/}}
 {{- define "medregistry.labels" -}}
 helm.sh/chart: {{ include "medregistry.chart" . }}
 {{ include "medregistry.selectorLabels" . }}

@@ -1,0 +1,51 @@
+{{/*Deployment of frontend site*/}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "medregistry.name" . }}
+  labels:
+  {{- include "medregistry.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+    {{- include "medregistry.selectorLabels" . | nindent 6 }}
+  replicas: {{ .Values.web.replicas }}
+  template:
+    metadata:
+      labels:
+      {{- include "medregistry.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: frontend
+          image: {{ .Values.images.web.repository }}/{{ .Values.images.web.name }}:{{ .Values.images.web.tag }}
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: {{ .Values.web.probs.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.web.probs.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.web.probs.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.web.probs.readiness.failureThreshold }}
+            successThreshold: {{ .Values.web.probs.readiness.successThreshold }}
+          livenessProbe:
+            httpGet:
+              path: /login
+              port: http
+            initialDelaySeconds: {{ .Values.web.probs.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.web.probs.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.web.probs.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.web.probs.liveness.failureThreshold }}
+          env:
+            - name: PROXY_SERVER_V1
+              value: {{ .Values.apiV1.host }}
+            - name: PROXY_PORT_V1
+              value: {{ .Values.apiV1.port | quote }}
+            - name: PROXY_SERVER_V2
+              value: {{ .Values.apiV2.host }}
+            - name: PROXY_PORT_V2
+              value: {{ .Values.apiV2.port | quote}}

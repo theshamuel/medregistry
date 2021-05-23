@@ -1,3 +1,6 @@
+nameOverride: ""
+fullnameOverride: ""
+
 image:
   pullPolicy: IfNotPresent
 
@@ -29,14 +32,14 @@ web:
   replicas: 1
   probs:
     readiness:
-      initialDelaySeconds: 60
-      periodSeconds: 30
-      timeoutSeconds: 5
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      timeoutSeconds: 2
       failureThreshold: 30
-      successThreshold: 2
+      successThreshold: 3
     liveness:
       initialDelaySeconds: 300
-      periodSeconds: 15
+      periodSeconds: 5
       timeoutSeconds: 3
       failureThreshold: 10
 db:
@@ -49,13 +52,16 @@ db:
       enabled: false
       secretName: s3-credentials-secret
 
-
 apiV1:
   replicas: 1
+  host: "dummy.com"
+  port: 80
   reports:
     path: "/reports"
 
 apiV2:
   replicas: 1
+  host: "dummy.com"
+  port: 80
   reports:
     path: "/reports"
