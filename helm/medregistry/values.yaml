@@ -29,6 +29,9 @@ ingress:
   host: "medregistry.example.com"
 
 web:
+  service:
+    type: ClusterIP
+    port: 80
   replicas: 1
   probs:
     readiness:
