@@ -47,3 +47,12 @@ app.kubernetes.io/name: {{ include "medregistry.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app: {{ include "medregistry.name" . }}
 {{- end -}}
+
+{{/*
+EKS ALB annotations
+*/}}
+{{- define "medregistry.eks.albAnnotations" -}}
+kubernetes.io/ingress.class: alb
+alb.ingress.kubernetes.io/scheme: internet-facing
+alb.ingress.kubernetes.io/target-type: ip
+{{- end -}}
