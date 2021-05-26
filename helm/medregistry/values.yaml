@@ -48,7 +48,10 @@ web:
       timeoutSeconds: 3
       failureThreshold: 10
 db:
-  replicas: 1
+  replicas: 2
+  storage:
+    class: "test"
+    size: 10Gi
   backups:
     import:
       enabled: false
