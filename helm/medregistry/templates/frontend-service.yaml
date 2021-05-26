@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "medregistry.name" . }}-frontend
+  name: {{ template "medregistry.name" . }}-frontend
   labels:
   {{- include "medregistry.labels" . | nindent 4 }}
 spec:

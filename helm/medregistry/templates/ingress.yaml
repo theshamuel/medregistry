@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "medregistry.name" . }}
+  name: {{ template "medregistry.name" . }}
   labels:
   {{- include "medregistry.labels" . | nindent 4 }}
   {{- if eq (lower .Values.ingress.eks.type) "alb" }}
