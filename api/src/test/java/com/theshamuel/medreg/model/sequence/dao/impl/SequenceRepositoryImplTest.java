@@ -15,7 +15,7 @@ import org.junit.Test;
  */
 public class SequenceRepositoryImplTest extends BaseRepositoryImplTest {
 
-    SequenceRepositoryImpl sequenceRepository = new SequenceRepositoryImpl();
+    SequenceRepositoryImpl sequenceRepository = new SequenceRepositoryImpl(template);
 
     @Test
     public void testGenNextSequenceNewCode() {

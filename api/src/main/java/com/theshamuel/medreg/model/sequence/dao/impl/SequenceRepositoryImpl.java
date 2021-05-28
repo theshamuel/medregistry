@@ -29,15 +29,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class SequenceRepositoryImpl implements SequenceOperations {
 
-    @Autowired
-    private MongoOperations mongo;
+    private final MongoOperations mongo;
 
+    public SequenceRepositoryImpl(MongoOperations mongo) {
+        this.mongo = mongo;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getNextSequence(String key) {
+    public synchronized String getNextSequence(String key) {
 
         Query query = new Query(Criteria.where("code").is(key));
 
@@ -58,15 +60,6 @@ public class SequenceRepositoryImpl implements SequenceOperations {
 
         return seq.toString();
 
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setMongo(MongoOperations mongo) {
-        this.mongo = mongo;
     }
 
 }
