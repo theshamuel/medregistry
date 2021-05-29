@@ -33,8 +33,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ClientRepositoryImpl implements ClientOperations {
 
-    @Autowired
-    private MongoOperations mongo;
+    private final MongoOperations mongo;
+
+    public ClientRepositoryImpl(MongoOperations mongo) {
+        this.mongo = mongo;
+    }
 
     /**
      * {@inheritDoc}
@@ -72,13 +75,5 @@ public class ClientRepositoryImpl implements ClientOperations {
         }
         return result;
     }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setMongo(MongoOperations mongo) {
-        this.mongo = mongo;
-    }
+    
 }

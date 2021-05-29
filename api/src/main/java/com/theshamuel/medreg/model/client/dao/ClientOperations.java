@@ -15,7 +15,6 @@ package com.theshamuel.medreg.model.client.dao;
 
 import com.theshamuel.medreg.model.client.entity.Client;
 import java.util.List;
-import org.springframework.data.mongodb.core.MongoOperations;
 
 /**
  * The interface Patient operations.
@@ -41,10 +40,4 @@ public interface ClientOperations {
      */
     List<Client> findByFilter(String filter);
 
-    /**
-     * Sets mongo.
-     *
-     * @param mongo the mongo
-     */
-    void setMongo(MongoOperations mongo);
 }

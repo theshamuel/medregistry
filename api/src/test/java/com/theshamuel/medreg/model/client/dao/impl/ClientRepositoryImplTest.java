@@ -22,7 +22,7 @@ import org.springframework.data.mongodb.core.query.Query;
  */
 public class ClientRepositoryImplTest extends BaseRepositoryImplTest {
 
-    ClientRepositoryImpl clientRepositoryImpl = new ClientRepositoryImpl();
+    ClientRepositoryImpl clientRepositoryImpl = new ClientRepositoryImpl(template);
 
     private Client client1;
     private Client client2;
