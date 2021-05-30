@@ -39,8 +39,4 @@ public class SequenceRepositoryImplTest extends BaseRepositoryImplTest {
         template.save(expected);
     }
 
-    @Override
-    public void setMongo() {
-        sequenceRepository.setMongo(template);
-    }
 }
