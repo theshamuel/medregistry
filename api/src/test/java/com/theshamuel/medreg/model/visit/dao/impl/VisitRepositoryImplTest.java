@@ -206,8 +206,4 @@ public class VisitRepositoryImplTest extends BaseRepositoryImplTest {
         template.save(visit5);
     }
 
-    @Override
-    public void setMongo() {
-        visitRepositoryImpl.setMongo(template);
-    }
 }

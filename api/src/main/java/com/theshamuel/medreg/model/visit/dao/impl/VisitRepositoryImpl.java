@@ -21,7 +21,6 @@ import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -34,8 +33,12 @@ import org.springframework.data.mongodb.core.query.Query;
  */
 public class VisitRepositoryImpl implements VisitOperations {
 
-    @Autowired
-    private MongoOperations mongo;
+    private final MongoOperations mongo;
+
+    public VisitRepositoryImpl(MongoOperations mongo) {
+        this.mongo = mongo;
+    }
+
 
     @Override
     public List<Visit> findByFilter(String filter) {
@@ -134,13 +137,5 @@ public class VisitRepositoryImpl implements VisitOperations {
                 .and("services.category").is(category);
         Query query = Query.query(where);
         return mongo.find(query, Visit.class);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setMongo(MongoOperations mongo) {
-        this.mongo = mongo;
     }
 }

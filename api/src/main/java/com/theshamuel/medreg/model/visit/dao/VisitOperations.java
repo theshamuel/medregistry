@@ -18,8 +18,6 @@ import com.theshamuel.medreg.model.visit.entity.Visit;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import org.springframework.data.mongodb.core.MongoOperations;
-
 
 /**
  * The interface Visit operations.
@@ -90,11 +88,4 @@ public interface VisitOperations {
      * @return the list
      */
     List<Visit> findBetweenDateEvent(LocalDate startDateEvent, LocalDate endDateEvent);
-
-    /**
-     * Sets mongo.
-     *
-     * @param mongo the mongo
-     */
-    void setMongo(MongoOperations mongo);
 }
