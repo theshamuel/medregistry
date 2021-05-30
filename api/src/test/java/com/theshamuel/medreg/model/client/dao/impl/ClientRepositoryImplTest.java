@@ -77,8 +77,4 @@ public class ClientRepositoryImplTest extends BaseRepositoryImplTest {
         template.save(client3);
     }
 
-    @Override
-    public void setMongo() {
-        clientRepositoryImpl.setMongo(template);
-    }
 }
