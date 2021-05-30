@@ -139,9 +139,4 @@ public class AppointmentRepositoryImplTest extends BaseRepositoryImplTest {
         template.save(appointmentDocPetrov);
 
     }
-
-    @Override
-    public void setMongo() {
-        appointmentRepositoryImpl.setMongo(template);
-    }
 }

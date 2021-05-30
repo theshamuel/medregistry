@@ -18,7 +18,6 @@ import com.theshamuel.medreg.model.doctor.entity.Doctor;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import org.springframework.data.mongodb.core.MongoOperations;
 
 /**
  * The interface Appointment operations.
@@ -97,10 +96,4 @@ public interface AppointmentOperations {
      */
     void deleteOutdatedAppointments(LocalDate dateEvent);
 
-    /**
-     * Sets mongo.
-     *
-     * @param mongo the mongo
-     */
-    void setMongo(MongoOperations mongo);
 }
