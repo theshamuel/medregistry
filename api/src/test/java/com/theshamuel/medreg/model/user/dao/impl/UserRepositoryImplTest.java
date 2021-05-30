@@ -16,7 +16,7 @@ import org.junit.Test;
  */
 public class UserRepositoryImplTest extends BaseRepositoryImplTest {
 
-    private UserRepositoryImpl userRepositoryImpl = new UserRepositoryImpl();
+    private UserRepositoryImpl userRepositoryImpl = new UserRepositoryImpl(template);
 
     @Test
     public void testFindByLogin() {
@@ -35,11 +35,6 @@ public class UserRepositoryImplTest extends BaseRepositoryImplTest {
         User expected = new UserBuilder().login("admin").fullname("Senior admin").password("123")
                 .salt("salt").author("admin").build();
         template.save(expected);
-    }
-
-    @Override
-    public void setMongo() {
-        userRepositoryImpl.setMongo(template);
     }
 
 }

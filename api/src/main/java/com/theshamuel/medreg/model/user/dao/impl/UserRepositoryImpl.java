@@ -30,8 +30,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserRepositoryImpl implements UserOperations {
 
-    @Autowired
-    private MongoOperations mongo;
+    private final MongoOperations mongo;
+
+    public UserRepositoryImpl(MongoOperations mongo) {
+        this.mongo = mongo;
+    }
 
 
     @Override
@@ -39,12 +42,5 @@ public class UserRepositoryImpl implements UserOperations {
         Criteria where = Criteria.where("login").is(login);
         Query query = Query.query(where);
         return mongo.findOne(query, User.class);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setMongo(MongoOperations mongo) {
-        this.mongo = mongo;
     }
 }

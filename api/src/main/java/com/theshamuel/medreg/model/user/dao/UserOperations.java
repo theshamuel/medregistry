@@ -14,8 +14,6 @@
 package com.theshamuel.medreg.model.user.dao;
 
 import com.theshamuel.medreg.model.user.entity.User;
-import org.springframework.data.mongodb.core.MongoOperations;
-
 
 /**
  * The interface User operations.
@@ -31,11 +29,4 @@ public interface UserOperations {
      * @return the user
      */
     User findByLogin(String login);
-
-    /**
-     * Sets mongo.
-     *
-     * @param mongo the mongo
-     */
-    void setMongo(MongoOperations mongo);
 }
