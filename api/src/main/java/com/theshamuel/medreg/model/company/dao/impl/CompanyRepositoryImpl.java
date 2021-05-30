@@ -14,7 +14,6 @@
 package com.theshamuel.medreg.model.company.dao.impl;
 
 import com.theshamuel.medreg.model.company.dao.CompanyOperations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 
 /**
@@ -23,14 +22,10 @@ import org.springframework.data.mongodb.core.MongoOperations;
  * @author Alex Gladkikh
  */
 public class CompanyRepositoryImpl implements CompanyOperations {
+    
+    private final MongoOperations mongo;
 
-    @Autowired
-    private MongoOperations mongo;
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setMongo(MongoOperations mongo) {
+    public CompanyRepositoryImpl(MongoOperations mongo) {
         this.mongo = mongo;
     }
 }
