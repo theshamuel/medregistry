@@ -96,7 +96,7 @@ public class ServiceController {
     public ResponseEntity<CustomerService> saveService(@RequestBody CustomerService customerService) {
         if (!customerServiceRepository.isUniqueService(customerService.getLabel().trim(), customerService.getPrice())) {
             throw new DuplicateRecordException(
-                    "Услуга с данным наименованием и ценой уже существует");
+                    "The service with the price and name has been existed already");
         } else {
             LocalDateTime now = LocalDateTime.now();
             customerService.setModifyDate(now);
@@ -174,7 +174,7 @@ public class ServiceController {
                 !currentCustomerService.getPrice().equals(customerService.getPrice())) {
             if (!customerServiceRepository.isUniqueService(customerService.getLabel().trim(), customerService.getPrice())) {
                 throw new DuplicateRecordException(
-                        "Услуга с данным наименованием и ценой уже существует");
+                        "The service with the price and name has been existed already");
             }
         }
         currentCustomerService.setLabel(customerService.getLabel());
