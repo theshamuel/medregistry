@@ -73,13 +73,13 @@ public class AuthController {
                                     .compact(), user.getShortname());
                     return new ResponseEntity(result, HttpStatus.OK);
                 } else {
-                    throw new NotFoundEntityException("Неверный пароль");
+                    throw new NotFoundEntityException("Invalid login or password");
                 }
             } else {
-                throw new NotFoundEntityException("Пользователь заблокирован");
+                throw new NotFoundEntityException("This account is blocked follow up administrator");
             }
         } else {
-            throw new NotFoundEntityException("Пользователя с данным логином не существует");
+            throw new NotFoundEntityException("Invalid login or password");
         }
 
     }
