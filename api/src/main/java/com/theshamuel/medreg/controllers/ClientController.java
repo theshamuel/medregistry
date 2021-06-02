@@ -167,7 +167,7 @@ public class ClientController {
         if (!clientRepository.isUniqueClient(client) && !(client.getPassportSerial() != null
                 && client.getPassportSerial().equals("-") && client.getPassportNumber() != null
                 && client.getPassportNumber().equals("-"))) {
-            throw new DuplicateRecordException("Пациент с такими паспортными данными уже заведен");
+            throw new DuplicateRecordException("The client with the ID number has been existed");
         }
         return new ResponseEntity(clientService.save(client), HttpStatus.CREATED);
     }
@@ -216,7 +216,7 @@ public class ClientController {
             currentClient.setModifyDate(LocalDateTime.now());
 
         } else {
-            throw new DuplicateRecordException("Пациент с такими паспортными данными уже заведен");
+            throw new DuplicateRecordException("The client with the ID number has been existed");
         }
         currentClient = clientService.save(currentClient);
         return new ResponseEntity(currentClient, HttpStatus.OK);
