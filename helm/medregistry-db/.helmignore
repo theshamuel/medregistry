@@ -1,0 +1,6 @@
+.git
+.idea
+*.bak
+*.tmp
+*~
+.DS_Store

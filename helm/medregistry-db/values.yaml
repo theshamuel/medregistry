@@ -1,0 +1,26 @@
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  pullPolicy: IfNotPresent
+
+images:
+  db:
+    repository: ghcr.io
+    name: theshamuel/medregdb
+    tag: 2.0.0
+
+tz: Europe/UTC
+
+db:
+  replicas: 2
+  storage:
+    class: "test"
+    size: 10Gi
+  backups:
+    import:
+      enabled: false
+      name: ""
+    export:
+      enabled: false
+      secretName: s3-credentials-secret
