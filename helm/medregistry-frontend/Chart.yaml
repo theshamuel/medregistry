@@ -1,5 +1,5 @@
 apiVersion: v2
-name: medregistry
+name: medregistry-frontend
 description: CRM for Medical Clinic
 type: application
 maintainers:
