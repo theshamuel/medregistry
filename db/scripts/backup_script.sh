@@ -9,13 +9,13 @@ mongo_port=27017
         path_archive="/backup/"$name_archive
 
         echo $name_archive
-        if [ "${MONGO_AUTH}" = true ]; then
+        if [[ "${MONGO_AUTH}" == "true" ]]; then
             mongodump -h localhost -p $mongo_port --username $admin_login --password $admin_pass --authenticationDatabase admin --gzip --db medregDB --archive=$path_archive
         else
             mongodump -h localhost --gzip --db medregDB --archive=$path_archive
         fi
         echo "=>Backup created successfuly!"
-        if [ "${COPY_TO_S3}" = true ]; then
+        if [[ "${COPY_TO_S3}" == true ]]; then
             AWSAccessKeyId=${AWS_ACCESS_KEY_ID}
             AWSSecretKey=${AWS_SECRET_KEY}
             aws_path=${AWS_PATH}

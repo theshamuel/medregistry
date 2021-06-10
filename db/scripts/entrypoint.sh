@@ -9,7 +9,7 @@ echo "MONGO_SERVER=${MONGO_SERVER}, MONGO_PORT=${MONGO_PORT}"
 echo "MONGO_ADMIN=${MONGO_ADMIN}, MONGO_ADMIN_PASSWORD=${MONGO_ADMIN_PASSWORD}, MONGO_DB=${MONGO_DB}"
 echo "MONGO_AUTH=${MONGO_AUTH}"
 
-if [ "${MONGO_AUTH}" = true ]; then
+if [[ "${MONGO_AUTH}" == "true" ]]; then
   (mongod --auth) &(
     sleep 5;
     echo "=> Creating ADMIN pwd"

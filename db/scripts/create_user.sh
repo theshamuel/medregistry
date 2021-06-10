@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "${MONGO_DB}" != "admin" ]; then
+if [[ "${MONGO_DB}" != "admin" ]]; then
     echo "=> Creating a ${MONGO_DB} database user with a password in MongoDB"
     mongo admin -u ${MONGO_ADMIN} -p ${MONGO_ADMIN_PASSWORD} << EOF
     echo "Using ${MONGO_DB} database"
