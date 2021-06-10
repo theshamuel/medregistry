@@ -13,10 +13,10 @@ images:
 tz: Europe/UTC
 
 db:
-  replicas: 2
+  replicas: 1
   storage:
-    class: "test"
-    size: 10Gi
+    class: ""
+    size: 25Gi
   backups:
     import:
       enabled: false
