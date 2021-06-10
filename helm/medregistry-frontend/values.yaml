@@ -15,6 +15,7 @@ tz: Europe/UTC
 ingress:
   enabled: true
   eks:
+    enabled: false
     type: "alb"
   host: "medregistry.example.com"
 

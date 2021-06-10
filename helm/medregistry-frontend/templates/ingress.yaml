@@ -2,22 +2,24 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ template "medregistry.name" . }}
+  name: {{ template "medregistry.name" . }}-ingress
   labels:
   {{- include "medregistry.labels" . | nindent 4 }}
-  {{- if eq (lower .Values.ingress.eks.type) "alb" }}
   annotations:
+  {{- if and (eq (lower .Values.ingress.eks.type) "alb") .Values.ingress.eks.enabled }}
   {{- include "medregistry.eks.albAnnotations" . | nindent 4 }}
   {{- end }}
 spec:
+  tls:
+    - secretName: medregistry-tls-secret
   rules:
     - http:
         paths:
-          - path: /*
+          - path: /
             pathType: Prefix
             backend:
               service:
-                name: {{ include "medregistry.name" . }}-frontend
+                name: {{ include "medregistry.name" . }}-svc
                 port:
                   number: 80
 {{- end }}
