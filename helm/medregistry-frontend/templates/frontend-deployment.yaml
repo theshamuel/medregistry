@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "medregistry.name" . }}
+  name: {{ template "medregistry.name" . }}-deployment
   labels:
   {{- include "medregistry.labels" . | nindent 4 }}
 spec:
