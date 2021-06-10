@@ -17,7 +17,7 @@ ingress:
   eks:
     enabled: false
     type: "alb"
-  host: "medregistry.example.com"
+  host: "medregistry.localhost"
 
 web:
   service:
@@ -36,3 +36,17 @@ web:
       periodSeconds: 5
       timeoutSeconds: 3
       failureThreshold: 10
+
+apiV1:
+  replicas: 1
+  host: "dummy.com"
+  port: 80
+  reports:
+    path: "/reports"
+
+apiV2:
+  replicas: 1
+  host: "dummy.com"
+  port: 80
+  reports:
+    path: "/reports"
