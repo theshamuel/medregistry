@@ -74,6 +74,10 @@ function config($routeProvider, $locationProvider) {
             templateUrl: 'online.html',
             controller: 'OnlineAppointmentsCtrl'
         })
+        .when('/blood-tests', {
+            templateUrl: 'blood-tests.html',
+            controller: 'BloodTestsCtrl'
+        })
         .otherwise({
             redirectTo: '/login'
         });
