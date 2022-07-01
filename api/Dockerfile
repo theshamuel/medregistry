@@ -4,6 +4,7 @@ ADD src /srv/medregistry/src
 ADD pom.xml /srv/medregistry/pom.xml
 ADD Makefile /srv/medregistry/Makefile
 
+LABEL org.opencontainers.image.source='https://github.com/theshamuel/medregistry'
 
 WORKDIR /srv/medregistry
 
