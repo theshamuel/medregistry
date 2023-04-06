@@ -1,5 +1,7 @@
 FROM mongo:3.4
 
+LABEL org.opencontainers.image.source https://github.com/theshamuel/medregistry
+
 ADD archives /archives
 ADD scripts/entrypoint.sh /entrypoint.sh
 ADD scripts/restore.sh /restore.sh
