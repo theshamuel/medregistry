@@ -5,16 +5,16 @@ angular
 
 function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridConstants, i18nService, $uibModal, dialogs, $route, $window) {
     let version_api = "v1";
-    
+
     i18nService.setCurrentLang('ru');
     $scope.lang = 'ru-RU';
     $scope.language = 'Russian';
 
     $scope.colums = [{
-            id: "createdDateLabel",
-            header: 'Дата создания',
-            width: 150
-        },
+        id: "createdDateLabel",
+        header: 'Дата создания',
+        width: 150
+    },
         {
             id: "surname",
             header: 'Фамилия',
@@ -50,7 +50,7 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         let url = "";
         let id = $scope.clientId;
         if (id != null && id != "") {
-            url = "/api/"+version_api+"/clients/" + id + "/consult";
+            url = "/api/" + version_api + "/clients/" + id + "/consult";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataOfHistiryVisits = text;
@@ -60,7 +60,7 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     console.log("FAIL=" + text)
                 }
             });
-            url = "/api/"+version_api+"/clients/" + id + "/ultra";
+            url = "/api/" + version_api + "/clients/" + id + "/ultra";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataOfHistiryUltra = text;
@@ -70,7 +70,7 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     console.log("FAIL=" + text)
                 }
             });
-            url = "/api/"+version_api+"/clients/" + id + "/analyzes";
+            url = "/api/" + version_api + "/clients/" + id + "/analyzes";
             webix.ajax().headers($localStorage.headers.value).sync().get(url, {
                 success: function (text, data, XmlHttpRequest) {
                     dataOfHistiryAnalyzes = text;
@@ -93,18 +93,30 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         let dateReport = new Date();
         let clientId = $scope.clientId;
         let doctorId = "-1";
-        let url = "/api/"+version_api+"/reports/file/clientCard/" + clientId + "/" + doctorId + "/" + dateReport.toJSON();
+        let url = "/api/" + version_api + "/reports/file/clientCard/" + clientId + "/" + doctorId + "/" + dateReport.toJSON();
         webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
             $rootScope.saveByteArray([data], 'Карта_пациента-' + dateReport.toJSON() + '.xls');
         });
     }
 
+    $scope.printNalogSpravka = function () {
+        // let dateReport = new Date();
+        // let clientId = $scope.clientId;
+        // let doctorId = "-1";
+        // let url = "/api/"+version_api+"/reports/file/clientCard/" + clientId + "/" + doctorId + "/" + dateReport.toJSON();
+        // webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
+        //     $rootScope.saveByteArray([data], 'Карта_пациента-' + dateReport.toJSON() + '.xls');
+        // });
+        console.log("hahahah")
+        $$("printNalogSpravke").show();
+    }
+
     webix.ready(function () {
 
         webix.proxy.addHeaders = {
-            $proxy:true,
-            load:function(view, callback, params){
-                webix.ajax().bind(view).headers($localStorage.headers.value).get(this.source, params, callback); 
+            $proxy: true,
+            load: function (view, callback, params) {
+                webix.ajax().bind(view).headers($localStorage.headers.value).get(this.source, params, callback);
             }
         };
         // filter
@@ -117,13 +129,13 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             width: 1200,
             rows: [{
                 cols: [{
-                        gravity: 1.4,
-                        view: "text",
-                        label: "ФИО пациента",
-                        id: "filterClient",
-                        labelWidth: 150,
-                        inputWidth: 500,
-                    },
+                    gravity: 1.4,
+                    view: "text",
+                    label: "ФИО пациента",
+                    id: "filterClient",
+                    labelWidth: 150,
+                    inputWidth: 500,
+                },
                     {
                         gravity: 0.95,
                         view: "text",
@@ -142,18 +154,18 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     {
                         gravity: 0.25,
                         cols: [{
-                                view: "button",
-                                type: "image",
-                                image: "../img/funnel_add_24.png",
-                                value: "Apply",
-                                click: function () {
-                                    $$('table').clearAll();
-                                    let url = $scope.getTableURI(15,0);
-                                    $$('table').load("addHeaders->"+url);
-                                    $$('table').refresh();
-                                    $$('table').setPage(0);
-                                }
-                            },
+                            view: "button",
+                            type: "image",
+                            image: "../img/funnel_add_24.png",
+                            value: "Apply",
+                            click: function () {
+                                $$('table').clearAll();
+                                let url = $scope.getTableURI(15, 0);
+                                $$('table').load("addHeaders->" + url);
+                                $$('table').refresh();
+                                $$('table').setPage(0);
+                            }
+                        },
                             {
                                 view: "button",
                                 type: "image",
@@ -164,8 +176,8 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                     $$('filterPhone').setValue("");
                                     $$('filterClient').setValue("");
                                     $$('table').clearAll();
-                                    let url = $scope.getTableURI(15,0);
-                                    $$('table').load("addHeaders->"+url);
+                                    let url = $scope.getTableURI(15, 0);
+                                    $$('table').load("addHeaders->" + url);
                                     $$('table').refresh();
                                     $$('table').setPage(0);
                                 }
@@ -175,7 +187,211 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                 ]
             }]
         });
-
+        //
+        webix.ui({
+            view: "window",
+            id: "printNalogSpravke",
+            head: "Налоговая справка",
+            modal: true,
+            position: "center",
+            width: 750,
+            autoheight: false,
+            body: {
+                view: "form",
+                id: "editform",
+                complexData: true,
+                elements: [{
+                    view: "text",
+                    label: "Фамилия",
+                    name: "surname",
+                    labelWidth: 90,
+                    invalidMessage: "Обязательное поле"
+                },
+                    {
+                        cols: [{
+                            view: "text",
+                            label: "Имя",
+                            name: "name",
+                            labelWidth: 90
+                        },
+                            {
+                                view: "text",
+                                label: "Отчество",
+                                name: "middlename",
+                                labelWidth: 90
+                            }
+                        ]
+                    },
+                    {
+                        rows: [{
+                            view: "tabbar",
+                            height: 35,
+                            multiview: true,
+                            id: "infoTabs",
+                            value: "generalInfo",
+                            on: {
+                                onBeforeTabClick: $scope.getHistoryVisits
+                            },
+                            options: [{
+                                id: "generalInfo",
+                                css: "common_tab",
+                                value: "Основные сведения"
+                            },
+                                {
+                                    id: "historyVisits",
+                                    css: "common_tab",
+                                    value: "История приемов"
+                                },
+                                {
+                                    id: "historyUltra",
+                                    css: "common_tab",
+                                    value: "УЗИ"
+                                },
+                                {
+                                    id: "historyAnalyzes",
+                                    css: "common_tab",
+                                    value: "Анализы"
+                                }
+                            ],
+                        },
+                            {
+                                css: "bottom_border_tab_header",
+                                cells: [{
+                                    id: "generalInfo",
+                                    view: "layout",
+                                    margin: 8,
+                                    padding: 10,
+                                    rows: [{
+                                        view: "layout",
+                                        label: "Инфо",
+                                        borderless: true,
+                                        rows: [{
+                                            cols: [{
+                                                view: "datepicker",
+                                                editable: true,
+                                                label: "Дата рождения",
+                                                name: "birthday",
+                                                labelWidth: 135,
+                                                width: 265,
+                                            },
+                                                {
+                                                    view: "button",
+                                                    type: "form",
+                                                    value: "printClient",
+                                                    label: "Налог. справка",
+                                                    css: "margin_client_col_nalog_spravka",
+                                                    width: 160,
+                                                    inputWidth: 150,
+                                                    click: function () {
+                                                        $scope.printNalogSpravka();
+                                                    }
+                                                },
+                                                {
+                                                    view: "button",
+                                                    type: "form",
+                                                    value: "printClient",
+                                                    label: "Карта пациента",
+                                                    css: "margin_client_col_client_card",
+                                                    width: 160,
+                                                    inputWidth: 150,
+                                                    click: function () {
+                                                        $scope.printCardClient();
+                                                    }
+                                                },
+                                            ]
+                                        }]
+                                    },
+                                        {
+                                            view: "layout",
+                                            label: "ФИО",
+                                            borderless: true,
+                                            rows: [{
+                                                cols: [{
+                                                    view: "text",
+                                                    label: "Телефон",
+                                                    name: "phone",
+                                                    labelWidth: 135
+                                                },
+                                                    {
+                                                        view: "radio",
+                                                        name: "gender",
+                                                        css: "margin_client_col_sex",
+                                                        options: [{
+                                                            id: "man",
+                                                            value: "Муж."
+                                                        },
+                                                            {
+                                                                id: "woman",
+                                                                value: "Жен."
+                                                            }
+                                                        ]
+                                                    },
+                                                ]
+                                            }]
+                                        },
+                                        {
+                                            view: "layout",
+                                            label: "ФИО",
+                                            borderless: true,
+                                            rows: [{
+                                                cols: [{
+                                                    view: "text",
+                                                    label: "Место работы",
+                                                    name: "workPlace",
+                                                    labelWidth: 135,
+                                                    // inputWidth: 349
+                                                },
+                                                    {
+                                                        gravity: 0.7,
+                                                        view: "text",
+                                                        label: "Должность",
+                                                        name: "workPosition",
+                                                        labelWidth: 100,
+                                                        // inputWidth: 349
+                                                    }
+                                                ]
+                                            }]
+                                        },
+                                    ]
+                                },
+                                ]
+                            }
+                        ],
+                    },
+                    {
+                        cols: [{
+                            view: "button",
+                            type: "form",
+                            value: "Print",
+                            label: "Печатать",
+                            click: function () {
+                                if ($$("editform").validate()) {
+                                    $scope.saveRow();
+                                    if ($scope.serverValidation) {
+                                        this.getTopParentView().hide();
+                                    }
+                                }
+                            }
+                        },
+                            {
+                                view: "button",
+                                value: "Cancel",
+                                label: "Отмена",
+                                click: function () {
+                                    this.getTopParentView().hide();
+                                }
+                            }
+                        ]
+                    }
+                ],
+                rules: {
+                    surname: webix.rules.isNotEmpty,
+                    passportSerial: webix.rules.isNotEmpty,
+                    passportNumber: webix.rules.isNotEmpty
+                }
+            }
+        });
+        //
         webix.ui({
             view: "window",
             id: "editwin",
@@ -189,19 +405,19 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                 id: "editform",
                 complexData: true,
                 elements: [{
-                        view: "text",
-                        label: "Фамилия",
-                        name: "surname",
-                        labelWidth: 90,
-                        invalidMessage: "Обязательное поле"
-                    },
+                    view: "text",
+                    label: "Фамилия",
+                    name: "surname",
+                    labelWidth: 90,
+                    invalidMessage: "Обязательное поле"
+                },
                     {
                         cols: [{
-                                view: "text",
-                                label: "Имя",
-                                name: "name",
-                                labelWidth: 90
-                            },
+                            view: "text",
+                            label: "Имя",
+                            name: "name",
+                            labelWidth: 90
+                        },
                             {
                                 view: "text",
                                 label: "Отчество",
@@ -212,184 +428,198 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     },
                     {
                         rows: [{
-                                view: "tabbar",
-                                height: 35,
-                                multiview: true,
-                                id: "infoTabs",
-                                value: "generalInfo",
-                                on: {
-                                    onBeforeTabClick: $scope.getHistoryVisits
-                                },
-                                options: [{
-                                        id: "generalInfo",
-                                        css: "common_tab",
-                                        value: "Основные сведения"
-                                    },
-                                    {
-                                        id: "historyVisits",
-                                        css: "common_tab",
-                                        value: "История приемов"
-                                    },
-                                    {
-                                        id: "historyUltra",
-                                        css: "common_tab",
-                                        value: "УЗИ"
-                                    },
-                                    {
-                                        id: "historyAnalyzes",
-                                        css: "common_tab",
-                                        value: "Анализы"
-                                    }
-                                ],
+                            view: "tabbar",
+                            height: 35,
+                            multiview: true,
+                            id: "infoTabs",
+                            value: "generalInfo",
+                            on: {
+                                onBeforeTabClick: $scope.getHistoryVisits
                             },
+                            options: [{
+                                id: "generalInfo",
+                                css: "common_tab",
+                                value: "Основные сведения"
+                            },
+                                {
+                                    id: "historyVisits",
+                                    css: "common_tab",
+                                    value: "История приемов"
+                                },
+                                {
+                                    id: "historyUltra",
+                                    css: "common_tab",
+                                    value: "УЗИ"
+                                },
+                                {
+                                    id: "historyAnalyzes",
+                                    css: "common_tab",
+                                    value: "Анализы"
+                                }
+                            ],
+                        },
                             {
                                 css: "bottom_border_tab_header",
                                 cells: [{
-                                        id: "generalInfo",
+                                    id: "generalInfo",
+                                    view: "layout",
+                                    margin: 8,
+                                    padding: 10,
+                                    rows: [{
                                         view: "layout",
-                                        margin: 8,
-                                        padding: 10,
+                                        label: "Инфо",
+                                        borderless: true,
                                         rows: [{
-                                                view: "layout",
-                                                label: "Инфо",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "datepicker",
-                                                            editable: true,
-                                                            label: "Дата рождения",
-                                                            name: "birthday",
-                                                            labelWidth: 135
-                                                        },
-                                                        {
-                                                            view: "button",
-                                                            type: "form",
-                                                            value: "printClient",
-                                                            label: "Карта пациента",
-                                                            css: "margin_client_col_sex",
-                                                            inputWidth: 187,
-                                                            click: function () {
-                                                                $scope.printCardClient();
-                                                            }
-                                                        }
-                                                    ]
-                                                }]
+                                            cols: [{
+                                                view: "datepicker",
+                                                editable: true,
+                                                label: "Дата рождения",
+                                                name: "birthday",
+                                                labelWidth: 135,
+                                                width: 265,
                                             },
-                                            {
-                                                view: "layout",
-                                                label: "ФИО",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "text",
-                                                            label: "Телефон",
-                                                            name: "phone",
-                                                            labelWidth: 135
-                                                        },
-                                                        {
-                                                            view: "radio",
-                                                            name: "gender",
-                                                            css: "margin_client_col_sex",
-                                                            options: [{
-                                                                    id: "man",
-                                                                    value: "Муж."
-                                                                },
-                                                                {
-                                                                    id: "woman",
-                                                                    value: "Жен."
-                                                                }
-                                                            ]
-                                                        },
-                                                    ]
-                                                }]
-                                            },
-                                            {
-                                                view: "layout",
-                                                label: "ФИО",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "text",
-                                                            label: "Место работы",
-                                                            name: "workPlace",
-                                                            labelWidth: 135,
-                                                            // inputWidth: 349
-                                                        },
-                                                        {
-                                                            gravity: 0.7,
-                                                            view: "text",
-                                                            label: "Должность",
-                                                            name: "workPosition",
-                                                            labelWidth: 100,
-                                                            // inputWidth: 349
-                                                        }
-                                                    ]
-                                                }]
-                                            },
-                                            {
-                                                view: "template",
-                                                type: "section",
-                                                template: "<span class='lb_template'>Паспортные данные</span>"
-
-                                            },
-                                            {
-                                                view: "layout",
-                                                label: "Паспорт",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "text",
-                                                            label: "Серия",
-                                                            name: "passportSerial",
-                                                            labelWidth: 130
-                                                        },
-                                                        {
-                                                            view: "text",
-                                                            label: "Номер",
-                                                            name: "passportNumber",
-                                                            css: "margin_client_col",
-                                                            inputWidth: 327,
-                                                            labelWidth: 140
-                                                        }
-                                                    ]
-                                                }]
-                                            },
-                                            {
-                                                view: "layout",
-                                                borderless: true,
-                                                rows: [{
-                                                    cols: [{
-                                                            view: "datepicker",
-                                                            editable: true,
-                                                            label: "Дата выдачи",
-                                                            name: "passportDate",
-                                                            labelWidth: 130
-                                                        },
-                                                        {
-                                                            view: "text",
-                                                            label: "Код подразд.",
-                                                            name: "passportCodePlace",
-                                                            labelWidth: 140,
-                                                            inputWidth: 327,
-                                                            css: "margin_client_col"
-                                                        }
-                                                    ]
-                                                }]
-                                            },
-                                            {
-                                                view: "text",
-                                                label: "Кем выдан",
-                                                name: "passportPlace",
-                                                labelWidth: 130,
-                                            },
-                                            {
-                                                view: "text",
-                                                label: "Адрес",
-                                                name: "address",
-                                                labelWidth: 130,
-                                            }
-                                        ]
+                                                {
+                                                    view: "button",
+                                                    type: "form",
+                                                    value: "printClient",
+                                                    label: "Налог. справка",
+                                                    css: "margin_client_col_nalog_spravka",
+                                                    width: 160,
+                                                    inputWidth: 150,
+                                                    click: function () {
+                                                        $scope.printNalogSpravka();
+                                                    }
+                                                },
+                                                {
+                                                    view: "button",
+                                                    type: "form",
+                                                    value: "printClient",
+                                                    label: "Карта пациента",
+                                                    css: "margin_client_col_client_card",
+                                                    width: 160,
+                                                    inputWidth: 150,
+                                                    click: function () {
+                                                        $scope.printCardClient();
+                                                    }
+                                                },
+                                            ]
+                                        }]
                                     },
+                                        {
+                                            view: "layout",
+                                            label: "ФИО",
+                                            borderless: true,
+                                            rows: [{
+                                                cols: [{
+                                                    view: "text",
+                                                    label: "Телефон",
+                                                    name: "phone",
+                                                    labelWidth: 135
+                                                },
+                                                    {
+                                                        view: "radio",
+                                                        name: "gender",
+                                                        css: "margin_client_col_sex",
+                                                        options: [{
+                                                            id: "man",
+                                                            value: "Муж."
+                                                        },
+                                                            {
+                                                                id: "woman",
+                                                                value: "Жен."
+                                                            }
+                                                        ]
+                                                    },
+                                                ]
+                                            }]
+                                        },
+                                        {
+                                            view: "layout",
+                                            label: "ФИО",
+                                            borderless: true,
+                                            rows: [{
+                                                cols: [{
+                                                    view: "text",
+                                                    label: "Место работы",
+                                                    name: "workPlace",
+                                                    labelWidth: 135,
+                                                    // inputWidth: 349
+                                                },
+                                                    {
+                                                        gravity: 0.7,
+                                                        view: "text",
+                                                        label: "Должность",
+                                                        name: "workPosition",
+                                                        labelWidth: 100,
+                                                        // inputWidth: 349
+                                                    }
+                                                ]
+                                            }]
+                                        },
+                                        {
+                                            view: "template",
+                                            type: "section",
+                                            template: "<span class='lb_template'>Паспортные данные</span>"
+
+                                        },
+                                        {
+                                            view: "layout",
+                                            label: "Паспорт",
+                                            borderless: true,
+                                            rows: [{
+                                                cols: [{
+                                                    view: "text",
+                                                    label: "Серия",
+                                                    name: "passportSerial",
+                                                    labelWidth: 130
+                                                },
+                                                    {
+                                                        view: "text",
+                                                        label: "Номер",
+                                                        name: "passportNumber",
+                                                        css: "margin_client_col",
+                                                        inputWidth: 270,
+                                                        labelWidth: 100
+                                                    }
+                                                ]
+                                            }]
+                                        },
+                                        {
+                                            view: "layout",
+                                            borderless: true,
+                                            rows: [{
+                                                cols: [{
+                                                    view: "datepicker",
+                                                    editable: true,
+                                                    label: "Дата выдачи",
+                                                    name: "passportDate",
+                                                    labelWidth: 130
+                                                },
+                                                    {
+                                                        view: "text",
+                                                        label: "Код подразд.",
+                                                        name: "passportCodePlace",
+                                                        labelWidth: 100,
+                                                        inputWidth: 270,
+                                                        css: "margin_client_col"
+                                                    }
+                                                ]
+                                            }]
+                                        },
+                                        {
+                                            view: "text",
+                                            label: "Кем выдан",
+                                            name: "passportPlace",
+                                            labelWidth: 130,
+                                        },
+                                        {
+                                            view: "text",
+                                            label: "Адрес",
+                                            name: "address",
+                                            labelWidth: 130,
+                                        }
+                                    ]
+                                },
                                     {
                                         id: "historyVisits",
                                         view: "layout",
@@ -404,10 +634,10 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                             select: true,
                                             scroll: "y",
                                             columns: [{
-                                                    id: "dateEvent",
-                                                    header: "Дата приема",
-                                                    width: 200
-                                                },
+                                                id: "dateEvent",
+                                                header: "Дата приема",
+                                                width: 200
+                                            },
                                                 {
                                                     id: "label",
                                                     header: "Услуга",
@@ -442,10 +672,10 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                             select: true,
                                             scroll: "y",
                                             columns: [{
-                                                    id: "dateEvent",
-                                                    header: "Дата приема",
-                                                    width: 200
-                                                },
+                                                id: "dateEvent",
+                                                header: "Дата приема",
+                                                width: 200
+                                            },
                                                 {
                                                     id: "label",
                                                     header: "Услуга",
@@ -480,10 +710,10 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                             select: true,
                                             scroll: "y",
                                             columns: [{
-                                                    id: "dateEvent",
-                                                    header: "Дата приема",
-                                                    width: 200
-                                                },
+                                                id: "dateEvent",
+                                                header: "Дата приема",
+                                                width: 200
+                                            },
                                                 {
                                                     id: "label",
                                                     header: "Услуга",
@@ -510,19 +740,19 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     },
                     {
                         cols: [{
-                                view: "button",
-                                type: "form",
-                                value: "Save",
-                                label: "Сохранить",
-                                click: function () {
-                                    if ($$("editform").validate()) {
-                                        $scope.saveRow();
-                                        if ($scope.serverValidation) {
-                                            this.getTopParentView().hide();
-                                        }
+                            view: "button",
+                            type: "form",
+                            value: "Save",
+                            label: "Сохранить",
+                            click: function () {
+                                if ($$("editform").validate()) {
+                                    $scope.saveRow();
+                                    if ($scope.serverValidation) {
+                                        this.getTopParentView().hide();
                                     }
                                 }
-                            },
+                            }
+                        },
                             {
                                 view: "button",
                                 value: "Cancel",
@@ -560,7 +790,7 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             datafetch: 15,
             datathrottle: 300,
             loadahead: 15,
-            data: webix.ajax().headers($localStorage.headers.value).get("/api/"+version_api+"/clients?count=15&start=0"),
+            data: webix.ajax().headers($localStorage.headers.value).get("/api/" + version_api + "/clients?count=15&start=0"),
             datatype: "json",
             columns: $scope.colums,
             pager: {
@@ -596,14 +826,14 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         });
         $$("editform").bind($$("table"));
     });
-    $scope.getTableURI = function(count,start){
-        let url = "/api/"+version_api+"/clients?count=" + count + "&start=" + start+"&filter=";
-        if ($$("filterClient").getValue()!=null && $$("filterClient").getValue()!="")
-            url = url + "surname="+$$("filterClient").getValue()+";";
-        if ($$("filterPassport").getValue()!=null && $$("filterPassport").getValue()!="")
-            url = url + "passport="+$$("filterPassport").getValue()+";";
-        if ($$("filterPhone").getValue()!=null && $$("filterPhone").getValue()!="")
-            url = url + "phone="+$$("filterPhone").getValue()+";";
+    $scope.getTableURI = function (count, start) {
+        let url = "/api/" + version_api + "/clients?count=" + count + "&start=" + start + "&filter=";
+        if ($$("filterClient").getValue() != null && $$("filterClient").getValue() != "")
+            url = url + "surname=" + $$("filterClient").getValue() + ";";
+        if ($$("filterPassport").getValue() != null && $$("filterPassport").getValue() != "")
+            url = url + "passport=" + $$("filterPassport").getValue() + ";";
+        if ($$("filterPhone").getValue() != null && $$("filterPhone").getValue() != "")
+            url = url + "phone=" + $$("filterPhone").getValue() + ";";
         return url;
     }
     $scope.saveRow = function () {
@@ -611,7 +841,7 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         let id = $scope.clientId;
         data.author = $localStorage.currentUser.login;
         if (!id) {
-            let url = "/api/"+version_api+"/clients/";
+            let url = "/api/" + version_api + "/clients/";
             webix.ajax().headers($localStorage.headers.value).sync()
                 .post(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -630,7 +860,7 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                 });
             $$("editform").bind($$("table"));
         } else {
-            let url = "/api/"+version_api+"/clients/" + id;
+            let url = "/api/" + version_api + "/clients/" + id;
             webix.ajax().headers($localStorage.headers.value).sync()
                 .put(url, JSON.stringify(data), {
                     success: function (text, data, XmlHttpRequest) {
@@ -657,7 +887,7 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             text: "Вы уверены, что хотите удалить пациента?",
             callback: function (result) {
                 if (result) {
-                    let url = "/api/"+version_api+"/clients/" + id;
+                    let url = "/api/" + version_api + "/clients/" + id;
                     webix.ajax().headers($localStorage.headers.value)
                         .del(url, JSON.stringify($$('editform').getValues()), {
                             success: function (text, data, XmlHttpRequest) {

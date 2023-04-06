@@ -177,7 +177,13 @@ body {
     margin-left: 160px !important;
 }
 
+.margin_client_col_nalog_spravka {
+    margin-left: 10px !important;
+}
 
+.margin_client_col_client_card {
+    margin-left: 0px !important;
+}
 /* ---- end client ---- */
 
 
