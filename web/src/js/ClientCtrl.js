@@ -100,19 +100,45 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
     }
 
     $scope.printNalogSpravka = function () {
-        // let dateReport = new Date();
-        // let clientId = $scope.clientId;
-        // let doctorId = "-1";
-        // let url = "/api/"+version_api+"/reports/file/clientCard/" + clientId + "/" + doctorId + "/" + dateReport.toJSON();
-        // webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
-        //     $rootScope.saveByteArray([data], 'Карта_пациента-' + dateReport.toJSON() + '.xls');
-        // });
-        console.log("hahahah")
-        $$("printNalogSpravke").show();
+        let fioPayer = $$("fioOfPayerID").getValue();
+        let familyRelation = $$("familyRelationID").getValue();
+        if ($$("editFormOfNalogSpravka").validate() ||
+        $$("nalogSpravkaDateFromID").getValue() == null ||
+        $$("nalogSpravkaDateToID").getValue() == null || 
+        $$("nalogSpravkaSelfPayerID").getValue() == 1 && 
+        (fioPayer == "" || fioPayer == null || 
+        familyRelation == "" || familyRelation == null)) {
+            webix.alert("Не заполнены обязательные поля!");
+            return
+        }
+
+        let dateReport = new Date();
+        let clientId = $scope.clientId;
+        let clientSurname = $scope.clientSurname;
+        let dateFrom = $$("nalogSpravkaDateFromID").getValue().toJSON();
+        let dateTo = $$("nalogSpravkaDateToID").getValue().toJSON();
+        let isSelfPayer = true; 
+        if ($$("nalogSpravkaSelfPayerID").getValue() == 1) {
+            isSelfPayer = false
+        }
+            let url = "http://localhost:9002/api/v2/reports/file/reportNalogSpravka/" +
+            clientId + 
+            "/" + dateFrom +
+            "/" + dateTo + 
+            "/" + fioPayer + 
+            "/" + familyRelation + 
+            "/" + isSelfPayer +
+            "/report.xlsx";
+            webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
+                $rootScope.saveByteArray([data], 'Налогова_справка-' + clientSurname + '_' + dateReport.toJSON() + '.xlsx');
+                $$("editFormOfNalogSpravka").clear();
+                $$("editFormOfNalogSpravka").clearValidation();
+                $$("editFormOfNalogSpravka").getTopParentView().hide();
+            });
+        
     }
 
     webix.ready(function () {
-
         webix.proxy.addHeaders = {
             $proxy: true,
             load: function (view, callback, params) {
@@ -198,199 +224,106 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             autoheight: false,
             body: {
                 view: "form",
-                id: "editform",
+                id: "editFormOfNalogSpravka",
                 complexData: true,
                 elements: [{
-                    view: "text",
-                    label: "Фамилия",
-                    name: "surname",
-                    labelWidth: 90,
-                    invalidMessage: "Обязательное поле"
+                    view: "checkbox",
+                    id: "nalogSpravkaSelfPayerID",
+                    label: "Налогоплательщим другое лицо (родственник пациента)",
+                    labelWidth: 400,
+                    on: {
+                        onChange: function () {
+                            if (this.getValue() == 1) {
+                                $$("fioOfPayerID").enable();
+                                $$("familyRelationID").enable();
+                            } else {
+                                $$("fioOfPayerID").setValue("");
+                                $$("fioOfPayerID").disable();
+                                //
+                              $$("familyRelationID").setValue("");
+                               $$("familyRelationID").disable();
+                            }
+                        }
+                    },
+                    value: 0
                 },
                     {
-                        cols: [{
-                            view: "text",
-                            label: "Имя",
-                            name: "name",
-                            labelWidth: 90
+                        view: "text",
+                        label: "ФИО налогоплательщика",
+                        id: "fioOfPayerID",
+                        name: "fioOfPayer",
+                        labelWidth: 200,
+                        disabled: true,
+                        invalidMessage: "Обязательное поле"
+                    }, {
+
+                        cells: [{
+                            css: "bottom_border_tab_header",
+                            id: "main",
+                            view: "layout",
+                            margin: 20,
+                            paddingY: 10,
+                            rows: [
+                            {
+                                view: "combo",
+                                label: "Родственная связь с пациентом",
+                                id: "familyRelationID",
+                                name: "familyRelation",
+                                labelWidth: 250,
+                                disabled: true,
+                                options: JSON.parse('[{"id":"spouse", "value":"супруг(а)"},{"id":"daughter", "value":"дочь"},{"id":"son", "value":"сын"},{"id":"mother", "value":"мать"},{"id":"father", "value":"отец"}]')
+                        
+                            },
+                            {
+                                cols: [{
+                                    view: "datepicker",
+                                    editable: true,
+                                    label: "Дата c",
+                                    id: "nalogSpravkaDateFromID",
+                                    name: "dateFrom",
+                                    labelWidth: 65,
+                                    width: 265,
+                                }, {
+                                    view: "datepicker",
+                                    editable: true,
+                                    label: "Дата по",
+                                    id: "nalogSpravkaDateToID",
+                                    name: "dateТо",
+                                    labelWidth: 65,
+                                    width: 265,
+                                },
+                                ]
+                            },
+                            ]
+                        }]
                         },
                             {
-                                view: "text",
-                                label: "Отчество",
-                                name: "middlename",
-                                labelWidth: 90
-                            }
-                        ]
-                    },
-                    {
-                        rows: [{
-                            view: "tabbar",
-                            height: 35,
-                            multiview: true,
-                            id: "infoTabs",
-                            value: "generalInfo",
-                            on: {
-                                onBeforeTabClick: $scope.getHistoryVisits
-                            },
-                            options: [{
-                                id: "generalInfo",
-                                css: "common_tab",
-                                value: "Основные сведения"
-                            },
-                                {
-                                    id: "historyVisits",
-                                    css: "common_tab",
-                                    value: "История приемов"
+                                cols: [{
+                                    view: "button",
+                                    type: "form",
+                                    value: "Print",
+                                    label: "Печатать",
+                                    click: function () {
+                                        $scope.printNalogSpravka();
+                                    }
                                 },
-                                {
-                                    id: "historyUltra",
-                                    css: "common_tab",
-                                    value: "УЗИ"
-                                },
-                                {
-                                    id: "historyAnalyzes",
-                                    css: "common_tab",
-                                    value: "Анализы"
-                                }
-                            ],
-                        },
-                            {
-                                css: "bottom_border_tab_header",
-                                cells: [{
-                                    id: "generalInfo",
-                                    view: "layout",
-                                    margin: 8,
-                                    padding: 10,
-                                    rows: [{
-                                        view: "layout",
-                                        label: "Инфо",
-                                        borderless: true,
-                                        rows: [{
-                                            cols: [{
-                                                view: "datepicker",
-                                                editable: true,
-                                                label: "Дата рождения",
-                                                name: "birthday",
-                                                labelWidth: 135,
-                                                width: 265,
-                                            },
-                                                {
-                                                    view: "button",
-                                                    type: "form",
-                                                    value: "printClient",
-                                                    label: "Налог. справка",
-                                                    css: "margin_client_col_nalog_spravka",
-                                                    width: 160,
-                                                    inputWidth: 150,
-                                                    click: function () {
-                                                        $scope.printNalogSpravka();
-                                                    }
-                                                },
-                                                {
-                                                    view: "button",
-                                                    type: "form",
-                                                    value: "printClient",
-                                                    label: "Карта пациента",
-                                                    css: "margin_client_col_client_card",
-                                                    width: 160,
-                                                    inputWidth: 150,
-                                                    click: function () {
-                                                        $scope.printCardClient();
-                                                    }
-                                                },
-                                            ]
-                                        }]
-                                    },
-                                        {
-                                            view: "layout",
-                                            label: "ФИО",
-                                            borderless: true,
-                                            rows: [{
-                                                cols: [{
-                                                    view: "text",
-                                                    label: "Телефон",
-                                                    name: "phone",
-                                                    labelWidth: 135
-                                                },
-                                                    {
-                                                        view: "radio",
-                                                        name: "gender",
-                                                        css: "margin_client_col_sex",
-                                                        options: [{
-                                                            id: "man",
-                                                            value: "Муж."
-                                                        },
-                                                            {
-                                                                id: "woman",
-                                                                value: "Жен."
-                                                            }
-                                                        ]
-                                                    },
-                                                ]
-                                            }]
-                                        },
-                                        {
-                                            view: "layout",
-                                            label: "ФИО",
-                                            borderless: true,
-                                            rows: [{
-                                                cols: [{
-                                                    view: "text",
-                                                    label: "Место работы",
-                                                    name: "workPlace",
-                                                    labelWidth: 135,
-                                                    // inputWidth: 349
-                                                },
-                                                    {
-                                                        gravity: 0.7,
-                                                        view: "text",
-                                                        label: "Должность",
-                                                        name: "workPosition",
-                                                        labelWidth: 100,
-                                                        // inputWidth: 349
-                                                    }
-                                                ]
-                                            }]
-                                        },
-                                    ]
-                                },
+                                    {
+                                        view: "button",
+                                        value: "Cancel",
+                                        label: "Отмена",
+                                        click: function () {
+                                            this.getTopParentView().hide();
+                                        }
+                                    }
                                 ]
                             }
                         ],
-                    },
-                    {
-                        cols: [{
-                            view: "button",
-                            type: "form",
-                            value: "Print",
-                            label: "Печатать",
-                            click: function () {
-                                if ($$("editform").validate()) {
-                                    $scope.saveRow();
-                                    if ($scope.serverValidation) {
-                                        this.getTopParentView().hide();
-                                    }
-                                }
-                            }
-                        },
-                            {
-                                view: "button",
-                                value: "Cancel",
-                                label: "Отмена",
-                                click: function () {
-                                    this.getTopParentView().hide();
-                                }
-                            }
-                        ]
+                        rules: {
+                            "dateFrom": webix.rules.isNotEmpty,
+                            "dateTo": webix.rules.isNotEmpty
+                        }
                     }
-                ],
-                rules: {
-                    surname: webix.rules.isNotEmpty,
-                    passportSerial: webix.rules.isNotEmpty,
-                    passportNumber: webix.rules.isNotEmpty
-                }
-            }
-        });
+            });
         //
         webix.ui({
             view: "window",
@@ -406,6 +339,7 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                 complexData: true,
                 elements: [{
                     view: "text",
+                    id: "surname",
                     label: "Фамилия",
                     name: "surname",
                     labelWidth: 90,
@@ -487,7 +421,8 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                                                     width: 160,
                                                     inputWidth: 150,
                                                     click: function () {
-                                                        $scope.printNalogSpravka();
+                                                        $scope.clientSurname = $$("surname").getValue();
+                                                        $$("printNalogSpravke").show();
                                                     }
                                                 },
                                                 {
@@ -802,6 +737,7 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             on: {
                 onItemDblClick: function () {
                     $scope.clientId = $$("table").getSelectedId();
+
                     $scope.getHistoryVisits();
                     $$("editform").clearValidation();
                     $$("infoTabs").setValue("generalInfo");
@@ -825,98 +761,99 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             }
         });
         $$("editform").bind($$("table"));
-    });
-    $scope.getTableURI = function (count, start) {
-        let url = "/api/" + version_api + "/clients?count=" + count + "&start=" + start + "&filter=";
-        if ($$("filterClient").getValue() != null && $$("filterClient").getValue() != "")
-            url = url + "surname=" + $$("filterClient").getValue() + ";";
-        if ($$("filterPassport").getValue() != null && $$("filterPassport").getValue() != "")
-            url = url + "passport=" + $$("filterPassport").getValue() + ";";
-        if ($$("filterPhone").getValue() != null && $$("filterPhone").getValue() != "")
-            url = url + "phone=" + $$("filterPhone").getValue() + ";";
-        return url;
-    }
-    $scope.saveRow = function () {
-        let data = $$("editform").getValues();
-        let id = $scope.clientId;
-        data.author = $localStorage.currentUser.login;
-        if (!id) {
-            let url = "/api/" + version_api + "/clients/";
-            webix.ajax().headers($localStorage.headers.value).sync()
-                .post(url, JSON.stringify(data), {
-                    success: function (text, data, XmlHttpRequest) {
-                        $$("table").parse(text);
-                        $scope.serverValidation = true;
-                        $scope.clientId = JSON.parse(text).id;
-                    },
-                    error: function (text, data, XmlHttpRequest) {
-                        $scope.checkAuth(XmlHttpRequest);
-                        $$("editform").markInvalid("passportSerial");
-                        $$("editform").markInvalid("passportNumber");
-                        webix.alert(" " + JSON.parse(text).code + ": \"" + JSON.parse(text).message + "\" ")
-                        $scope.serverValidation = false;
-                        console.log("Fail. Add client - " + id)
-                    }
-                });
-            $$("editform").bind($$("table"));
-        } else {
-            let url = "/api/" + version_api + "/clients/" + id;
-            webix.ajax().headers($localStorage.headers.value).sync()
-                .put(url, JSON.stringify(data), {
-                    success: function (text, data, XmlHttpRequest) {
-                        $$("table").parse(text);
-                        $scope.serverValidation = true;
-                    },
-                    error: function (text, data, XmlHttpRequest) {
-                        $scope.checkAuth(XmlHttpRequest);
-                        $$("editform").markInvalid("passportSerial");
-                        $$("editform").markInvalid("passportNumber");
-                        webix.alert(" " + JSON.parse(text).code + ": \"" + JSON.parse(text).message + "\" ")
-                        $scope.serverValidation = false;
-                        console.log("Fail. Update client - " + id)
-                    }
-                });
+    })
+        ;
+        $scope.getTableURI = function (count, start) {
+            let url = "/api/" + version_api + "/clients?count=" + count + "&start=" + start + "&filter=";
+            if ($$("filterClient").getValue() != null && $$("filterClient").getValue() != "")
+                url = url + "surname=" + $$("filterClient").getValue() + ";";
+            if ($$("filterPassport").getValue() != null && $$("filterPassport").getValue() != "")
+                url = url + "passport=" + $$("filterPassport").getValue() + ";";
+            if ($$("filterPhone").getValue() != null && $$("filterPhone").getValue() != "")
+                url = url + "phone=" + $$("filterPhone").getValue() + ";";
+            return url;
         }
-    }
-
-    $scope.deleteRow = function () {
-        let id = $$("table").getSelectedId();
-        if (!id) return;
-        webix.confirm({
-            title: "Удаление пациента",
-            text: "Вы уверены, что хотите удалить пациента?",
-            callback: function (result) {
-                if (result) {
-                    let url = "/api/" + version_api + "/clients/" + id;
-                    webix.ajax().headers($localStorage.headers.value)
-                        .del(url, JSON.stringify($$('editform').getValues()), {
-                            success: function (text, data, XmlHttpRequest) {
-                                $$("table").remove(id);
-                            },
-                            error: function (text, data, XmlHttpRequest) {
-                                $scope.checkAuth(XmlHttpRequest);
-                                console.log("Fail. Delete client - " + id)
-                            }
-                        });
-                }
+        $scope.saveRow = function () {
+            let data = $$("editform").getValues();
+            let id = $scope.clientId;
+            data.author = $localStorage.currentUser.login;
+            if (!id) {
+                let url = "/api/" + version_api + "/clients/";
+                webix.ajax().headers($localStorage.headers.value).sync()
+                    .post(url, JSON.stringify(data), {
+                        success: function (text, data, XmlHttpRequest) {
+                            $$("table").parse(text);
+                            $scope.serverValidation = true;
+                            $scope.clientId = JSON.parse(text).id;
+                        },
+                        error: function (text, data, XmlHttpRequest) {
+                            $scope.checkAuth(XmlHttpRequest);
+                            $$("editform").markInvalid("passportSerial");
+                            $$("editform").markInvalid("passportNumber");
+                            webix.alert(" " + JSON.parse(text).code + ": \"" + JSON.parse(text).message + "\" ")
+                            $scope.serverValidation = false;
+                            console.log("Fail. Add client - " + id)
+                        }
+                    });
+                $$("editform").bind($$("table"));
+            } else {
+                let url = "/api/" + version_api + "/clients/" + id;
+                webix.ajax().headers($localStorage.headers.value).sync()
+                    .put(url, JSON.stringify(data), {
+                        success: function (text, data, XmlHttpRequest) {
+                            $$("table").parse(text);
+                            $scope.serverValidation = true;
+                        },
+                        error: function (text, data, XmlHttpRequest) {
+                            $scope.checkAuth(XmlHttpRequest);
+                            $$("editform").markInvalid("passportSerial");
+                            $$("editform").markInvalid("passportNumber");
+                            webix.alert(" " + JSON.parse(text).code + ": \"" + JSON.parse(text).message + "\" ")
+                            $scope.serverValidation = false;
+                            console.log("Fail. Update client - " + id)
+                        }
+                    });
             }
-        });
-    }
+        }
 
-    $scope.addRow = function () {
-        $$("table").clearSelection();
-        $$("editform").clear();
-        $$("editform").clearValidation();
-        $$("infoTabs").setValue("generalInfo");
-        $$("editwin").show();
-        $scope.clientId = null;
-        $scope.getHistoryVisits();
-    }
+        $scope.deleteRow = function () {
+            let id = $$("table").getSelectedId();
+            if (!id) return;
+            webix.confirm({
+                title: "Удаление пациента",
+                text: "Вы уверены, что хотите удалить пациента?",
+                callback: function (result) {
+                    if (result) {
+                        let url = "/api/" + version_api + "/clients/" + id;
+                        webix.ajax().headers($localStorage.headers.value)
+                            .del(url, JSON.stringify($$('editform').getValues()), {
+                                success: function (text, data, XmlHttpRequest) {
+                                    $$("table").remove(id);
+                                },
+                                error: function (text, data, XmlHttpRequest) {
+                                    $scope.checkAuth(XmlHttpRequest);
+                                    console.log("Fail. Delete client - " + id)
+                                }
+                            });
+                    }
+                }
+            });
+        }
 
-    $scope.checkAuth = function (XmlHttpRequest) {
-        if (XmlHttpRequest.status === 401) {
-            $localStorage.tookenExpired = true;
-            $scope.logout();
+        $scope.addRow = function () {
+            $$("table").clearSelection();
+            $$("editform").clear();
+            $$("editform").clearValidation();
+            $$("infoTabs").setValue("generalInfo");
+            $$("editwin").show();
+            $scope.clientId = null;
+            $scope.getHistoryVisits();
+        }
+
+        $scope.checkAuth = function (XmlHttpRequest) {
+            if (XmlHttpRequest.status === 401) {
+                $localStorage.tookenExpired = true;
+                $scope.logout();
+            }
         }
     }
-}
