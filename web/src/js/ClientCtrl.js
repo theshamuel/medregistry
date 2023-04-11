@@ -121,20 +121,20 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         if ($$("nalogSpravkaSelfPayerID").getValue() == 1) {
             isSelfPayer = false
         }
-            let url = "http://localhost:9002/api/v2/reports/file/reportNalogSpravka/" +
-            clientId + 
-            "/" + dateFrom +
-            "/" + dateTo + 
-            "/" + fioPayer + 
-            "/" + familyRelation + 
-            "/" + isSelfPayer +
-            "/report.xlsx";
-            webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
-                $rootScope.saveByteArray([data], 'Налогова_справка-' + clientSurname + '_' + dateReport.toJSON() + '.xlsx');
-                $$("editFormOfNalogSpravka").clear();
-                $$("editFormOfNalogSpravka").clearValidation();
-                $$("editFormOfNalogSpravka").getTopParentView().hide();
-            });
+        let url = "/api/v2/reports/file/reportNalogSpravka/" +
+        clientId + 
+        "/" + dateFrom +
+        "/" + dateTo + 
+        "/" + fioPayer + 
+        "/" + familyRelation + 
+        "/" + isSelfPayer +
+        "/report.xlsx";
+        webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
+            $rootScope.saveByteArray([data], 'Налогова_справка-' + clientSurname + '_' + dateReport.toJSON() + '.xlsx');
+            $$("editFormOfNalogSpravka").clear();
+            $$("editFormOfNalogSpravka").clearValidation();
+            $$("editFormOfNalogSpravka").getTopParentView().hide();
+        });
         
     }
 
@@ -229,7 +229,7 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                 elements: [{
                     view: "checkbox",
                     id: "nalogSpravkaSelfPayerID",
-                    label: "Налогоплательщим другое лицо (родственник пациента)",
+                    label: "Налогоплательщик другое лицо (родственник пациента)",
                     labelWidth: 400,
                     on: {
                         onChange: function () {
