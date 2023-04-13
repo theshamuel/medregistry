@@ -123,7 +123,7 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
         if ($$("nalogSpravkaSelfPayerID").getValue() == 1) {
             isSelfPayer = false
         }
-        let url = "http://localhost:9002/api/v2/reports/file/reportNalogSpravka/" +
+        let url = "/api/v2/reports/file/reportNalogSpravka/" +
             clientId +
             "/" + dateFrom +
             "/" + dateTo +
