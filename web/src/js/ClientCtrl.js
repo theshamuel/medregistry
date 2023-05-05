@@ -133,7 +133,7 @@ function ClientCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             "/" + isSelfPayer +
             "/report.xlsx";
         webix.ajax().response("blob").headers($localStorage.headers.value).get(url, function (text, data) {
-            $rootScope.saveByteArray([data], 'Налогова_справка-' + clientSurname + '_' + dateReport.toJSON() + '.xlsx');
+            $rootScope.saveByteArray([data], 'Налоговая_справка-' + clientSurname + '_' + dateReport.toJSON() + '.xlsx');
             $$("nalogSpravkaSelfPayerID").setValue(0);
             $$("editFormOfNalogSpravka").clear();
             $$("editFormOfNalogSpravka").clearValidation();
