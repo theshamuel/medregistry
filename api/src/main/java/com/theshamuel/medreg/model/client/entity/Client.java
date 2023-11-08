@@ -81,6 +81,10 @@ public class Client extends BaseEntity {
     @Field("address")
     private String address;
 
+    //email
+    @Field("email")
+    private String email;
+
     /**
      * Gets name.
      *
@@ -357,6 +361,25 @@ public class Client extends BaseEntity {
      */
     public void setAddress(String address) {
         this.address = address;
+    }
+
+
+    /**
+     * Sets email.
+     *
+     * @param email the email
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * Gets email.
+     *
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
     }
 
     @Override

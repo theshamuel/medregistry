@@ -164,6 +164,7 @@ public class ClientController {
         client.setName(client.getName().trim());
         client.setSurname(client.getSurname().trim());
         client.setMiddlename(client.getMiddlename().trim());
+        client.setEmail(client.getEmail().trim());
         if (!clientRepository.isUniqueClient(client) && !(client.getPassportSerial() != null
                 && client.getPassportSerial().equals("-") && client.getPassportNumber() != null
                 && client.getPassportNumber().equals("-"))) {
@@ -202,7 +203,7 @@ public class ClientController {
             currentClient.setAddress(client.getAddress());
             currentClient.setBirthday(client.getBirthday());
             currentClient.setGender(client.getGender());
-
+            
             currentClient.setPassportSerial(client.getPassportSerial());
             currentClient.setPassportNumber(client.getPassportNumber());
             currentClient.setPassportCodePlace(client.getPassportCodePlace());
@@ -212,6 +213,7 @@ public class ClientController {
             currentClient.setWorkPlace(client.getWorkPlace());
             currentClient.setWorkPosition(client.getWorkPosition());
             currentClient.setPhone(client.getPhone());
+            currentClient.setEmail(client.getEmail());
 
             currentClient.setModifyDate(LocalDateTime.now());
 
