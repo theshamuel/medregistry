@@ -14,9 +14,9 @@
 package com.theshamuel.medreg.model.report.dao;
 
 import com.theshamuel.medreg.model.report.entity.Report;
-import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
-
+import com.theshamuel.medreg.model.service.entity.Service;
 import java.util.List;
+import org.springframework.data.mongodb.core.MongoOperations;
 
 /**
  * The interface Report operations.
@@ -26,19 +26,19 @@ public interface ReportOperations {
     /**
      * Is unique report boolean.
      *
-     * @param customerService  the customerService
+     * @param service  the service
      * @param template the template
      * @return the boolean (true - unique, false - not)
      */
-    boolean isUniqueReport(CustomerService customerService, String template);
+    boolean isUniqueReport(Service service, String template);
 
     /**
-     * Find by customerService list.
+     * Find by service list.
      *
-     * @param customerService the customerService
+     * @param service the service
      * @return the list
      */
-    List<Report> findByService(CustomerService customerService);
+    List<Report> findByService(Service service);
 
     /**
      * Find common reports list.
@@ -47,4 +47,10 @@ public interface ReportOperations {
      */
     List<Report> findCommonReports();
 
+    /**
+     * Sets mongo.
+     *
+     * @param mongo the mongo
+     */
+    void setMongo(MongoOperations mongo);
 }

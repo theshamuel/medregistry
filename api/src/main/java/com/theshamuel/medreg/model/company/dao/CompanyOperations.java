@@ -13,6 +13,9 @@
  */
 package com.theshamuel.medreg.model.company.dao;
 
+
+import org.springframework.data.mongodb.core.MongoOperations;
+
 /**
  * The interface Company operations class.
  *
@@ -20,4 +23,10 @@ package com.theshamuel.medreg.model.company.dao;
  */
 public interface CompanyOperations {
 
+    /**
+     * Sets mongo.
+     *
+     * @param mongo the mongo
+     */
+    void setMongo(MongoOperations mongo);
 }

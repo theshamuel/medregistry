@@ -80,7 +80,7 @@ public class ReportParamsService {
                 }
                 return "";
             case "[clientCardNum]":
-                if (client.isEmpty() || client.get().getCardNumber() == null) {
+                if (client.isPresent() || client.get().getCardNumber() == null) {
                     client.get().setCardNumber(Long.valueOf(
                             sequenceRepository.getNextSequence("clientCardNum")));
                     clientRepository.save(client.get());

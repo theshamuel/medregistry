@@ -20,8 +20,7 @@ import com.theshamuel.medreg.model.client.dao.ClientRepository;
 import com.theshamuel.medreg.model.client.entity.Client;
 import com.theshamuel.medreg.model.client.entity.History;
 import com.theshamuel.medreg.model.client.service.ClientService;
-import com.theshamuel.medreg.model.customerservice.dao.CustomerServiceRepository;
-import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
+import com.theshamuel.medreg.model.service.dao.ServiceRepository;
 import com.theshamuel.medreg.model.visit.dao.VisitRepository;
 import com.theshamuel.medreg.model.visit.entity.Visit;
 import com.theshamuel.medreg.utils.Utils;
@@ -51,24 +50,24 @@ public class ClientServiceImpl extends BaseServiceImpl<Client, Client> implement
     VisitRepository visitRepository;
 
     /**
-     * The CustomerService repository.
+     * The Service repository.
      */
-    CustomerServiceRepository customerServiceRepository;
+    ServiceRepository serviceRepository;
 
     /**
      * Instantiates a new Client service.
      *
      * @param clientRepository  the client repository
      * @param visitRepository   the visit repository
-     * @param customerServiceRepository the service repository
+     * @param serviceRepository the service repository
      */
     @Autowired
     public ClientServiceImpl(ClientRepository clientRepository, VisitRepository visitRepository,
-            CustomerServiceRepository customerServiceRepository) {
+            ServiceRepository serviceRepository) {
         super(clientRepository);
         this.clientRepository = clientRepository;
         this.visitRepository = visitRepository;
-        this.customerServiceRepository = customerServiceRepository;
+        this.serviceRepository = serviceRepository;
     }
 
     /**
@@ -80,19 +79,21 @@ public class ClientServiceImpl extends BaseServiceImpl<Client, Client> implement
         List<Visit> visits = visitRepository.findAllClientVisits(clientId, category);
         List<History> histories = new ArrayList<>();
 
-        for (Visit e : visits) {
-            Optional<List<CustomerService>> services = Optional
+        visits.forEach(e -> {
+            Optional<List<com.theshamuel.medreg.model.service.entity.Service>> services = Optional
                     .ofNullable(e.getServices());
 
-            services.ifPresent(item -> item.forEach(i -> {
-                if (category.equals(i.getCategory())) {
-                    Optional<LocalDate> dateEvent = Optional.ofNullable(e.getDateEvent());
-                    histories.add(new History(i.getLabel(),
-                            dateEvent.map(localDate -> localDate
-                                    .format(BaseEntity.formatterDate)).orElse("")));
-                }
-            }));
-        }
+            services.ifPresent(item -> {
+                item.forEach(i -> {
+                    if (category.equals(i.getCategory())) {
+                        Optional<LocalDate> dateEvent = Optional.ofNullable(e.getDateEvent());
+                        histories.add(new History(i.getLabel(),
+                                dateEvent.isPresent() ? dateEvent.get()
+                                        .format(BaseEntity.formatterDate) : ""));
+                    }
+                });
+            });
+        });
 
         return histories;
     }
@@ -102,9 +103,9 @@ public class ClientServiceImpl extends BaseServiceImpl<Client, Client> implement
     public Client save(Client dto) {
         if (!dto.getPassportSerial().equals("-") && !dto.getPassportNumber().equals("-")) {
             String passportSerial = Utils
-                    .deleteNotNeedSymbol(dto.getPassportSerial().trim(), Utils.BAD_SYMBOLS);
+                    .deleteNotNeedSymbol(dto.getPassportSerial().trim(), Utils.badSymbols);
             String passportNumber = Utils
-                    .deleteNotNeedSymbol(dto.getPassportNumber().trim(), Utils.BAD_SYMBOLS);
+                    .deleteNotNeedSymbol(dto.getPassportNumber().trim(), Utils.badSymbols);
             if (passportSerial.length() > 0 && passportNumber.length() > 0) {
                 dto.setPassportSerial(passportSerial);
                 dto.setPassportNumber(passportNumber);

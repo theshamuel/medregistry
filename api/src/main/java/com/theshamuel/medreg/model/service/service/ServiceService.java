@@ -11,21 +11,21 @@
  * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
-package com.theshamuel.medreg.model.customerservice.service;
+package com.theshamuel.medreg.model.service.service;
 
 import com.theshamuel.medreg.model.baseclasses.service.BaseService;
-import com.theshamuel.medreg.model.customerservice.dto.CustomerServiceDto;
-import com.theshamuel.medreg.model.customerservice.entity.PersonalRate;
-import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
+import com.theshamuel.medreg.model.service.dto.ServiceDto;
+import com.theshamuel.medreg.model.service.entity.PersonalRate;
+import com.theshamuel.medreg.model.service.entity.Service;
 import java.math.BigInteger;
 import java.util.List;
 
 /**
- * The interface CustomerService service.
+ * The interface Service service.
  *
  * @author Alex Gladkikh
  */
-public interface CustomerServiceService extends BaseService<CustomerServiceDto, CustomerService> {
+public interface ServiceService extends BaseService<ServiceDto, Service> {
 
     /**
      * Gets personal rates by service id.

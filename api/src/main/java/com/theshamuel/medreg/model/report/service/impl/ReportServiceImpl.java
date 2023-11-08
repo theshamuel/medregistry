@@ -30,14 +30,13 @@ import com.theshamuel.medreg.model.report.entity.ReportOfWorkDayByDoctor;
 import com.theshamuel.medreg.model.report.entity.ReportOfWorkDayRecord;
 import com.theshamuel.medreg.model.report.entity.RootReportByDoctor;
 import com.theshamuel.medreg.model.report.service.ReportService;
-import com.theshamuel.medreg.model.customerservice.dao.CustomerServiceRepository;
-import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
-import com.theshamuel.medreg.model.customerservice.entity.PersonalRate;
-import com.theshamuel.medreg.model.customerservice.service.CustomerServiceService;
+import com.theshamuel.medreg.model.service.dao.ServiceRepository;
+import com.theshamuel.medreg.model.service.entity.PersonalRate;
+import com.theshamuel.medreg.model.service.entity.Service;
+import com.theshamuel.medreg.model.service.service.ServiceService;
 import com.theshamuel.medreg.model.types.CategoryOfService;
 import com.theshamuel.medreg.model.visit.dao.VisitRepository;
 import com.theshamuel.medreg.model.visit.entity.Visit;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +54,6 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -78,6 +76,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
 /**
@@ -93,32 +92,33 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
     private final Environment environment;
     private ReportRepository reportRepository;
     private VisitRepository visitRepository;
-    private CustomerServiceRepository customerServiceRepository;
+    private ServiceRepository serviceRepository;
     private AppointmentService appointmentService;
-    private CustomerServiceService customerServiceService;
+    private ServiceService serviceService;
     private DoctorRepository doctorRepository;
     private CompanyRepository companyRepository;
 
     /**
      * Instantiates a new Report service.
      *
-     * @param reportRepository          the report repository
-     * @param visitRepository           the visit repository
-     * @param customerServiceRepository the service repository
-     * @param appointmentService        the appointment service
-     * @param customerServiceService    the service service
-     * @param doctorRepository          the doctor repository
-     * @param companyRepository         the company repository
+     * @param reportRepository   the report repository
+     * @param visitRepository    the visit repository
+     * @param serviceRepository  the service repository
+     * @param appointmentService the appointment service
+     * @param serviceService     the service service
+     * @param doctorRepository   the doctor repository
+     * @param companyRepository  the company repository
      */
+    @Autowired
     public ReportServiceImpl(ReportRepository reportRepository, VisitRepository visitRepository,
-                             CustomerServiceRepository customerServiceRepository, AppointmentService appointmentService,
-                             CustomerServiceService customerServiceService, DoctorRepository doctorRepository,
+                             ServiceRepository serviceRepository, AppointmentService appointmentService,
+                             ServiceService serviceService, DoctorRepository doctorRepository,
                              CompanyRepository companyRepository, ReportParamsService reportParamsService, Environment environment) {
         super(reportRepository);
         this.reportRepository = reportRepository;
         this.visitRepository = visitRepository;
-        this.customerServiceRepository = customerServiceRepository;
-        this.customerServiceService = customerServiceService;
+        this.serviceRepository = serviceRepository;
+        this.serviceService = serviceService;
         this.appointmentService = appointmentService;
         this.doctorRepository = doctorRepository;
         this.companyRepository = companyRepository;
@@ -132,8 +132,8 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
      */
     @Override
     public boolean isUniqueReport(String serviceId, String template) {
-        CustomerService customerService = customerServiceRepository.findOne(serviceId);
-        return reportRepository.isUniqueReport(customerService, template);
+        Service service = serviceRepository.findOne(serviceId);
+        return reportRepository.isUniqueReport(service, template);
     }
 
 
@@ -148,7 +148,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
             Optional<List> services = Optional.ofNullable(e.getServices());
             services.ifPresent(i -> {
                 i.stream().distinct().forEachOrdered(action -> {
-                    String serviceId = ((CustomerService) action).getId().split("MEDREG")[0];
+                    String serviceId = ((Service) action).getId().split("MEDREG")[0];
                     result.addAll(getReportsByService(serviceId));
                 });
             });
@@ -164,7 +164,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
     public List<ReportDto> getReportsByService(String serviceId) {
         List result = new ArrayList();
         result.addAll(getCommonReports());
-        Optional<CustomerService> service = Optional.ofNullable(customerServiceRepository.findOne(serviceId));
+        Optional<Service> service = Optional.ofNullable(serviceRepository.findOne(serviceId));
         service.ifPresent(e -> {
             result.addAll(reportRepository.findByService(e).stream().map(i -> obj2dto(i))
                     .collect(Collectors.toList()));
@@ -464,7 +464,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
                                                 .get(j).getDoctorPayTypePersonal().equals("percent")
                                                 ? records.get(j).getDoctorPayPersonal() + "%"
                                                 : records.get(j).getDoctorPayPersonal()
-                                                + " руб.");
+                                                        + " руб.");
                                 if (records.get(j).getDoctorPayTypePersonal() != null && records
                                         .get(j).getDoctorPayTypePersonal().equals("percent")) {
                                     ((XWPFTable) element).getRows().get(recordRow).getCell(4)
@@ -581,7 +581,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
      */
     @Override
     public byte[] getReportTemplate(String clientId, String doctorId, String reportId,
-                                    String visitId, LocalDate dateEvent) {
+            String visitId, LocalDate dateEvent) {
         logger.info("CALL getReportClientCard START - {}", LocalDateTime.now()
                 .format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss", Locale.getDefault())));
         Report report = reportRepository.findOne(reportId);
@@ -695,7 +695,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
      */
     @Override
     public byte[] getReportContract(String clientId, String doctorId, String visitId,
-                                    LocalDate dateEvent) {
+            LocalDate dateEvent) {
         logger.info("CALL getReportContract START - {}", LocalDateTime.now()
                 .format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss", Locale.getDefault())));
         byte[] resultFile = null;
@@ -990,13 +990,13 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
      */
     @Override
     public Report dto2obj(ReportDto reportDto) {
-        CustomerService customerService = null;
+        Service service = null;
         if (reportDto != null && reportDto.getServiceId() != null) {
-            customerService = customerServiceRepository.findOne(reportDto.getServiceId());
+            service = serviceRepository.findOne(reportDto.getServiceId());
         }
 
         return new Report(reportDto.getId(), reportDto.getCreatedDate(), reportDto.getModifyDate(),
-                reportDto.getAuthor(), reportDto.getLabel(), customerService, reportDto.getTemplate());
+                reportDto.getAuthor(), reportDto.getLabel(), service, reportDto.getTemplate());
 
     }
 
@@ -1013,9 +1013,9 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
 
         List<ReportOfWorkDayRecord> records = new ArrayList<>();
         BigInteger sum = BigInteger.valueOf(0);
-        List<CustomerService> customerServices = visit.getServices();
-        if (customerServices != null) {
-            customerServices.forEach(service -> {
+        List<Service> services = visit.getServices();
+        if (services != null) {
+            services.forEach(service -> {
                 ReportOfWorkDayRecord tmpRecord = new ReportOfWorkDayRecord(service.getId(),
                         service.getLabel(), service.getPrice());
                 //Calculation new price with discount
@@ -1028,15 +1028,15 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
                     tmpRecord.setLabel(
                             tmpRecord.getLabel() + " (со скидкой " + service.getDiscount() + "%)");
                 }
-                if (records.contains(tmpRecord) && !customerServiceService
+                if (records.contains(tmpRecord) && !serviceService
                         .hasPersonalRate(service.getId(), visit.getDoctor().getId())) {
                     ReportOfWorkDayRecord duplicate = records.stream()
                             .filter(i -> i.equals(tmpRecord)).collect(Collectors.toList()).get(0);
                     duplicate.setAmount(duplicate.getAmount() + 1);
                 } else {
-                    if (customerServiceService
+                    if (serviceService
                             .hasPersonalRate(service.getId(), visit.getDoctor().getId())) {
-                        tmpRecord.setPrice(customerServiceService.getPriceFromPersonalRate(service.getId(),
+                        tmpRecord.setPrice(serviceService.getPriceFromPersonalRate(service.getId(),
                                 visit.getDoctor().getId()));
                     }
                     if (records.contains(tmpRecord)) {
@@ -1077,12 +1077,12 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
         BigInteger totalSum = BigInteger.valueOf(0);
         final BigInteger[] terminalSum = {BigInteger.valueOf(0)};
         visits.forEach(visit -> {
-            List<CustomerService> customerServices = visit.getServices();
+            List<Service> services = visit.getServices();
             if (visit.getTerminalSum() != null) {
                 terminalSum[0] = terminalSum[0].add(visit.getTerminalSum());
             }
-            if (customerServices != null) {
-                customerServices.forEach(service -> {
+            if (services != null) {
+                services.forEach(service -> {
                     String serviceId = service.getId().split("MEDREG")[0];
 
                     ReportOfWorkDayRecord tmpRecord = new ReportOfWorkDayRecord(service.getId(),
@@ -1094,9 +1094,9 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
                         if (listDoctor != null) {
                             for (Doctor doctor : listDoctor) {
                                 String doctorId = doctor.getId();
-                                BigInteger contractorRate = customerServiceService
+                                BigInteger contractorRate = serviceService
                                         .getPersonalRateByServiceIdAndDoctorId(serviceId, doctorId)
-                                        != null ? customerServiceService
+                                        != null ? serviceService
                                         .getPersonalRateByServiceIdAndDoctorId(serviceId, doctorId)
                                         .getDoctorPay() : BigInteger.valueOf(0);
                                 if (contractorRate != null) {
@@ -1117,15 +1117,15 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
                                 tmpRecord.getLabel() + " (со скидкой " + service.getDiscount()
                                         + "%)");
                     }
-                    if (records.contains(tmpRecord) && !customerServiceService
+                    if (records.contains(tmpRecord) && !serviceService
                             .hasPersonalRate(service.getId(), visit.getDoctor().getId())) {
                         ReportOfWorkDayRecord duplicate = records.stream()
                                 .filter(i -> i.equals(tmpRecord)).collect(Collectors.toList())
                                 .get(0);
                         duplicate.setAmount(duplicate.getAmount() + 1);
                     } else {
-                        if (customerServiceService.hasPersonalRate(serviceId, visit.getDoctor().getId())) {
-                            tmpRecord.setPrice(customerServiceService.getPriceFromPersonalRate(serviceId,
+                        if (serviceService.hasPersonalRate(serviceId, visit.getDoctor().getId())) {
+                            tmpRecord.setPrice(serviceService.getPriceFromPersonalRate(serviceId,
                                     visit.getDoctor().getId()));
                         }
                         if (records.contains(tmpRecord)) {
@@ -1174,9 +1174,9 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
         Set<String> hasPcrByDoctorSet = new HashSet<>();
         visits.forEach(visit -> {
             hasPcrByDoctorSet.clear();
-            List<CustomerService> customerServices = visit.getServices();
-            if (customerServices != null) {
-                customerServices.forEach(service -> {
+            List<Service> services = visit.getServices();
+            if (services != null) {
+                services.forEach(service -> {
                     ReportOfWorkDayByDoctor reportOfWorkDayByDoctor = new ReportOfWorkDayByDoctor();
                     reportOfWorkDayByDoctor.setDoctorId(visit.getDoctor().getId());
                     reportOfWorkDayByDoctor.setDoctorFio(visit.getDoctor().getValue());
@@ -1186,9 +1186,9 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
                             visit.getDoctor().getExcludeFromReport() != null
                                     && visit.getDoctor().getExcludeFromReport() < 1)) {
                         if (visit.getDoctor() != null && serviceId != null &&
-                                customerServiceService.hasPersonalRate(serviceId, visit.getDoctor().getId())
+                                serviceService.hasPersonalRate(serviceId, visit.getDoctor().getId())
                                 && !service.getCategory().equals(CategoryOfService.MAZOK)) {
-                            PersonalRate personalRate = customerServiceService
+                            PersonalRate personalRate = serviceService
                                     .getPersonalRateByServiceIdAndDoctorId(serviceId,
                                             visit.getDoctor().getId());
                             if (personalRate.getDoctorPay() != null
@@ -1204,14 +1204,14 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
                                             && tmpReportOfWorkDay.getRecords() != null) {
                                         List<ReportOfWorkDayRecord> list = tmpReportOfWorkDay
                                                 .getRecords();
-                                        BigInteger priceFromPersonalRate = customerServiceService
+                                        BigInteger priceFromPersonalRate = serviceService
                                                 .getPriceFromPersonalRate(serviceId,
                                                         visit.getDoctor().getId());
                                         if (service.getCategory().equals(CategoryOfService.PCR)
                                                 && !hasPcrByDoctorSet
                                                 .add(visit.getDoctor().getId())) {
                                             priceFromPersonalRate = service.getPrice();
-                                            personalRate = customerServiceService
+                                            personalRate = serviceService
                                                     .getPersonalRateByServiceIdAndDoctorId(
                                                             serviceId, visit.getDoctor().getId());
                                         } else if (service.getCategory()
@@ -1237,12 +1237,12 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
                                     }
                                 } else {
                                     List<ReportOfWorkDayRecord> list = new ArrayList<>();
-                                    BigInteger priceFromPersonalRate = customerServiceService
+                                    BigInteger priceFromPersonalRate = serviceService
                                             .getPriceFromPersonalRate(serviceId,
                                                     visit.getDoctor().getId());
                                     if (service.getCategory().equals(CategoryOfService.PCR)
                                             && hasPcrByDoctorSet.add(visit.getDoctor().getId())) {
-                                        priceFromPersonalRate = customerServiceService
+                                        priceFromPersonalRate = serviceService
                                                 .getPriceFromPersonalRate(serviceId,
                                                         doctorRepository
                                                                 .findBySurnameStrong("лаборатория")
@@ -1251,7 +1251,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportDto, Report> implem
                                                                 .size() > 0 ? doctorRepository
                                                                 .findBySurnameStrong("лаборатория")
                                                                 .get(0).getId() : "-1");
-                                        personalRate = customerServiceService
+                                        personalRate = serviceService
                                                 .getPersonalRateByServiceIdAndDoctorId(serviceId,
                                                         doctorRepository
                                                                 .findBySurnameStrong("лаборатория")

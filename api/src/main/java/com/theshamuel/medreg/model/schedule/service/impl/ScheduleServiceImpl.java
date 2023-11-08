@@ -40,8 +40,8 @@ import org.springframework.stereotype.Service;
 public class ScheduleServiceImpl extends BaseServiceImpl<ScheduleDto, Schedule> implements
         ScheduleService {
 
-    private final ScheduleRepository scheduleRepository;
-    private final DoctorRepository doctorRepository;
+    private ScheduleRepository scheduleRepository;
+    private DoctorRepository doctorRepository;
 
     /**
      * Instantiates a new Schedule service.
@@ -49,7 +49,8 @@ public class ScheduleServiceImpl extends BaseServiceImpl<ScheduleDto, Schedule> 
      * @param scheduleRepository the schedule repository
      * @param doctorRepository   the doctor repository
      */
-    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, DoctorRepository doctorRepository) {
+    public ScheduleServiceImpl(ScheduleRepository scheduleRepository,
+            DoctorRepository doctorRepository) {
         super(scheduleRepository);
         this.scheduleRepository = scheduleRepository;
         this.doctorRepository = doctorRepository;
@@ -62,13 +63,13 @@ public class ScheduleServiceImpl extends BaseServiceImpl<ScheduleDto, Schedule> 
         } else {
             Page<ScheduleDto> result = super.findByFilter(pageRequest, filter);
             String[] params = filter.trim().split(";");
-            for (String param : params) {
-                String[] tokens = param.trim().split("=");
-                if (tokens[0].equals("doctor") && tokens.length == 2 && result != null
+            for (int i = 0; i < params.length; i++) {
+                String[] tookens = params[i].trim().split("=");
+                if (tookens[0].equals("doctor") && tookens.length == 2 && result != null
                         && result.getContent() != null) {
-                    List<Doctor> doctorList = doctorRepository.findBySurnameWeak(tokens[1]);
+                    List<Doctor> doctorList = doctorRepository.findBySurnameWeak(tookens[1]);
                     List<ScheduleDto> content = result.getContent();
-                    List<String> doctorsId = doctorList.stream().map(Doctor::getId)
+                    List<String> doctorsId = doctorList.stream().map(doctor -> doctor.getId())
                             .collect(Collectors.toList());
                     content = content.stream().filter(p -> doctorsId.contains(p.getDoctor()))
                             .collect(Collectors.toList());

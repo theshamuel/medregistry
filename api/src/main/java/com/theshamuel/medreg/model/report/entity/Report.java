@@ -14,8 +14,7 @@
 package com.theshamuel.medreg.model.report.entity;
 
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
-import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
-
+import com.theshamuel.medreg.model.service.entity.Service;
 import java.time.LocalDateTime;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -35,7 +34,7 @@ public class Report extends BaseEntity {
     @Field("label")
     private String label;
     @DBRef
-    private CustomerService customerService;
+    private Service service;
     @Field("template")
     private String template;
     @Transient
@@ -55,17 +54,17 @@ public class Report extends BaseEntity {
      * @param modifyDate  the modify date
      * @param author      the author
      * @param label       the label
-     * @param customerService     the customerService
+     * @param service     the service
      * @param template    the template
      */
     public Report(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author,
-                  String label, CustomerService customerService, String template) {
+            String label, Service service, String template) {
         setId(id);
         setCreatedDate(createdDate);
         setModifyDate(modifyDate);
         setAuthor(author);
         this.label = label;
-        this.customerService = customerService;
+        this.service = service;
         this.template = template;
     }
 
@@ -88,21 +87,21 @@ public class Report extends BaseEntity {
     }
 
     /**
-     * Gets customerService.
+     * Gets service.
      *
-     * @return the customerService
+     * @return the service
      */
-    public CustomerService getService() {
-        return customerService;
+    public Service getService() {
+        return service;
     }
 
     /**
-     * Sets customerService.
+     * Sets service.
      *
-     * @param customerService the customerService
+     * @param service the service
      */
-    public void setService(CustomerService customerService) {
-        this.customerService = customerService;
+    public void setService(Service service) {
+        this.service = service;
     }
 
     /**
@@ -124,9 +123,9 @@ public class Report extends BaseEntity {
     }
 
     /**
-     * Gets customerService label.
+     * Gets service label.
      *
-     * @return the customerService label
+     * @return the service label
      */
     public String getServiceLabel() {
         return getService() != null ? getService().getLabel() : "";
@@ -148,7 +147,7 @@ public class Report extends BaseEntity {
                 .append(getId(), report.getId())
                 .append(label, report.label)
                 .append(template, report.template)
-                .append(customerService, report.customerService)
+                .append(service, report.service)
                 .isEquals();
     }
 
@@ -158,7 +157,7 @@ public class Report extends BaseEntity {
                 .append(getId())
                 .append(label)
                 .append(template)
-                .append(customerService)
+                .append(service)
                 .toHashCode();
     }
 }

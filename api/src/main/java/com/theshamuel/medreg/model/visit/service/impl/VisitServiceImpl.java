@@ -20,11 +20,11 @@ import com.theshamuel.medreg.model.client.dao.ClientRepository;
 import com.theshamuel.medreg.model.client.entity.Client;
 import com.theshamuel.medreg.model.doctor.dao.DoctorRepository;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
-import com.theshamuel.medreg.model.customerservice.dao.CustomerServiceRepository;
-import com.theshamuel.medreg.model.customerservice.dto.CustomerServiceDto;
-import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
-import com.theshamuel.medreg.model.customerservice.entity.PersonalRate;
-import com.theshamuel.medreg.model.customerservice.service.CustomerServiceService;
+import com.theshamuel.medreg.model.service.dao.ServiceRepository;
+import com.theshamuel.medreg.model.service.dto.ServiceDto;
+import com.theshamuel.medreg.model.service.entity.PersonalRate;
+import com.theshamuel.medreg.model.service.entity.Service;
+import com.theshamuel.medreg.model.service.service.ServiceService;
 import com.theshamuel.medreg.model.visit.dao.VisitRepository;
 import com.theshamuel.medreg.model.visit.dto.VisitDto;
 import com.theshamuel.medreg.model.visit.entity.Visit;
@@ -57,9 +57,9 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
 
     private AppointmentRepository appointmentRepository;
 
-    private CustomerServiceRepository customerServiceRepository;
+    private ServiceRepository serviceRepository;
 
-    private CustomerServiceService customerServiceService;
+    private ServiceService serviceService;
 
     /**
      * Instantiates a new Visit service.
@@ -68,20 +68,20 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
      * @param doctorRepository      the doctor repository
      * @param clientRepository      the client repository
      * @param appointmentRepository the appointment repository
-     * @param customerServiceRepository     the service repository
-     * @param customerServiceService        the service service
+     * @param serviceRepository     the service repository
+     * @param serviceService        the service service
      */
     @Autowired
     public VisitServiceImpl(VisitRepository visitRepository, DoctorRepository doctorRepository,
-                            ClientRepository clientRepository, AppointmentRepository appointmentRepository,
-                            CustomerServiceRepository customerServiceRepository, CustomerServiceService customerServiceService) {
+            ClientRepository clientRepository, AppointmentRepository appointmentRepository,
+            ServiceRepository serviceRepository, ServiceService serviceService) {
         super(visitRepository);
         this.visitRepository = visitRepository;
         this.doctorRepository = doctorRepository;
         this.clientRepository = clientRepository;
         this.appointmentRepository = appointmentRepository;
-        this.customerServiceRepository = customerServiceRepository;
-        this.customerServiceService = customerServiceService;
+        this.serviceRepository = serviceRepository;
+        this.serviceService = serviceService;
     }
 
 
@@ -116,19 +116,19 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
      * {@inheritDoc}
      */
     @Override
-    public List<CustomerServiceDto> getServices(String visitId) {
-        List<CustomerServiceDto> result = new ArrayList<>();
+    public List<ServiceDto> getServices(String visitId) {
+        List<ServiceDto> result = new ArrayList<>();
         Visit visit = visitRepository.findOne(visitId);
         if (visit != null) {
-            Optional<List<CustomerService>> tmp = Optional.ofNullable(visit.getServices());
+            Optional<List<Service>> tmp = Optional.ofNullable(visit.getServices());
             tmp.ifPresent(item -> item.forEach(e -> {
                 BigInteger price = e.getPrice();
 
-                if (customerServiceService.hasPersonalRate(e.getId(), visit.getDoctor().getId())) {
-                    price = customerServiceService.getPriceFromPersonalRate(e.getId(), visit.getDoctor().getId());
+                if (serviceService.hasPersonalRate(e.getId(), visit.getDoctor().getId())) {
+                    price = serviceService.getPriceFromPersonalRate(e.getId(), visit.getDoctor().getId());
                 }
 
-                result.add(new CustomerServiceDto(e.getId(), e.getLabel(), price, e.getDiscount()));
+                result.add(new ServiceDto(e.getId(), e.getLabel(), price, e.getDiscount()));
             }));
             return result;
         }
@@ -206,30 +206,30 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
     @Override
     public void addService(String visitId, String serviceId, BigInteger discount) {
         Visit visit = visitRepository.findOne(visitId);
-        CustomerService customerService = customerServiceRepository.findOne(serviceId);
+        Service service = serviceRepository.findOne(serviceId);
         Doctor doctor = visit.getDoctor();
         Random random = new Random();
-        if (customerService != null && doctor != null) {
-            if (customerService.getPersonalRates() != null && customerService.getPersonalRates().size() > 0) {
-                for (PersonalRate personalRate : customerService.getPersonalRates()) {
+        if (service != null && doctor != null) {
+            if (service.getPersonalRates() != null && service.getPersonalRates().size() > 0) {
+                for (PersonalRate personalRate : service.getPersonalRates()) {
                     if (personalRate.getDoctorId().equals(doctor.getId())) {
-                        customerService.setPrice(personalRate.getPrice());
-                        customerService.setDoctorPay(personalRate.getDoctorPay());
-                        customerService.setDoctorPayType(personalRate.getDoctorPayType());
+                        service.setPrice(personalRate.getPrice());
+                        service.setDoctorPay(personalRate.getDoctorPay());
+                        service.setDoctorPayType(personalRate.getDoctorPayType());
                         break;
                     }
                 }
             }
-            customerService.setDiscount(discount);
-            customerService.setId(customerService.getId().concat("MEDREG")
+            service.setDiscount(discount);
+            service.setId(service.getId().concat("MEDREG")
                     .concat(String.valueOf(random.nextInt(Integer.MAX_VALUE))));
             if (visit.getServices() != null) {
                 List result = visit.getServices();
-                result.add(customerService);
+                result.add(service);
                 visit.setServices(result);
             } else {
-                List<CustomerService> list = new ArrayList<>();
-                list.add(customerService);
+                List<Service> list = new ArrayList<>();
+                list.add(service);
                 visit.setServices(list);
             }
             visitRepository.save(visit);
@@ -246,9 +246,9 @@ public class VisitServiceImpl extends BaseServiceImpl<VisitDto, Visit> implement
 
         Visit visit = visitRepository.findOne(visitId);
         if (visit != null) {
-            List<CustomerService> list = visit.getServices();
+            List<Service> list = visit.getServices();
             if (list != null) {
-                for (CustomerService el : list) {
+                for (Service el : list) {
                     if (el.getId().equals(serviceId)) {
                         list.remove(el);
                         break;

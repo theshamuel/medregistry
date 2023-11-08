@@ -17,8 +17,7 @@ import com.theshamuel.medreg.model.appointment.entity.Appointment;
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
 import com.theshamuel.medreg.model.client.entity.Client;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
-import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
-
+import com.theshamuel.medreg.model.service.entity.Service;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -56,8 +55,8 @@ public class Visit extends BaseEntity {
     @Field("appointment")
     private Appointment appointment;
 
-    @Field("customerServices")
-    private List<CustomerService> customerServices;
+    @Field("services")
+    private List<Service> services;
 
     @Field("terminalSum")
     private BigInteger terminalSum;
@@ -96,7 +95,7 @@ public class Visit extends BaseEntity {
      * @param dateEvent             the date event
      * @param timeEvent             the time event
      * @param appointment           the appointment
-     * @param customerServices              the customerServices
+     * @param services              the services
      * @param terminalSum           the terminal sum
      * @param diagnosis             the diagnosis
      * @param additionalExamination the additionalExamination
@@ -104,7 +103,7 @@ public class Visit extends BaseEntity {
      */
     public Visit(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author,
             String contractNum, Doctor doctor, Client client, LocalDate dateEvent,
-            LocalTime timeEvent, Appointment appointment, List<CustomerService> customerServices,
+            LocalTime timeEvent, Appointment appointment, List<Service> services,
             BigInteger terminalSum, String diagnosis, String additionalExamination,
             String therapy) {
         setId(id);
@@ -118,7 +117,7 @@ public class Visit extends BaseEntity {
         this.dateEvent = dateEvent;
         this.timeEvent = timeEvent;
         this.appointment = appointment;
-        this.customerServices = customerServices;
+        this.services = services;
         this.terminalSum = terminalSum;
         this.diagnosis = diagnosis;
         this.additionalExamination = additionalExamination;
@@ -199,21 +198,21 @@ public class Visit extends BaseEntity {
 
 
     /**
-     * Gets customerServices.
+     * Gets services.
      *
-     * @return the customerServices
+     * @return the services
      */
-    public List<CustomerService> getServices() {
-        return customerServices;
+    public List<Service> getServices() {
+        return services;
     }
 
     /**
-     * Sets customerServices.
+     * Sets services.
      *
-     * @param customerServices the customerServices
+     * @param services the services
      */
-    public void setServices(List<CustomerService> customerServices) {
-        this.customerServices = customerServices;
+    public void setServices(List<Service> services) {
+        this.services = services;
     }
 
     /**
@@ -367,7 +366,7 @@ public class Visit extends BaseEntity {
         return new EqualsBuilder()
                 .append(getId(), visit.getId())
                 .append(contractNum, visit.contractNum)
-                .append(customerServices, visit.customerServices)
+                .append(services, visit.services)
                 .append(appointment, visit.appointment)
                 .append(client, visit.client)
                 .isEquals();
@@ -378,7 +377,7 @@ public class Visit extends BaseEntity {
         return new HashCodeBuilder(17, 37)
                 .append(getId())
                 .append(contractNum)
-                .append(customerServices)
+                .append(services)
                 .append(appointment)
                 .append(client)
                 .toHashCode();

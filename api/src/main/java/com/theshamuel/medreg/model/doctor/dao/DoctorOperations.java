@@ -66,4 +66,10 @@ public interface DoctorOperations {
      */
     List<Doctor> findAllExcludeContractors(Sort sort);
 
+    /**
+     * Sets mongo.
+     *
+     * @param mongo the mongo
+     */
+    void setMongo(MongoOperations mongo);
 }

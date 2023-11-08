@@ -26,9 +26,7 @@ public final class BusinessGarbageCollectorDaemon {
     }
 
     private static void clearOutdatedAppointments() {
-        final String uri =  "http://localhost:" +
-                        System.getenv("SERVER_PORT") != null ? System.getenv("SERVER_PORT") : "9000" +
-                            "/api/appointments/outdated";
+        final String uri = "http://localhost:9000/api/appointments/outdated";
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.delete(uri);
     }

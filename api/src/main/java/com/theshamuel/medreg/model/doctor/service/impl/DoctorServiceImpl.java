@@ -20,7 +20,7 @@ import com.theshamuel.medreg.model.doctor.dto.DoctorDto;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
 import com.theshamuel.medreg.model.doctor.entity.Position;
 import com.theshamuel.medreg.model.doctor.service.DoctorService;
-import com.theshamuel.medreg.model.customerservice.service.CustomerServiceService;
+import com.theshamuel.medreg.model.service.service.ServiceService;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,24 +46,24 @@ public class DoctorServiceImpl extends BaseServiceImpl<DoctorDto, Doctor> implem
     PositionRepository positionRepository;
 
     /**
-     * The CustomerService service.
+     * The Service service.
      */
-    CustomerServiceService customerServiceService;
+    ServiceService serviceService;
 
     /**
      * Instantiates a new Doctor service.
      *
      * @param doctorRepository   the doctor repository
      * @param positionRepository the position repository
-     * @param customerServiceService     the service service
+     * @param serviceService     the service service
      */
     @Autowired
     public DoctorServiceImpl(DoctorRepository doctorRepository,
-            PositionRepository positionRepository, CustomerServiceService customerServiceService) {
+            PositionRepository positionRepository, ServiceService serviceService) {
         super(doctorRepository);
         this.doctorRepository = doctorRepository;
         this.positionRepository = positionRepository;
-        this.customerServiceService = customerServiceService;
+        this.serviceService = serviceService;
     }
 
     /**
@@ -103,7 +103,7 @@ public class DoctorServiceImpl extends BaseServiceImpl<DoctorDto, Doctor> implem
                 obj.getPosition() != null && positionRepository.findById(obj.getPosition()) != null ? positionRepository.findById(obj.getPosition()).getValueGenitive()
                         : "";
         List personalRates =
-                obj.getId() != null ? customerServiceService.getPersonalRatesByDoctorId(obj.getId()) : null;
+                obj.getId() != null ? serviceService.getPersonalRatesByDoctorId(obj.getId()) : null;
         String personalRateLabel = "Нет";
         if (personalRates != null && personalRates.size() > 0) {
             personalRateLabel = "Есть";

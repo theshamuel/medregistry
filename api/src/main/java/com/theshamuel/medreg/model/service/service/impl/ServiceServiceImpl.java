@@ -11,17 +11,17 @@
  * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
-package com.theshamuel.medreg.model.customerservice.service.impl;
+package com.theshamuel.medreg.model.service.service.impl;
 
 import com.theshamuel.medreg.exception.DuplicateRecordException;
 import com.theshamuel.medreg.model.baseclasses.service.BaseServiceImpl;
 import com.theshamuel.medreg.model.doctor.dao.DoctorRepository;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
-import com.theshamuel.medreg.model.customerservice.dao.CustomerServiceRepository;
-import com.theshamuel.medreg.model.customerservice.dto.CustomerServiceDto;
-import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
-import com.theshamuel.medreg.model.customerservice.entity.PersonalRate;
-import com.theshamuel.medreg.model.customerservice.service.CustomerServiceService;
+import com.theshamuel.medreg.model.service.dao.ServiceRepository;
+import com.theshamuel.medreg.model.service.dto.ServiceDto;
+import com.theshamuel.medreg.model.service.entity.PersonalRate;
+import com.theshamuel.medreg.model.service.entity.Service;
+import com.theshamuel.medreg.model.service.service.ServiceService;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,30 +32,30 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * The CustomerService service implementation class.
+ * The Service service implementation class.
  *
  * @author Alex Gladkikh
  */
 @org.springframework.stereotype.Service
-public class CustomerServiceServiceImpl extends BaseServiceImpl<CustomerServiceDto, CustomerService> implements
-        CustomerServiceService {
+public class ServiceServiceImpl extends BaseServiceImpl<ServiceDto, Service> implements
+        ServiceService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomerServiceServiceImpl.class);
-    private CustomerServiceRepository customerServiceRepository;
+    private static Logger logger = LoggerFactory.getLogger(ServiceServiceImpl.class);
+    private ServiceRepository serviceRepository;
 
     private DoctorRepository doctorRepository;
 
     /**
-     * Instantiates a new CustomerService service.
+     * Instantiates a new Service service.
      *
-     * @param customerServiceRepository the service repository
+     * @param serviceRepository the service repository
      * @param doctorRepository  the doctor repository
      */
     @Autowired
-    public CustomerServiceServiceImpl(CustomerServiceRepository customerServiceRepository,
-                                      DoctorRepository doctorRepository) {
-        super(customerServiceRepository);
-        this.customerServiceRepository = customerServiceRepository;
+    public ServiceServiceImpl(ServiceRepository serviceRepository,
+            DoctorRepository doctorRepository) {
+        super(serviceRepository);
+        this.serviceRepository = serviceRepository;
         this.doctorRepository = doctorRepository;
     }
 
@@ -65,7 +65,7 @@ public class CustomerServiceServiceImpl extends BaseServiceImpl<CustomerServiceD
     @Override
     public List getPersonalRatesByServiceId(String serviceId) {
 
-        Optional<CustomerService> service = Optional.ofNullable(customerServiceRepository.findOne(serviceId));
+        Optional<Service> service = Optional.ofNullable(serviceRepository.findOne(serviceId));
         List<PersonalRate> result = new ArrayList<>();
         service.ifPresent(e -> {
             Optional<List<PersonalRate>> personalRates = Optional.ofNullable(e.getPersonalRates());
@@ -91,15 +91,15 @@ public class CustomerServiceServiceImpl extends BaseServiceImpl<CustomerServiceD
      */
     @Override
     public void addPersonalRate(String serviceId, PersonalRate personalRate) {
-        CustomerService customerService = customerServiceRepository.findOne(serviceId);
-        if (customerService != null) {
-            if (customerService.getPersonalRates() != null) {
-                List result = customerService.getPersonalRates();
+        Service service = serviceRepository.findOne(serviceId);
+        if (service != null) {
+            if (service.getPersonalRates() != null) {
+                List result = service.getPersonalRates();
                 if (result.contains(personalRate)) {
                     throw new DuplicateRecordException(
                             "Персональная ставка с данными параметрами уже добавлена");
                 } else {
-                    List<String> doctorIds = customerService.getPersonalRates().stream()
+                    List<String> doctorIds = service.getPersonalRates().stream()
                             .map(i -> i.getDoctorId()).collect(Collectors.toList());
                     if (doctorIds.contains(personalRate.getDoctorId())) {
                         throw new DuplicateRecordException(
@@ -107,20 +107,20 @@ public class CustomerServiceServiceImpl extends BaseServiceImpl<CustomerServiceD
                     }
                 }
                 result.add(personalRate);
-                customerService.setPersonalRates(result);
-                customerServiceRepository.save(customerService);
+                service.setPersonalRates(result);
+                serviceRepository.save(service);
             } else {
                 List<PersonalRate> list = new ArrayList<>();
                 list.add(personalRate);
-                customerService.setPersonalRates(list);
-                customerServiceRepository.save(customerService);
+                service.setPersonalRates(list);
+                serviceRepository.save(service);
             }
         }
     }
 
     @Override
     public void deletePersonalRate(String serviceId, PersonalRate personalRate) {
-        Optional<CustomerService> service = Optional.ofNullable(customerServiceRepository.findOne(serviceId));
+        Optional<Service> service = Optional.ofNullable(serviceRepository.findOne(serviceId));
         service.ifPresent(item -> {
             Optional<List<PersonalRate>> personalRates = Optional
                     .ofNullable(item.getPersonalRates());
@@ -132,7 +132,7 @@ public class CustomerServiceServiceImpl extends BaseServiceImpl<CustomerServiceD
                     }
                 }
                 item.setPersonalRates(list);
-                customerServiceRepository.save(item);
+                serviceRepository.save(item);
             });
 
         });
@@ -140,8 +140,8 @@ public class CustomerServiceServiceImpl extends BaseServiceImpl<CustomerServiceD
 
     @Override
     public List getPersonalRatesByDoctorId(String doctorId) {
-        Optional<List<CustomerService>> services = Optional
-                .ofNullable(customerServiceRepository.findPersonalRatesByDoctorId(doctorId));
+        Optional<List<Service>> services = Optional
+                .ofNullable(serviceRepository.findPersonalRatesByDoctorId(doctorId));
         List<PersonalRate> result = new ArrayList<>();
         services.ifPresent(e -> {
             e.forEach(i -> {
@@ -163,11 +163,11 @@ public class CustomerServiceServiceImpl extends BaseServiceImpl<CustomerServiceD
 
     @Override
     public BigInteger getPriceFromPersonalRate(String serviceId, String doctorId) {
-        Optional<CustomerService> service = Optional.ofNullable(customerServiceRepository.findOne(serviceId));
+        Optional<Service> service = Optional.ofNullable(serviceRepository.findOne(serviceId));
         final BigInteger[] result = {BigInteger.valueOf(0)};
         service.ifPresent(i -> {
             result[0] = i.getPrice();
-            Optional<List<PersonalRate>> personalRates = Optional.of(
+            Optional<List<PersonalRate>> personalRates = Optional.ofNullable(
                     i.getPersonalRates().stream()
                             .filter(e -> e.getDoctorId() != null && e.getDoctorId()
                                     .equals(doctorId)).collect(Collectors.toList()));
@@ -184,11 +184,11 @@ public class CustomerServiceServiceImpl extends BaseServiceImpl<CustomerServiceD
 
     @Override
     public PersonalRate getPersonalRateByServiceIdAndDoctorId(String serviceId, String doctorId) {
-        Optional<CustomerService> service = Optional.ofNullable(customerServiceRepository.findOne(serviceId));
+        Optional<Service> service = Optional.ofNullable(serviceRepository.findOne(serviceId));
         final PersonalRate[] result = {null};
         service.ifPresent(i -> {
             if (i.getPersonalRates() != null) {
-                Optional<List<PersonalRate>> personalRates = Optional.of(
+                Optional<List<PersonalRate>> personalRates = Optional.ofNullable(
                         i.getPersonalRates().stream()
                                 .filter(e -> e.getDoctorId() != null && e.getDoctorId()
                                         .equals(doctorId)).collect(Collectors.toList()));
@@ -199,7 +199,7 @@ public class CustomerServiceServiceImpl extends BaseServiceImpl<CustomerServiceD
                 });
             } else {
                 logger.warn(
-                        "CustomerService personalRates is null: id =" + i.getId() + ";label=" + i.getLabel()
+                        "Service personalRates is null: id =" + i.getId() + ";label=" + i.getLabel()
                                 + ";");
             }
         });
@@ -210,26 +210,28 @@ public class CustomerServiceServiceImpl extends BaseServiceImpl<CustomerServiceD
     @Override
     public boolean hasPersonalRate(String serviceId, String doctorId) {
         boolean[] result = new boolean[]{false};
-        Optional<CustomerService> service = Optional.ofNullable(customerServiceRepository.findOne(serviceId));
+        Optional<Service> service = Optional.ofNullable(serviceRepository.findOne(serviceId));
         if (service.isPresent()) {
             Optional<List<PersonalRate>> rates = Optional
                     .ofNullable(service.get().getPersonalRates());
-            rates.ifPresent(list -> list.forEach(rate -> {
-                if (doctorId.equals(rate.getDoctorId())) {
-                    result[0] = true;
-                }
-            }));
+            rates.ifPresent(list -> {
+                list.forEach(rate -> {
+                    if (doctorId.equals(rate.getDoctorId())) {
+                        result[0] = true;
+                    }
+                });
+            });
         }
         return result[0];
     }
 
     @Override
-    public CustomerServiceDto obj2dto(CustomerService obj) {
-        return new CustomerServiceDto(obj.getId(), obj.getLabel(), obj.getPrice(), obj.getDiscount());
+    public ServiceDto obj2dto(Service obj) {
+        return new ServiceDto(obj.getId(), obj.getLabel(), obj.getPrice(), obj.getDiscount());
     }
 
     @Override
-    public CustomerService dto2obj(CustomerServiceDto dto) {
-        return new CustomerService(dto.getId(), dto.getLabel(), dto.getPrice(), dto.getDiscount());
+    public Service dto2obj(ServiceDto dto) {
+        return new Service(dto.getId(), dto.getLabel(), dto.getPrice(), dto.getDiscount());
     }
 }

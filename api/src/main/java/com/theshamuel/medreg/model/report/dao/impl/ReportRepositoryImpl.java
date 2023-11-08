@@ -15,31 +15,26 @@ package com.theshamuel.medreg.model.report.dao.impl;
 
 import com.theshamuel.medreg.model.report.dao.ReportOperations;
 import com.theshamuel.medreg.model.report.entity.Report;
-import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
-
+import com.theshamuel.medreg.model.service.entity.Service;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class ReportRepositoryImpl implements ReportOperations {
 
-    private final MongoOperations mongo;
-
-    public ReportRepositoryImpl(MongoOperations mongo) {
-        this.mongo = mongo;
-    }
+    @Autowired
+    private MongoOperations mongo;
 
     @Override
-    public boolean isUniqueReport(CustomerService customerService, String template) {
-        Criteria where;
-        if (customerService != null) {
-            where = Criteria.where("customerService").is(customerService).and("template")
+    public boolean isUniqueReport(Service service, String template) {
+        Criteria where = null;
+        if (service != null) {
+            where = Criteria.where("service").is(service).and("template")
                     .regex("^" + template + "$", "i");
         } else {
-            where = Criteria.where("customerService").exists(false).and("template").is(template);
+            where = Criteria.where("service").exists(false).and("template").is(template);
         }
         Query query = Query.query(where);
         return mongo.findOne(query, Report.class) == null;
@@ -47,8 +42,8 @@ public class ReportRepositoryImpl implements ReportOperations {
     }
 
     @Override
-    public List<Report> findByService(CustomerService customerService) {
-        Criteria where = Criteria.where("customerService").is(customerService);
+    public List<Report> findByService(Service service) {
+        Criteria where = Criteria.where("service").is(service);
         Query query = Query.query(where);
         return mongo.find(query, Report.class);
     }
@@ -60,4 +55,8 @@ public class ReportRepositoryImpl implements ReportOperations {
         return mongo.find(query, Report.class);
     }
 
+    @Override
+    public void setMongo(MongoOperations mongo) {
+        this.mongo = mongo;
+    }
 }

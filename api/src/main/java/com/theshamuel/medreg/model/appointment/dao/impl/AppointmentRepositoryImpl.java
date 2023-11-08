@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -38,11 +39,9 @@ public class AppointmentRepositoryImpl implements AppointmentOperations {
 
     private static final Logger logger = LoggerFactory.getLogger(AppointmentRepositoryImpl.class);
 
-    private final MongoOperations mongo;
+    @Autowired
+    private MongoOperations mongo;
 
-    public AppointmentRepositoryImpl(MongoOperations mongo) {
-        this.mongo = mongo;
-    }
 
     /**
      * {@inheritDoc}
@@ -202,4 +201,12 @@ public class AppointmentRepositoryImpl implements AppointmentOperations {
         return result != null ? result : Collections.emptyList();
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setMongo(MongoOperations mongo) {
+        this.mongo = mongo;
+    }
 }

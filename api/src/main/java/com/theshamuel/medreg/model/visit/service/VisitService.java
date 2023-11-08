@@ -14,7 +14,7 @@
 package com.theshamuel.medreg.model.visit.service;
 
 import com.theshamuel.medreg.model.baseclasses.service.BaseService;
-import com.theshamuel.medreg.model.customerservice.dto.CustomerServiceDto;
+import com.theshamuel.medreg.model.service.dto.ServiceDto;
 import com.theshamuel.medreg.model.visit.dto.VisitDto;
 import com.theshamuel.medreg.model.visit.entity.Visit;
 import java.math.BigInteger;
@@ -43,7 +43,7 @@ public interface VisitService extends BaseService<VisitDto, Visit> {
      * @param visitId the visit id
      * @return the services
      */
-    List<CustomerServiceDto> getServices(String visitId);
+    List<ServiceDto> getServices(String visitId);
 
     /**
      * Gets visits by doctor and date event.

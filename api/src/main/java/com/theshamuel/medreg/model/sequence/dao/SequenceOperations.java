@@ -13,6 +13,8 @@
  */
 package com.theshamuel.medreg.model.sequence.dao;
 
+import org.springframework.data.mongodb.core.MongoOperations;
+
 /**
  * The interface Sequence operations.
  *
@@ -29,4 +31,10 @@ public interface SequenceOperations {
      */
     String getNextSequence(String key);
 
+    /**
+     * Sets mongo.
+     *
+     * @param mongo the mongo
+     */
+    void setMongo(MongoOperations mongo);
 }

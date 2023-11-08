@@ -11,33 +11,17 @@
  * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
-package com.theshamuel.medreg.model.customerservice.dao;
+package com.theshamuel.medreg.model.service.dao;
 
-import java.math.BigInteger;
-import java.util.List;
-import org.springframework.data.mongodb.core.MongoOperations;
+import com.theshamuel.medreg.model.service.entity.Service;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
- * The interface CustomerService operations.
+ * The interface Service repository.
  *
  * @author Alex Gladkikh
  */
-public interface CustomerServiceOperations {
+public interface ServiceRepository extends MongoRepository<Service, String>, ServiceOperations {
 
-    /**
-     * Find by label service.
-     *
-     * @param label the label
-     * @return the service
-     */
-    boolean isUniqueService(String label, BigInteger price);
-
-    /**
-     * Find by label service.
-     *
-     * @param doctorId the id of Doctor
-     * @return the service
-     */
-    List findPersonalRatesByDoctorId(String doctorId);
 
 }

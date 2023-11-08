@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -35,11 +36,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ScheduleRepositoryImpl implements ScheduleOperations {
 
-    private final MongoOperations mongo;
-
-    public ScheduleRepositoryImpl(MongoOperations mongo) {
-        this.mongo = mongo;
-    }
+    @Autowired
+    private MongoOperations mongo;
 
 
     /**
@@ -49,7 +47,7 @@ public class ScheduleRepositoryImpl implements ScheduleOperations {
     public Schedule findByDateWorkAndDoctor(Doctor doctor, LocalDate dateWork) {
         Criteria where = Criteria.where("doctor").is(doctor).and("dateWork").is(dateWork);
         Query query = Query.query(where);
-        return this.mongo.findOne(query, Schedule.class);
+        return mongo.findOne(query, Schedule.class);
     }
 
 
@@ -101,4 +99,12 @@ public class ScheduleRepositoryImpl implements ScheduleOperations {
         return mongo.findOne(query, Schedule.class);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setMongo(MongoOperations mongo) {
+        this.mongo = mongo;
+    }
 }

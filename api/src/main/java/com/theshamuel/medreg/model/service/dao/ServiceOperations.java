@@ -11,26 +11,39 @@
  * <p>
  * My LinkedIn profile: https://www.linkedin.com/in/alex-gladkikh-767a15115/
  */
-package com.theshamuel.medreg.model.company.dao.impl;
+package com.theshamuel.medreg.model.service.dao;
 
-import com.theshamuel.medreg.model.company.dao.CompanyOperations;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.math.BigInteger;
+import java.util.List;
 import org.springframework.data.mongodb.core.MongoOperations;
 
 /**
- * The Company repository implementation.
+ * The interface Service operations.
  *
  * @author Alex Gladkikh
  */
-public class CompanyRepositoryImpl implements CompanyOperations {
-
-    @Autowired
-    private MongoOperations mongo;
+public interface ServiceOperations {
 
     /**
-     * {@inheritDoc}
+     * Find by label service.
+     *
+     * @param label the label
+     * @return the service
      */
-    public void setMongo(MongoOperations mongo) {
-        this.mongo = mongo;
-    }
+    boolean isUniqueService(String label, BigInteger price);
+
+    /**
+     * Find by label service.
+     *
+     * @param doctorId the id of Doctor
+     * @return the service
+     */
+    List findPersonalRatesByDoctorId(String doctorId);
+
+    /**
+     * Sets mongo.
+     *
+     * @param mongo the mongo
+     */
+    void setMongo(MongoOperations mongo);
 }

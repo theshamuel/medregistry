@@ -14,8 +14,7 @@
 package com.theshamuel.medreg.model.visit.dto;
 
 import com.theshamuel.medreg.model.baseclasses.entity.BaseEntity;
-import com.theshamuel.medreg.model.customerservice.entity.CustomerService;
-
+import com.theshamuel.medreg.model.service.entity.Service;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,7 +46,7 @@ public class VisitDto extends BaseEntity {
 
     private String passportLabel;
 
-    private List<CustomerService> customerServices;
+    private List<Service> services;
 
     private String clientLabel;
 
@@ -86,7 +85,7 @@ public class VisitDto extends BaseEntity {
      * @param doctorId                  the doctor id
      * @param doctorLabel               the doctor label
      * @param clientId                  the client id
-     * @param customerServices                  the customerServices
+     * @param services                  the services
      * @param terminalSum               the terminal sum
      * @param totalSum                  the total sum
      * @param dateEvent                 the date event
@@ -100,11 +99,11 @@ public class VisitDto extends BaseEntity {
      * @param doctorExcludedFromReports the doctor excluded from reports
      */
     public VisitDto(String id, LocalDateTime createdDate, LocalDateTime modifyDate, String author,
-                    String contractNum, String doctorId, String doctorLabel, String clientId,
-                    List<CustomerService> customerServices, BigInteger terminalSum, BigInteger totalSum,
-                    LocalDate dateEvent, LocalTime timeEvent, String clientLabel, String appointmentId,
-                    String dateTimeLabel, String timeLabel, String phoneLabel, String passportLabel, Boolean doctorExcludedFromReports,
-                    String diagnosis, String additionalExamination, String therapy) {
+            String contractNum, String doctorId, String doctorLabel, String clientId,
+            List<Service> services, BigInteger terminalSum, BigInteger totalSum,
+            LocalDate dateEvent, LocalTime timeEvent, String clientLabel, String appointmentId,
+            String dateTimeLabel, String timeLabel, String phoneLabel, String passportLabel, Boolean doctorExcludedFromReports,
+            String diagnosis, String additionalExamination, String therapy) {
         setId(id);
         setCreatedDate(createdDate);
         setModifyDate(modifyDate);
@@ -113,7 +112,7 @@ public class VisitDto extends BaseEntity {
         this.doctorId = doctorId;
         this.doctorLabel = doctorLabel;
         this.clientId = clientId;
-        this.customerServices = customerServices;
+        this.services = services;
         this.terminalSum = terminalSum;
         this.totalSum = totalSum;
         this.dateEvent = dateEvent;
@@ -239,21 +238,21 @@ public class VisitDto extends BaseEntity {
     }
 
     /**
-     * Gets customerServices.
+     * Gets services.
      *
-     * @return the customerServices
+     * @return the services
      */
-    public List<CustomerService> getServices() {
-        return customerServices;
+    public List<Service> getServices() {
+        return services;
     }
 
     /**
-     * Sets customerServices.
+     * Sets services.
      *
-     * @param customerServices the customerServices
+     * @param services the services
      */
-    public void setServices(List<CustomerService> customerServices) {
-        this.customerServices = customerServices;
+    public void setServices(List<Service> services) {
+        this.services = services;
     }
 
     /**
@@ -486,7 +485,7 @@ public class VisitDto extends BaseEntity {
         return new EqualsBuilder()
                 .append(getId(), visitDto.getId())
                 .append(contractNum, visitDto.contractNum)
-                .append(customerServices, visitDto.customerServices)
+                .append(services, visitDto.services)
                 .append(appointmentId, visitDto.appointmentId)
                 .append(clientId, visitDto.clientId)
                 .isEquals();
@@ -497,7 +496,7 @@ public class VisitDto extends BaseEntity {
         return new HashCodeBuilder(17, 37)
                 .append(getId())
                 .append(contractNum)
-                .append(customerServices)
+                .append(services)
                 .append(appointmentId)
                 .append(clientId)
                 .toHashCode();

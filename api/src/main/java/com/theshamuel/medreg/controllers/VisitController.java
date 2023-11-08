@@ -16,7 +16,7 @@ package com.theshamuel.medreg.controllers;
 import com.theshamuel.medreg.ResponsePage;
 import com.theshamuel.medreg.exception.DuplicateRecordException;
 import com.theshamuel.medreg.model.sequence.dao.SequenceRepository;
-import com.theshamuel.medreg.model.customerservice.dto.CustomerServiceDto;
+import com.theshamuel.medreg.model.service.dto.ServiceDto;
 import com.theshamuel.medreg.model.visit.dto.VisitDto;
 import com.theshamuel.medreg.model.visit.service.VisitService;
 import java.math.BigInteger;
@@ -238,7 +238,7 @@ public class VisitController {
      * @return the list of services from visit
      */
     @GetMapping(value = "/visits/{id}/services", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<CustomerServiceDto>> getServicesOfVisit(@PathVariable("id") String id) {
+    public ResponseEntity<List<ServiceDto>> getServicesOfVisit(@PathVariable("id") String id) {
         return new ResponseEntity(visitService.getServices(id), HttpStatus.OK);
     }
 

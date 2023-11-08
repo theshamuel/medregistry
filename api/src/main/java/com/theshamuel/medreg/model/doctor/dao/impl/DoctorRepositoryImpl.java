@@ -16,6 +16,7 @@ package com.theshamuel.medreg.model.doctor.dao.impl;
 import com.theshamuel.medreg.model.doctor.dao.DoctorOperations;
 import com.theshamuel.medreg.model.doctor.entity.Doctor;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -30,11 +31,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class DoctorRepositoryImpl implements DoctorOperations {
 
-    private final MongoOperations mongo;
-
-    public DoctorRepositoryImpl(MongoOperations mongo) {
-        this.mongo = mongo;
-    }
+    @Autowired
+    private MongoOperations mongo;
 
     /**
      * {@inheritDoc}
@@ -91,4 +89,11 @@ public class DoctorRepositoryImpl implements DoctorOperations {
         return mongo.find(query, Doctor.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setMongo(MongoOperations mongo) {
+        this.mongo = mongo;
+    }
 }
