@@ -1,4 +1,4 @@
-FROM theshamuel/baseimg-java-build:15-alpine as builder
+FROM theshamuel/baseimg-java-build:8-alpine as builder
 
 ADD src /srv/medregistry/src
 ADD pom.xml /srv/medregistry/pom.xml
@@ -22,7 +22,7 @@ RUN \
   (cd target/dependency; jar -xf ../*.jar) && \
   ls -la
 
-FROM theshamuel/baseimg-java-app:15-alpine
+FROM theshamuel/baseimg-java-app:8-alpine
 ARG DEPENDENCY=/srv/medregistry/target/dependency
 
 RUN \
