@@ -8,9 +8,10 @@ echo $TZ > /etc/timezone
 echo "MONGO_SERVER=${MONGO_SERVER}, MONGO_PORT=${MONGO_PORT}"
 echo "MONGO_ADMIN=${MONGO_ADMIN}, MONGO_ADMIN_PASSWORD=${MONGO_ADMIN_PASSWORD}, MONGO_DB=${MONGO_DB}"
 echo "MONGO_AUTH=${MONGO_AUTH}"
+echo "MONGO_ARCHIVE=${MONGO_ARCHIVE}"
 
 if [[ "${MONGO_AUTH}" == "true" ]]; then
-  (mongod --auth) &(
+  (mongod --auth --bind_ip_all) &(
     sleep 5;
     echo "=> Creating ADMIN pwd"
     mongo admin --eval "db.createUser({ user: '$MONGO_ADMIN', pwd: '$MONGO_ADMIN_PASSWORD', roles: [ { role: 'root', db: 'admin' } ] })" && /
@@ -19,7 +20,7 @@ if [[ "${MONGO_AUTH}" == "true" ]]; then
     /backup_script.sh
   )
 else
-  (mongod) &(
+  (mongod --bind_ip_all) &(
     sleep 5;
     echo "=> Mongo start in test mode without credentials"
     /restore.sh

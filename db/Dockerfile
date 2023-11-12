@@ -1,4 +1,4 @@
-FROM mongo:3.4
+FROM mongo:5.0.22-focal
 
 LABEL org.opencontainers.image.source https://github.com/theshamuel/medregistry
 
