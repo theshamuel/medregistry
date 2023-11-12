@@ -8,8 +8,8 @@ name_archive="mrdb_"$(date +%Y-%m-%d-%H%M%S-otb.tag.gz)
 path_archive="/backup/"$name_archive
 bucket=${BUCKET_NAME}
 
-echo "archive name="+$name_archive
-echo "bucket name="+$bucket
+echo "archive name="$name_archive
+echo "bucket name="$bucket
 
 if [[ "${MONGO_AUTH}" == "true" ]]; then
     mongodump -h localhost -p $mongo_port --username $admin_login --password $admin_pass --authenticationDatabase admin --gzip --db medregDB --archive=$path_archive
@@ -27,7 +27,7 @@ if [[ "${COPY_TO_S3}" == true ]]; then
     content_type='application/x-compressed-tar'
     string="PUT\n\n$content_type\n$date\n$acl\n${resource}"
     signature=$(echo -en "${string}" | openssl sha1 -hmac "${AWSSecretKey}" -binary | base64)
-    curl -i -X PUT -T "$path_archive" \
+    curl -s -X PUT -T "$path_archive" \
     -H "Host: $bucket.s3.amazonaws.com" \
     -H "Date: $date" \
     -H "Content-Type: $content_type" \
