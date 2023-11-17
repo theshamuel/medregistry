@@ -977,6 +977,20 @@ function VisitsTodayCtrl($http, $location, $localStorage, $scope, $rootScope, ui
                                             },
                                             {
                                                 view: "layout",
+                                                label: "Email",
+                                                borderless: true,
+                                                rows: [{
+                                                    cols: [{
+                                                        view: "text",
+                                                        label: "Эл. почта",
+                                                        name: "email",
+                                                        labelWidth: 135,
+                                                    }
+                                                    ]
+                                                }]
+                                            },
+                                            {
+                                                view: "layout",
                                                 label: "ФИО",
                                                 borderless: true,
                                                 rows: [{
