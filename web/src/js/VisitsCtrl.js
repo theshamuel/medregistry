@@ -298,6 +298,9 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
             if (reportItem != null && reportItem.template == "templateVisitResult") {
                 version_api = 'v2'
                 url_ = "/api/" + version_api + "/reports/file/reportVisitResult/" + visitId + "/report.xlsx"
+            } if (reportItem != null && reportItem.template == "Contract") {
+                version_api = 'v2'
+                url_ = "/api/" + version_api + "/reports/file/reportContract/" + clientId + "/" + visitId + "/" + dateReport.toJSON() + "/report.xlsx"
             } else {
                 version_api = 'v1'
             }
@@ -312,7 +315,7 @@ function VisitsCtrl($http, $location, $localStorage, $scope, $rootScope, uiGridC
                     $rootScope.saveByteArray([data], 'Заключение_' + dateReport.toJSON() + '_' +
                         suffixClient + '.xlsx')
                 } else if (reportItem != null && reportItem.template === "Contract")
-                    $rootScope.saveByteArray([data], 'Договор_' + dateReport.toJSON() + '.xls');
+                    $rootScope.saveByteArray([data], 'Договор_' + dateReport.toJSON() + '.xlsx');
                 else
                     $rootScope.saveByteArray([data], 'Бланк_' + reportItem.label + "-" +
                         dateReport.toJSON() + '.doc');
