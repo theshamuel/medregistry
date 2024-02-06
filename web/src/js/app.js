@@ -70,6 +70,10 @@ function config($routeProvider, $locationProvider) {
             templateUrl: 'reportofperiod.html',
             controller: 'ReportOfPeriodCtrl'
         })
+        .when('/reportofperiodprofit', {
+            templateUrl: 'reportofperiodprofit.html',
+            controller: 'ReportOfPeriodProfitCtrl'
+        })
         .when('/online', {
             templateUrl: 'online.html',
             controller: 'OnlineAppointmentsCtrl'
